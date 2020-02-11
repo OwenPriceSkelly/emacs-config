@@ -4,6 +4,10 @@
 ;; refresh' after modifying this file!
 
 
+;; ----------------------------------------------------------------
+
+;;
+;; ----------------------------------------------------------------
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Owen Price-Skelly"
@@ -26,8 +30,8 @@
 (setq doom-theme 'doom-horizon)
 
 ;; If you intend to use org, it is recommended you change this!
-(setq org-directory "~/org/doom/")
-
+(setq org-directory "~/org/"
+      deft-directory org-directory)
 ;; If you want to change the style of line numbers, change this to `relative' or
 ;; `nil' to disable it:
 (setq display-line-numbers-type 'relative)
