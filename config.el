@@ -11,6 +11,9 @@
       which-key-side-window-location 'bottom
       display-line-numbers-type 'relative
       ranger-override-dired t
+
+
+      doom-leader-key "SPC"
       doom-localleader-key ",")
 
 ;; -----------------------------------------------------------------------------
@@ -37,6 +40,10 @@
 
 (map! :leader
       :desc "visual expand"      "v"       #'er/expand-region)
+
+(map! :leader
+      (:when (featurep! :ui treemacs)
+        :desc "project sidebar" "0" #'treemacs-select-window))
 
 (map! :leader
       (:when (featurep! :ui workspaces)
