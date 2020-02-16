@@ -19,6 +19,8 @@
 ;; - `load!' for loading external *.el files relative to this one
 ;; -----------------------------------------------------------------------------
 ;; - `use-package' `use-package!'for configuring packages
+(use-package! treemacs
+  :defer-incrementally t)
 (use-package! hercules
   :demand t)
 (use-package! evil-textobj-line
@@ -52,29 +54,27 @@
       (:when (featurep! :ui workspaces)
         (:prefix "TAB"
           :desc "Switch workspace" "TAB" #'+workspace/switch-to
-           "." nil)))
+          "." nil)))
 
 (map! :leader
       (:when (featurep! :ui tabs)
         :n "]" #'centaur-tabs-forward-tab
         :n "[" #'centaur-tabs-backward-tab))
 
-
-      ;; (:when (featurep! :editor multiple-cursors)
-      ;;   (:prefix-map  ("s" . "search")
-      ;;     (:prefix ("e" . "edit")
-      ;;       :v  "R"     #'evil-multiedit-match-all
-      ;;       :n  "M-d"   #'evil-multiedit-match-symbol-and-next
-      ;;       :n  "M-D"   #'evil-multiedit-match-symbol-and-prev
-      ;;       :v  "M-d"   #'evil-multiedit-match-and-next
-      ;;       :v  "M-D"   #'evil-multiedit-match-and-prev
-      ;;       :nv "C-M-d" #'evil-multiedit-restore
-      ;;       (:after evil-multiedit
-      ;;         (:map evil-multiedit-state-map
-      ;;           "M-d"    #'evil-multiedit-match-and-next
-      ;;           "M-D"    #'evil-multiedit-match-and-prev
-      ;;           "RET"    #'evil-multiedit-toggle-or-restrict-region
-      ;;           [return] #'evil-multiedit-toggle-or-restrict-region)))))
+(map!
+ (:when (featurep! :editor multiple-cursors)
+   :v  "R"     #'evil-multiedit-match-all
+   :n  "M-d"   #'evil-multiedit-match-symbol-and-next
+   :n  "M-D"   #'evil-multiedit-match-symbol-and-prev
+   :v  "M-d"   #'evil-multiedit-match-and-next
+   :v  "M-D"   #'evil-multiedit-match-and-prev
+   :nv "C-M-d" #'evil-multiedit-restore
+   (:after evil-multiedit
+     (:map evil-multiedit-state-map
+       "M-d"    #'evil-multiedit-match-and-next
+       "M-D"    #'evil-multiedit-match-and-prev
+       "RET"    #'evil-multiedit-toggle-or-restrict-region
+       [return] #'evil-multiedit-toggle-or-restrict-region))))
 
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
