@@ -10,7 +10,7 @@
       deft-directory org-directory
 
       display-line-numbers-type 'relative
-
+      ranger-override-dired t
       doom-localleader-key ",")
 
 ;; -----------------------------------------------------------------------------
@@ -19,21 +19,64 @@
 ;; - `load!' for loading external *.el files relative to this one
 ;; -----------------------------------------------------------------------------
 ;; - `use-package' `use-package!'for configuring packages
+
 ;; -----------------------------------------------------------------------------
 ;; - `after!' for running code after a package has loaded
 ;; -----------------------------------------------------------------------------
 ;; - `add-load-path!' for adding directories to the `load-path', where Emacs
 ;;   looks when you load packages with `require' or `use-package'.
-;; -----------------------------------------------------------------------------
-;; - `map!' for binding new keys
-(map! (:when (featurep! :ui tabs))
-      :n "SPC ]" #'centaur-tabs-forward-tab
-      :n "SPC [" #'centaur-tabs-backward-tab)
 
 ;; -----------------------------------------------------------------------------
-;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
-;; This will open documentation for it, including demos of how they are used.
-;;
-;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
-;; they are implemented.
+;; - Keybinding
+;; -----------------------------------------------------------------------------
+(general-auto-unbind-keys)
+
+(map! :leader
+
+      :desc "M-x"                   "SPC"    #'execute-extended-command
+
+      :desc "Find file in project"  ":"      #'projectile-find-file
+      :desc "Search project"        "/"      #'+default/search-project)
+
+(map! :leader
+      (:when (featurep! :ui tabs)
+        :n "]" #'centaur-tabs-forward-tab
+        :n "[" #'centaur-tabs-backward-tab))
+
+      ;; (:when (featurep! :editor multiple-cursors)
+      ;;   (:prefix-map  ("s" . "search")
+      ;;     (:prefix ("e" . "edit")
+      ;;       :v  "R"     #'evil-multiedit-match-all
+      ;;       :n  "M-d"   #'evil-multiedit-match-symbol-and-next
+      ;;       :n  "M-D"   #'evil-multiedit-match-symbol-and-prev
+      ;;       :v  "M-d"   #'evil-multiedit-match-and-next
+      ;;       :v  "M-D"   #'evil-multiedit-match-and-prev
+      ;;       :nv "C-M-d" #'evil-multiedit-restore
+      ;;       (:after evil-multiedit
+      ;;         (:map evil-multiedit-state-map
+      ;;           "M-d"    #'evil-multiedit-match-and-next
+      ;;           "M-D"    #'evil-multiedit-match-and-prev
+      ;;           "RET"    #'evil-multiedit-toggle-or-restrict-region
+      ;;           [return] #'evil-multiedit-toggle-or-restrict-region)))))
+
+;; -----------------------------------------------------------------------------
+;; Misc. quality of life snippets
+;; -----------------------------------------------------------------------------
+(when-let (dims (doom-cache-get 'last-frame-size))
+  (cl-destructuring-bind ((left . top) width height fullscreen) dims
+    (setq initial-frame-alist
+          (append initial-frame-alist
+                  `((left . ,left)
+                    (top . ,top)
+                    (width . ,width)
+                    (height . ,height)
+                    (fullscreen . ,fullscreen))))))
+
+(defun save-frame-dimensions ()
+  (doom-cache-set 'last-frame-size
+                  (list (frame-position)
+                        (frame-width)
+                        (frame-height)
+                        (frame-parameter nil 'fullscreen))))
+
+(add-hook 'kill-emacs-hook #'save-frame-dimensions)
