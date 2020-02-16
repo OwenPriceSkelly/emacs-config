@@ -43,10 +43,6 @@
       :desc "visual expand"      "v"       #'er/expand-region)
 
 (map! :leader
-      (:prefix "s" "e" #'evil-iedit-state/iedit-mode-from-expand-region))
-
-
-(map! :leader
       (:when (featurep! :ui treemacs)
         :desc "project sidebar" "0" #'treemacs-select-window))
 
@@ -82,6 +78,7 @@
 (hercules-def
  :toggle-funs #'evil-multiedit-state
  :keymap 'evil-multiedit-state-map)
+
 (hercules-def
  :toggle-funs #'evil-multiedit-insert-state
  :keymap 'evil-multiedit-insert-state-map)

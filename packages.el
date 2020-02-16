@@ -6,7 +6,7 @@
 (package! hercules)
 (package! evil-textobj-line)
 (package! iedit)
-
+(package! evil-lion)
 
 ;; ----------------------------------------------------------------
 ;; This is where you install packages, by declaring them with the `package!'
