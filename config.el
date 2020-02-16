@@ -1,5 +1,4 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
 
@@ -9,6 +8,7 @@
       org-directory "~/org/"
       deft-directory org-directory
 
+      which-key-side-window-location 'bottom
       display-line-numbers-type 'relative
       ranger-override-dired t
       doom-localleader-key ",")
@@ -30,18 +30,25 @@
 ;; - Keybinding
 ;; -----------------------------------------------------------------------------
 (general-auto-unbind-keys)
+(map! :leader
+      :desc "M-x"                "SPC"     #'execute-extended-command
+      :desc "Ivy M-x"            ":"       #'counsel-M-x
+      :desc "Search project"     "/"       #'+default/search-project)
 
 (map! :leader
+      :desc "visual expand"      "v"       #'er/expand-region)
 
-      :desc "M-x"                   "SPC"    #'execute-extended-command
-
-      :desc "Find file in project"  ":"      #'projectile-find-file
-      :desc "Search project"        "/"      #'+default/search-project)
+(map! :leader
+      (:when (featurep! :ui workspaces)
+        (:prefix "TAB"
+          :desc "Switch workspace" "TAB" #'+workspace/switch-to
+           "." nil)))
 
 (map! :leader
       (:when (featurep! :ui tabs)
         :n "]" #'centaur-tabs-forward-tab
         :n "[" #'centaur-tabs-backward-tab))
+
 
       ;; (:when (featurep! :editor multiple-cursors)
       ;;   (:prefix-map  ("s" . "search")
@@ -80,3 +87,6 @@
                         (frame-parameter nil 'fullscreen))))
 
 (add-hook 'kill-emacs-hook #'save-frame-dimensions)
+
+;; (set-variables)
+;; (set-keymaps)
