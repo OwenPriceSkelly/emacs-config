@@ -6,7 +6,8 @@
 (package! hercules)
 (package! evil-textobj-line)
 (package! iedit)
-(package! evil-iedit-state)
+
+
 ;; ----------------------------------------------------------------
 ;; This is where you install packages, by declaring them with the `package!'
 ;; macro, then running 'doom refresh' on the command line. You'll need to
