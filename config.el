@@ -16,19 +16,18 @@
       doom-leader-key "SPC"
       doom-localleader-key ",")
 
-;; -----------------------------------------------------------------------------
-;; here are some additional functions/macros that could help you configure doom:
-;;
 ;; - `load!' for loading external *.el files relative to this one
 ;; -----------------------------------------------------------------------------
 ;; - `use-package' `use-package!'for configuring packages
-
+(use-package! hercules
+  :demand t)
+(use-package! evil-textobj-line
+  :demand t)
 ;; -----------------------------------------------------------------------------
 ;; - `after!' for running code after a package has loaded
 ;; -----------------------------------------------------------------------------
 ;; - `add-load-path!' for adding directories to the `load-path', where Emacs
 ;;   looks when you load packages with `require' or `use-package'.
-
 ;; -----------------------------------------------------------------------------
 ;; - Keybinding
 ;; -----------------------------------------------------------------------------
@@ -40,6 +39,10 @@
 
 (map! :leader
       :desc "visual expand"      "v"       #'er/expand-region)
+
+(map! :leader
+      (:prefix "s" "e" #'evil-iedit-state/iedit-mode-from-expand-region))
+
 
 (map! :leader
       (:when (featurep! :ui treemacs)
@@ -76,6 +79,13 @@
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
 ;; -----------------------------------------------------------------------------
+(hercules-def
+ :toggle-funs #'evil-multiedit-state
+ :keymap 'evil-multiedit-state-map)
+(hercules-def
+ :toggle-funs #'evil-multiedit-insert-state
+ :keymap 'evil-multiedit-insert-state-map)
+
 (when-let (dims (doom-cache-get 'last-frame-size))
   (cl-destructuring-bind ((left . top) width height fullscreen) dims
     (setq initial-frame-alist
