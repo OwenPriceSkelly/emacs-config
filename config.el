@@ -33,44 +33,35 @@
 ;; -----------------------------------------------------------------------------
 ;; - Keybinding
 ;; -----------------------------------------------------------------------------
-(general-auto-unbind-keys)
-(map! :leader
-      :desc "M-x"                "SPC"     #'execute-extended-command
-      :desc "Ivy M-x"            ":"       #'counsel-M-x
-      :desc "Search project"     "/"       #'+default/search-project)
+(defun personal/bind-keys ()
+  (general-auto-unbind-keys)
+  (map! :leader
+        :desc "M-x"                "SPC"     #'execute-extended-command
+        :desc "Ivy M-x"            ":"       #'counsel-M-x
+        :desc "Search project"     "/"       #'+default/search-project)
 
-(map! :leader
-      :desc "visual expand"      "v"       #'er/expand-region)
+  (map! :leader
+        :desc "visual expand"      "v"       #'er/expand-region)
 
-(map! :leader
-      (:when (featurep! :ui treemacs)
-        :desc "project sidebar" "0" #'treemacs-select-window))
+  (map! :leader
+        (:prefix "b"
+          :desc "Fallback Buffer" "h" #'+doom-dashboard/open))
 
-(map! :leader
-      (:when (featurep! :ui workspaces)
-        (:prefix "TAB"
-          :desc "Switch workspace" "TAB" #'+workspace/switch-to
-          "." nil)))
+  (map! :leader
+        (:when (featurep! :ui treemacs)
+          :desc "project sidebar" "0" #'treemacs-select-window))
 
-(map! :leader
-      (:when (featurep! :ui tabs)
-        :n "]" #'centaur-tabs-forward-tab
-        :n "[" #'centaur-tabs-backward-tab))
+  (map! :leader
+        (:when (featurep! :ui workspaces)
+          (:prefix "TAB"
+            :desc "Switch workspace" "TAB" #'+workspace/switch-to
+            "." nil)))
 
-(map!
- (:when (featurep! :editor multiple-cursors)
-   :v  "R"     #'evil-multiedit-match-all
-   :n  "M-d"   #'evil-multiedit-match-symbol-and-next
-   :n  "M-D"   #'evil-multiedit-match-symbol-and-prev
-   :v  "M-d"   #'evil-multiedit-match-and-next
-   :v  "M-D"   #'evil-multiedit-match-and-prev
-   :nv "C-M-d" #'evil-multiedit-restore
-   (:after evil-multiedit
-     (:map evil-multiedit-state-map
-       "M-d"    #'evil-multiedit-match-and-next
-       "M-D"    #'evil-multiedit-match-and-prev
-       "RET"    #'evil-multiedit-toggle-or-restrict-region
-       [return] #'evil-multiedit-toggle-or-restrict-region))))
+  (map! :leader
+        (:when (featurep! :ui tabs)
+          :n "]" #'centaur-tabs-forward-tab
+          :n "[" #'centaur-tabs-backward-tab)))
+
 
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
@@ -103,4 +94,4 @@
 (add-hook 'kill-emacs-hook #'save-frame-dimensions)
 
 ;; (set-variables)
-;; (set-keymaps)
+(personal/bind-keys)
