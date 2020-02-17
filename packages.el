@@ -5,7 +5,6 @@
 ;; (package! org-roam)
 (package! hercules)
 (package! evil-textobj-line)
-(package! iedit)
 (package! evil-lion)
 
 ;; ----------------------------------------------------------------

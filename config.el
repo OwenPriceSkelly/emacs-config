@@ -1,30 +1,32 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-(setq user-full-name "Owen Price-Skelly"
-      user-mail-address "Owen.Price.Skelly@gmail.com"
+(defun personal/variables ()
+  (setq user-full-name "Owen Price-Skelly"
+        user-mail-address "Owen.Price.Skelly@gmail.com"
 
-      doom-theme 'doom-horizon
-      doom-font (font-spec :family "monospace" :size 14)
+        doom-theme 'doom-horizon
+        doom-font (font-spec :family "monospace" :size 14)
 
-      org-directory "~/org/"
-      deft-directory org-directory
+        org-directory "~/.doom.d/org/"
+        deft-directory org-directory
 
-      which-key-side-window-location 'bottom
-      display-line-numbers-type 'relative
-      ranger-override-dired t
+        which-key-side-window-location 'bottom
+        display-line-numbers-type 'relative
+        ranger-override-dired t
 
 
-      doom-leader-key "SPC"
-      doom-localleader-key ",")
+        doom-leader-key "SPC"
+        doom-localleader-key ","))
 
 ;; - `load!' for loading external *.el files relative to this one
 ;; -----------------------------------------------------------------------------
 ;; - `use-package' `use-package!'for configuring packages
-(use-package! treemacs
-  :defer-incrementally t)
-(use-package! hercules
-  :demand t)
-(use-package! evil-textobj-line
-  :demand t)
+(defun personal/use-packages ()
+  (use-package! treemacs
+    :defer-incrementally t)
+  (use-package! hercules
+    :demand t)
+  (use-package! evil-textobj-line
+    :demand t))
 ;; -----------------------------------------------------------------------------
 ;; - `after!' for running code after a package has loaded
 ;; -----------------------------------------------------------------------------
@@ -41,7 +43,7 @@
         :desc "Search project"     "/"       #'+default/search-project)
 
   (map! :leader
-        :desc "visual expand"      "v"       #'er/expand-region)
+        :desc "Visual expand"      "v"       #'er/expand-region)
 
   (map! :leader
         (:prefix "b"
@@ -49,7 +51,7 @@
 
   (map! :leader
         (:when (featurep! :ui treemacs)
-          :desc "project sidebar" "0" #'treemacs-select-window))
+          :desc "Project sidebar" "0" #'treemacs-select-window))
 
   (map! :leader
         (:when (featurep! :ui workspaces)
@@ -57,22 +59,31 @@
             :desc "Switch workspace" "TAB" #'+workspace/switch-to
             "." nil)))
 
+  (map! :map ein:notebook-mode-map
+        :localleader
+        "," #'+ein/hydra/body)
+
   (map! :leader
         (:when (featurep! :ui tabs)
           :n "]" #'centaur-tabs-forward-tab
-          :n "[" #'centaur-tabs-backward-tab)))
+          :n "[" #'centaur-tabs-backward-tab))
 
+  ;; (hercules-def
+  ;;  :show-funs '(+workspace-switch +workspace/switch-right +workspace/switch-left)
+  ;;  :keymap 'doom-leader-workspace-map
+  ;;  :transient t)
 
+  ;;TODO: toggle-funs vs show-funs??
+  (hercules-def
+    :toggle-funs #'evil-multiedit-state
+    :keymap 'evil-multiedit-state-map)
+
+  (hercules-def
+    :toggle-funs #'evil-multiedit-insert-state
+    :keymap 'evil-multiedit-insert-state-map))
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
 ;; -----------------------------------------------------------------------------
-(hercules-def
- :toggle-funs #'evil-multiedit-state
- :keymap 'evil-multiedit-state-map)
-
-(hercules-def
- :toggle-funs #'evil-multiedit-insert-state
- :keymap 'evil-multiedit-insert-state-map)
 
 (when-let (dims (doom-cache-get 'last-frame-size))
   (cl-destructuring-bind ((left . top) width height fullscreen) dims
@@ -93,5 +104,6 @@
 
 (add-hook 'kill-emacs-hook #'save-frame-dimensions)
 
-;; (set-variables)
+(personal/variables)
+(personal/use-packages)
 (personal/bind-keys)
