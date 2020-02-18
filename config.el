@@ -37,61 +37,53 @@
 ;; -----------------------------------------------------------------------------
 (defun personal/bind-keys ()
   (general-auto-unbind-keys)
+  ;; Leader-key bindings
   (map! :leader
         :desc "Ivy M-x"                "SPC"     #'counsel-M-x
-        :desc "M-x"            ":"       #'execute-extended-command
-        :desc "Search project"     "/"       #'+default/search-project)
+        :desc "M-x"                    ":"       #'execute-extended-command
+        :desc "Search project"         "/"       #'+default/search-project
+        :desc "Visual expand"          "v"       #'er/expand-region
 
+        (:when (featurep! :ui treemacs)
+            :desc "Project sidebar"      "0"       #'treemacs-select-window)
+        (:when (featurep! :ui workspaces)
+          (:prefix "TAB"
+            :desc "Switch workspace"   "TAB"     #'+workspace/switch-to))
+
+        (:when (featurep! :ui tabs)
+          :desc "Forward tab"   "]" #'centaur-tabs-forward-tab
+          :desc "Backward tab"  "[" #'centaur-t)
+        (:prefix "b"
+          :desc "Fallback buffer"      "h"       #'+doom-dashboard/open)abs-backward-tab)
+  ;; Search/replace bindings
   (map! (:when (featurep! :completion ivy)
           :map ivy-minibuffer-map
           (:prefix "C-c"
-            :desc "Search/Replace buffer" "e" #'+ivy/woccur)))
+            :desc "wgrep"              "e"       #'+ivy/woccur)))
 
-  (map! :leader
-        :desc "Visual expand"      "v"       #'er/expand-region)
+  (hercules-def
+    :toggle-funs #'evil-multiedit-state
+    :keymap 'evil-multiedit-state-map)
 
-  (map! :leader
-        (:prefix "b"
-          :desc "Fallback buffer" "h" #'+doom-dashboard/open))
+  (hercules-def
+   :toggle-funs #'evil-multiedit-insert-state
+   :keymap 'evil-multiedit-insert-state-map)
 
-  (map! :leader
-        (:when (featurep! :ui treemacs)
-          :desc "Project sidebar" "0" #'treemacs-select-window))
-
-  (map! :leader
-        (:when (featurep! :ui workspaces)
-          (:prefix "TAB"
-            :desc "Switch workspace" "TAB" #'+workspace/switch-to
-            "." nil)))
-
+  ;; major mode bindings
   (map! :after python
         :map python-mode-map
         :localleader
         (:prefix ("r" . "repl")
-          :desc "python" "p" #'+python/open-repl
-          :desc "python" "i" #'+python/open-ipython-repl
-          :desc "python" "j" #'+python/open-jupyter-repl)
+          :desc "python"  "p" #'+python/open-repl
+          :desc "ipython" "i" #'+python/open-ipython-repl
+          :desc "jupyter" "j" #'+python/open-jupyter-repl)
         (:prefix ("=" . "format")
           :desc "buffer" "=" #'+format/buffer))
 
   (map! :after ein
         :map ein:notebook-mode-map
         :localleader
-        "," #'+ein/hydra/body)
-
-  (map! :leader
-        (:when (featurep! :ui tabs)
-          :n "]" #'centaur-tabs-forward-tab
-          :n "[" #'centaur-tabs-backward-tab))
-
-  ;;TODO: toggle-funs vs show-funs??
-  (hercules-def
-   :toggle-funs #'evil-multiedit-state
-   :keymap 'evil-multiedit-state-map)
-
-  (hercules-def
-   :toggle-funs #'evil-multiedit-insert-state
-   :keymap 'evil-multiedit-insert-state-map))
+        "," #'+ein/hydra/body))
 
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
