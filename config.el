@@ -59,7 +59,18 @@
             :desc "Switch workspace" "TAB" #'+workspace/switch-to
             "." nil)))
 
-  (map! :map ein:notebook-mode-map
+  (map! :after python
+        :map python-mode-map
+        :localleader
+          (:prefix ("r" . "repl")
+            :desc "python" "p" #'+python/open-repl
+            :desc "python" "i" #'+python/open-ipython-repl
+            :desc "python" "j" #'+python/open-jupyter-repl)
+          (:prefix ("=" . "format")
+            :desc "buffer" "=" #'+format/buffer))
+
+  (map! :after ein
+        :map ein:notebook-mode-map
         :localleader
         "," #'+ein/hydra/body)
 
@@ -67,11 +78,6 @@
         (:when (featurep! :ui tabs)
           :n "]" #'centaur-tabs-forward-tab
           :n "[" #'centaur-tabs-backward-tab))
-
-  ;; (hercules-def
-  ;;  :show-funs '(+workspace-switch +workspace/switch-right +workspace/switch-left)
-  ;;  :keymap 'doom-leader-workspace-map
-  ;;  :transient t)
 
   ;;TODO: toggle-funs vs show-funs??
   (hercules-def
@@ -81,6 +87,7 @@
   (hercules-def
     :toggle-funs #'evil-multiedit-insert-state
     :keymap 'evil-multiedit-insert-state-map))
+
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
 ;; -----------------------------------------------------------------------------
