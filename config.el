@@ -38,16 +38,21 @@
 (defun personal/bind-keys ()
   (general-auto-unbind-keys)
   (map! :leader
-        :desc "M-x"                "SPC"     #'execute-extended-command
-        :desc "Ivy M-x"            ":"       #'counsel-M-x
+        :desc "Ivy M-x"                "SPC"     #'counsel-M-x
+        :desc "M-x"            ":"       #'execute-extended-command
         :desc "Search project"     "/"       #'+default/search-project)
+
+  (map! (:when (featurep! :completion ivy)
+          :map ivy-minibuffer-map
+          (:prefix "C-c"
+            :desc "Search/Replace buffer" "e" #'+ivy/woccur)))
 
   (map! :leader
         :desc "Visual expand"      "v"       #'er/expand-region)
 
   (map! :leader
         (:prefix "b"
-          :desc "Fallback Buffer" "h" #'+doom-dashboard/open))
+          :desc "Fallback buffer" "h" #'+doom-dashboard/open))
 
   (map! :leader
         (:when (featurep! :ui treemacs)
@@ -62,12 +67,12 @@
   (map! :after python
         :map python-mode-map
         :localleader
-          (:prefix ("r" . "repl")
-            :desc "python" "p" #'+python/open-repl
-            :desc "python" "i" #'+python/open-ipython-repl
-            :desc "python" "j" #'+python/open-jupyter-repl)
-          (:prefix ("=" . "format")
-            :desc "buffer" "=" #'+format/buffer))
+        (:prefix ("r" . "repl")
+          :desc "python" "p" #'+python/open-repl
+          :desc "python" "i" #'+python/open-ipython-repl
+          :desc "python" "j" #'+python/open-jupyter-repl)
+        (:prefix ("=" . "format")
+          :desc "buffer" "=" #'+format/buffer))
 
   (map! :after ein
         :map ein:notebook-mode-map
@@ -81,12 +86,12 @@
 
   ;;TODO: toggle-funs vs show-funs??
   (hercules-def
-    :toggle-funs #'evil-multiedit-state
-    :keymap 'evil-multiedit-state-map)
+   :toggle-funs #'evil-multiedit-state
+   :keymap 'evil-multiedit-state-map)
 
   (hercules-def
-    :toggle-funs #'evil-multiedit-insert-state
-    :keymap 'evil-multiedit-insert-state-map))
+   :toggle-funs #'evil-multiedit-insert-state
+   :keymap 'evil-multiedit-insert-state-map))
 
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
