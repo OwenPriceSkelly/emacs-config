@@ -3,7 +3,7 @@
   (setq user-full-name "Owen Price-Skelly"
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
-        doom-theme 'doom-horizon
+        doom-theme 'doom-gruvbox
         doom-font (font-spec :family "monospace" :size 14)
 
         org-directory "~/.doom.d/org/"
@@ -13,13 +13,14 @@
         display-line-numbers-type 'relative
         ranger-override-dired t
 
+        ;; (add-hook! 'prog-mode-hook
+        ;;   (setq-local +word-wrap-extra-indent 'double)
+        ;;   (+word-wrap-mode +1))
 
         doom-leader-key "SPC"
         doom-localleader-key ","))
 
-;; - `load!' for loading external *.el files relative to this one
-;; -----------------------------------------------------------------------------
-;; - `use-package' `use-package!'for configuring packages
+
 (defun personal/use-packages ()
   (use-package! treemacs
     :defer-incrementally t)
@@ -27,11 +28,6 @@
     :demand t)
   (use-package! evil-textobj-line
     :demand t))
-;; -----------------------------------------------------------------------------
-;; - `after!' for running code after a package has loaded
-;; -----------------------------------------------------------------------------
-;; - `add-load-path!' for adding directories to the `load-path', where Emacs
-;;   looks when you load packages with `require' or `use-package'.
 ;; -----------------------------------------------------------------------------
 ;; - Keybinding
 ;; -----------------------------------------------------------------------------
@@ -45,7 +41,7 @@
         :desc "Visual expand"          "v"       #'er/expand-region
 
         (:when (featurep! :ui treemacs)
-            :desc "Project sidebar"      "0"       #'treemacs-select-window)
+          :desc "Project sidebar"      "0"       #'treemacs-select-window)
         (:when (featurep! :ui workspaces)
           (:prefix "TAB"
             :desc "Switch workspace"   "TAB"     #'+workspace/switch-to))
@@ -54,7 +50,7 @@
           :desc "Forward tab"   "]" #'centaur-tabs-forward-tab
           :desc "Backward tab"  "[" #'centaur-t)
         (:prefix "b"
-          :desc "Fallback buffer"      "h"       #'+doom-dashboard/open)abs-backward-tab)
+          :desc "Fallback buffer"      "h"       #'+doom-dashboard/open))
   ;; Search/replace bindings
   (map! (:when (featurep! :completion ivy)
           :map ivy-minibuffer-map
@@ -62,12 +58,14 @@
             :desc "wgrep"              "e"       #'+ivy/woccur)))
 
   (hercules-def
-    :toggle-funs #'evil-multiedit-state
-    :keymap 'evil-multiedit-state-map)
+   :show-funs #'evil-multiedit-state
+   :keymap 'evil-multiedit-state-map)
+   ;; :transient t
 
   (hercules-def
-   :toggle-funs #'evil-multiedit-insert-state
+   :show-funs #'evil-multiedit-insert-state
    :keymap 'evil-multiedit-insert-state-map)
+   ;; :transient t)
 
   ;; major mode bindings
   (map! :after python
@@ -88,7 +86,7 @@
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
 ;; -----------------------------------------------------------------------------
-
+;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))
   (cl-destructuring-bind ((left . top) width height fullscreen) dims
     (setq initial-frame-alist
@@ -111,3 +109,12 @@
 (personal/variables)
 (personal/use-packages)
 (personal/bind-keys)
+
+;; - `load!' for loading external *.el files relative to this one
+;; -----------------------------------------------------------------------------
+;; - `use-package' `use-package!'for configuring packages
+;; -----------------------------------------------------------------------------
+;; - `after!' for running code after a package has loaded
+;; -----------------------------------------------------------------------------
+;; - `add-load-path!' for adding directories to the `load-path', where Emacs
+;;   looks when you load packages with `require' or `use-package'.
