@@ -54,7 +54,8 @@
           :desc "Forward tab"   "]" #'centaur-tabs-forward-tab
           :desc "Backward tab"  "[" #'centaur-t)
         (:prefix "b"
-          :desc "Fallback buffer"      "h"       #'+doom-dashboard/open))
+          :desc "Fallback buffer"      "h"       #'+doom-dashboard/open
+          :desc "Messages buffer"      "m"       #'view-echo-area-messages))
   ;; Search/replace bindings
   (map! (:when (featurep! :completion ivy)
           :map ivy-minibuffer-map
