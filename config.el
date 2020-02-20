@@ -24,8 +24,12 @@
 (defun personal/use-packages ()
   (use-package! treemacs
     :defer-incrementally t)
+  (use-package! evil-iedit-state
+    :demand t)
   (use-package! hercules
     :demand t)
+  (use-package expand-region
+    :config (setq expand-region-contract-fast-key "V"))
   (use-package! evil-textobj-line
     :demand t))
 ;; -----------------------------------------------------------------------------
@@ -57,15 +61,25 @@
           (:prefix "C-c"
             :desc "wgrep"              "e"       #'+ivy/woccur)))
 
-  (hercules-def
-   :show-funs #'evil-multiedit-state
-   :keymap 'evil-multiedit-state-map)
-   ;; :transient t
+  (map! :v "R" #'evil-iedit-state/iedit-mode-from-expand-region
+        :n "R" #'evil-iedit-state/iedit-mode)
 
   (hercules-def
-   :show-funs #'evil-multiedit-insert-state
-   :keymap 'evil-multiedit-insert-state-map)
-   ;; :transient t)
+   :show-funs '(evil-iedit-state/iedit-mode evil-iedit-state/iedit-mode-from-expand-region)
+   :hide-funs #'evil-iedit-state/quit-iedit-mode
+   :keymap 'evil-iedit-state-map)
+
+
+
+  ;; (hercules-def
+  ;;  :show-funs #'evil-multiedit-state
+  ;;  :keymap 'evil-multiedit-state-map
+  ;;  :transient t)
+
+  ;; (hercules-def
+  ;;  :show-funs #'evil-multiedit-insert-state
+  ;;  :keymap 'evil-multiedit-insert-state-map
+  ;;  :transient t)
 
   ;; major mode bindings
   (map! :after python
