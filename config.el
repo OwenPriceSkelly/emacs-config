@@ -4,7 +4,8 @@
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
         doom-theme 'doom-gruvbox
-        doom-font (font-spec :family "monospace" :size 14)
+        ;; doom-font (font-spec :family "monospace" :size 14)
+        doom-font (font-spec :family "Iosevka SS09" :size 14)
 
         org-directory "~/.doom.d/org/"
         deft-directory org-directory
@@ -13,6 +14,7 @@
         display-line-numbers-type 'relative
         ranger-override-dired t
 
+        iedit-occurrence-context-lines 1
         ;; (add-hook! 'prog-mode-hook
         ;;   (setq-local +word-wrap-extra-indent 'double)
         ;;   (+word-wrap-mode +1))
@@ -24,8 +26,6 @@
 (defun personal/use-packages ()
   (use-package! treemacs
     :defer-incrementally t)
-  (use-package! evil-iedit-state
-    :demand t)
   (use-package! hercules
     :demand t)
   (use-package expand-region
@@ -36,7 +36,7 @@
 ;; - Keybinding
 ;; -----------------------------------------------------------------------------
 (defun personal/bind-keys ()
-  (general-auto-unbind-keys)
+  ;; (general-auto-unbind-keys)
   ;; Leader-key bindings
   (map! :leader
         :desc "Ivy M-x"                "SPC"     #'counsel-M-x
@@ -50,41 +50,43 @@
           (:prefix "TAB"
             :desc "Switch workspace"   "TAB"     #'+workspace/switch-to))
 
+
         (:when (featurep! :ui tabs)
           :desc "Forward tab"   "]" #'centaur-tabs-forward-tab
           :desc "Backward tab"  "[" #'centaur-t)
+
         (:prefix "b"
-          :desc "Fallback buffer"      "h"       #'+doom-dashboard/open
-          :desc "Messages buffer"      "m"       #'view-echo-area-messages))
+          :desc "Fallback buffer"        "h"     #'+doom-dashboard/open
+          :desc "Messages buffer"        "m"     #'view-echo-area-messages
+          :desc "ibuffer (other window)" "I"     #'ibuffer-other-window))
+
   ;; Search/replace bindings
   (map! (:when (featurep! :completion ivy)
           :map ivy-minibuffer-map
           (:prefix "C-c"
             :desc "wgrep"              "e"       #'+ivy/woccur)))
 
-  (map! :v "R" #'evil-iedit-state/iedit-mode-from-expand-region
-        :n "R" #'evil-iedit-state/iedit-mode)
+  (map! :map evil-multiedit-state-map
+        "n"   #'evil-multiedit-next
+        "N"   #'evil-multiedit-prev
+        "V"   #'iedit-show/hide-unmatched-lines)
 
   (hercules-def
-   :show-funs '(evil-iedit-state/iedit-mode evil-iedit-state/iedit-mode-from-expand-region)
-   :hide-funs #'evil-iedit-state/quit-iedit-mode
-   :keymap 'evil-iedit-state-map)
+   :show-funs #'(evil-multiedit-state
+                 evil-multiedit-restore
+                 evil-multiedit-match-all
+                 evil-multiedit-match-and-next
+                 evil-multiedit-next
+                 evil-multiedit-prev
+                 evil-multiedit-toggle-or-restrict-region
+                 evil-multiedit-toggle-marker-here)
+   :hide-funs #'evil-multiedit-abort
+   :keymap 'evil-multiedit-state-map
+   :transient t))
 
-
-
-  ;; (hercules-def
-  ;;  :show-funs #'evil-multiedit-state
-  ;;  :keymap 'evil-multiedit-state-map
-  ;;  :transient t)
-
-  ;; (hercules-def
-  ;;  :show-funs #'evil-multiedit-insert-state
-  ;;  :keymap 'evil-multiedit-insert-state-map
-  ;;  :transient t)
-
-  ;; major mode bindings
-  (map! :after python
-        :map python-mode-map
+;; major mode bindings
+(defun personal/python-config ()
+  (map! :map python-mode-map
         :localleader
         (:prefix ("r" . "repl")
           :desc "python"  "p" #'+python/open-repl
@@ -92,7 +94,6 @@
           :desc "jupyter" "j" #'+python/open-jupyter-repl)
         (:prefix ("=" . "format")
           :desc "buffer" "=" #'+format/buffer))
-
   (map! :after ein
         :map ein:notebook-mode-map
         :localleader
@@ -124,7 +125,7 @@
 (personal/variables)
 (personal/use-packages)
 (personal/bind-keys)
-
+(after! python (personal/python-config))
 ;; - `load!' for loading external *.el files relative to this one
 ;; -----------------------------------------------------------------------------
 ;; - `use-package' `use-package!'for configuring packages
