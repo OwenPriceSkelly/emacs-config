@@ -4,8 +4,8 @@
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
         doom-theme 'doom-gruvbox
-        ;; doom-font (font-spec :family "monospace" :size 14)
-        doom-font (font-spec :family "Iosevka SS09" :size 14)
+        doom-font (font-spec :family "monospace" :size 14)
+        ;; doom-font (font-spec :family "Iosevka SS09" :size 14)
 
         org-directory "~/.doom.d/org/"
         deft-directory org-directory
@@ -25,18 +25,21 @@
 
 (defun personal/use-packages ()
   (use-package! treemacs
-    :defer-incrementally t)
+    :defer-incrementally t
+    :config
+    (treemacs-follow-mode 1))
   (use-package! hercules
     :demand t)
   (use-package expand-region
-    :config (setq expand-region-contract-fast-key "V"))
+    :config
+    (setq expand-region-contract-fast-key "V"))
   (use-package! evil-textobj-line
     :demand t))
 ;; -----------------------------------------------------------------------------
 ;; - Keybinding
 ;; -----------------------------------------------------------------------------
 (defun personal/bind-keys ()
-  ;; (general-auto-unbind-keys)
+  (general-auto-unbind-keys)
   ;; Leader-key bindings
   (map! :leader
         :desc "Ivy M-x"                "SPC"     #'counsel-M-x
@@ -61,28 +64,37 @@
           :desc "ibuffer (other window)" "I"     #'ibuffer-other-window))
 
   ;; Search/replace bindings
-  (map! (:when (featurep! :completion ivy)
-          :map ivy-minibuffer-map
-          (:prefix "C-c"
-            :desc "wgrep"              "e"       #'+ivy/woccur)))
+  (map! :map ivy-minibuffer-map
+        (:prefix "C-c"
+          :desc "wgrep"              "e"       #'+ivy/woccur)))
 
-  (map! :map evil-multiedit-state-map
-        "n"   #'evil-multiedit-next
-        "N"   #'evil-multiedit-prev
-        "V"   #'iedit-show/hide-unmatched-lines)
+(map! (:when (featurep! :editor multiple-cursors)
+        ;; evil-multiedit
+        :nv "R" #'evil-multiedit-match-all
+        :n "C-n" #'evil-multiedit-match-symbol-and-next
+        :n "C-N" #'evil-multiedit-match-symbol-and-prev
+        :v "C-n" #'evil-multiedit-match-and-next
+        :v "C-N" #'evil-multiedit-match-and-prev
+        :nv "C-M-n" #'evil-multiedit-restore
+        (:after evil-multiedit
+          (:map evil-multiedit-state-map
+            "n" #'evil-multiedit-next
+            "N" #'evil-multiedit-prev
+            "V" #'iedit-show/hide-unmatched-lines))))
 
-  (hercules-def
-   :show-funs #'(evil-multiedit-state
-                 evil-multiedit-restore
-                 evil-multiedit-match-all
-                 evil-multiedit-match-and-next
-                 evil-multiedit-next
-                 evil-multiedit-prev
-                 evil-multiedit-toggle-or-restrict-region
-                 evil-multiedit-toggle-marker-here)
-   :hide-funs #'evil-multiedit-abort
-   :keymap 'evil-multiedit-state-map
-   :transient t))
+
+(hercules-def
+ :show-funs #'(evil-multiedit-state
+               evil-multiedit-restore
+               evil-multiedit-match-all
+               evil-multiedit-match-and-next
+               evil-multiedit-next
+               evil-multiedit-prev
+               evil-multiedit-toggle-or-restrict-region
+               evil-multiedit-toggle-marker-here)
+ :hide-funs #'evil-multiedit-abort
+ :keymap 'evil-multiedit-state-map
+ :transient t)
 
 ;; major mode bindings
 (defun personal/python-config ()
