@@ -66,35 +66,35 @@
   ;; Search/replace bindings
   (map! :map ivy-minibuffer-map
         (:prefix "C-c"
-          :desc "wgrep"              "e"       #'+ivy/woccur)))
-
-(map! (:when (featurep! :editor multiple-cursors)
-        ;; evil-multiedit
-        :nv "R" #'evil-multiedit-match-all
+          :desc "wgrep"              "e"       #'+ivy/woccur))
+  ;; evil-multiedit
+  (map! :nv "R" #'evil-multiedit-match-all
         :n "C-n" #'evil-multiedit-match-symbol-and-next
         :n "C-N" #'evil-multiedit-match-symbol-and-prev
         :v "C-n" #'evil-multiedit-match-and-next
         :v "C-N" #'evil-multiedit-match-and-prev
         :nv "C-M-n" #'evil-multiedit-restore
-        (:after evil-multiedit
-          (:map evil-multiedit-state-map
-            "n" #'evil-multiedit-next
-            "N" #'evil-multiedit-prev
-            "V" #'iedit-show/hide-unmatched-lines))))
+   (:after evil-multiedit
+     (:map evil-multiedit-state-map
+       "n"   #'evil-multiedit-next
+       "N"   #'evil-multiedit-prev
+       "C-n" #'evil-multiedit-match-and-next
+       "C-N" #'evil-multiedit-match-and-prev
+       "V"   #'iedit-show/hide-unmatched-lines))))
 
 
-(hercules-def
- :show-funs #'(evil-multiedit-state
-               evil-multiedit-restore
-               evil-multiedit-match-all
-               evil-multiedit-match-and-next
-               evil-multiedit-next
-               evil-multiedit-prev
-               evil-multiedit-toggle-or-restrict-region
-               evil-multiedit-toggle-marker-here)
- :hide-funs #'evil-multiedit-abort
- :keymap 'evil-multiedit-state-map
- :transient t)
+;; (hercules-def
+;;  :show-funs #'(evil-multiedit-state
+;;                evil-multiedit-restore
+;;                evil-multiedit-match-all
+;;                evil-multiedit-match-and-next
+;;                evil-multiedit-next
+;;                evil-multiedit-prev
+;;                evil-multiedit-toggle-or-restrict-region
+;;                evil-multiedit-toggle-marker-here)
+;;  :hide-funs #'evil-multiedit-abort
+;;  :keymap 'evil-multiedit-state-map
+;;  :transient t)
 
 ;; major mode bindings
 (defun personal/python-config ()
@@ -138,6 +138,7 @@
 (personal/use-packages)
 (personal/bind-keys)
 (after! python (personal/python-config))
+
 ;; - `load!' for loading external *.el files relative to this one
 ;; -----------------------------------------------------------------------------
 ;; - `use-package' `use-package!'for configuring packages
