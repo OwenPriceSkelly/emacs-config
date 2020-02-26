@@ -2,11 +2,9 @@
 ;;; $DOOMDIR/packages.el
 
 ;; ----------------------------------------------------------------
-;; (package! org-roam)
+(package! org-roam :recipe (:host github :repo "jethrokuan/org-roam"))
 (package! hercules)
 (package! evil-textobj-line)
-(package! evil-lion)
-(package! evil-iedit-state)
 
 ;; ----------------------------------------------------------------
 ;; This is where you install packages, by declaring them with the `package!'

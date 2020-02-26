@@ -5,7 +5,7 @@
 
         doom-theme 'doom-gruvbox
         doom-font (font-spec :family "monospace" :size 14)
-        ;; doom-font (font-spec :family "Iosevka SS09" :size 14)
+        ;; doom-font (font-spec :family "Fira Mono" :size 14)
 
         org-directory "~/.doom.d/org/"
         deft-directory org-directory
@@ -15,9 +15,7 @@
         ranger-override-dired t
 
         iedit-occurrence-context-lines 1
-        ;; (add-hook! 'prog-mode-hook
-        ;;   (setq-local +word-wrap-extra-indent 'double)
-        ;;   (+word-wrap-mode +1))
+        fill-column 88
 
         doom-leader-key "SPC"
         doom-localleader-key ","))
@@ -26,13 +24,38 @@
 (defun personal/use-packages ()
   (use-package! treemacs
     :defer-incrementally t
-    :config
-    (treemacs-follow-mode 1))
-  (use-package! hercules
-    :demand t)
+    :config (treemacs-follow-mode 1))
+
+  ;; (use-package! org-roam
+  ;;   :init
+  ;;   (setq! org-roam-directory "~/.doom.d/org/roam/"))
+  ;; (use-package! org-roam
+  ;;       :hook
+  ;;       (after-init . org-roam-mode)
+  ;;       :custom
+  ;;       (org-roam-directory "~/.doom.d/org/roam/")
+  ;;       :commands
+  ;;       :init (map! :leader
+  ;;                   (:prefix "n"
+  ;;                     (:prefix ("r" . "org-roam")
+  ;;                       (:map org-roam-mode-map
+  ;;                         :desc "org-roam popup" "l" #'org-roam
+  ;;                         :desc "find file" "f"      #'org-roam-find-file
+  ;;                         :desc "show graph" "g"     #'org-roam-show-graph)
+  ;;                       (:map org-mode-map
+  ;;                         :desc "org-roam insert"    #'org-roam-insert)))))
+        ;; :bind (:map org-roam-mode-map
+        ;;         (("C-c n l" . org-roam))
+        ;;         ("C-c n f" . org-roam-find-file)
+        ;;         ("C-c n g" . org-roam-show-graph)
+        ;;         :map org-mode-map
+        ;;         (("C-c n i" . org-roam-insert))))
+
+
   (use-package expand-region
     :config
     (setq expand-region-contract-fast-key "V"))
+
   (use-package! evil-textobj-line
     :demand t))
 ;; -----------------------------------------------------------------------------
@@ -54,14 +77,16 @@
             :desc "Switch workspace"   "TAB"     #'+workspace/switch-to))
 
 
-        (:when (featurep! :ui tabs)
-          :desc "Forward tab"   "]" #'centaur-tabs-forward-tab
-          :desc "Backward tab"  "[" #'centaur-t)
-
         (:prefix "b"
           :desc "Fallback buffer"        "h"     #'+doom-dashboard/open
           :desc "Messages buffer"        "m"     #'view-echo-area-messages
           :desc "ibuffer (other window)" "I"     #'ibuffer-other-window))
+
+  (map! (:when (featurep! :ui tabs)
+          :n "L" #'centaur-tabs-forward-tab
+          :n "C-S-l" #'centaur-tabs-forward-tab-other-window
+          :n "H" #'centaur-tabs-backward-tab
+          :n "C-S-h" #'centaur-tabs-backward-tab-other-window))
 
   ;; Search/replace bindings
   (map! :map ivy-minibuffer-map
@@ -70,40 +95,29 @@
   ;; evil-multiedit
   (map! :nv "R" #'evil-multiedit-match-all
         :n "C-n" #'evil-multiedit-match-symbol-and-next
-        :n "C-N" #'evil-multiedit-match-symbol-and-prev
+        :n "C-S-n" #'evil-multiedit-match-symbol-and-prev
         :v "C-n" #'evil-multiedit-match-and-next
-        :v "C-N" #'evil-multiedit-match-and-prev
+        :v "C-S-n" #'evil-multiedit-match-and-prev
         :nv "C-M-n" #'evil-multiedit-restore
    (:after evil-multiedit
      (:map evil-multiedit-state-map
        "n"   #'evil-multiedit-next
        "N"   #'evil-multiedit-prev
        "C-n" #'evil-multiedit-match-and-next
-       "C-N" #'evil-multiedit-match-and-prev
+       "C-S-n" #'evil-multiedit-match-and-prev
        "V"   #'iedit-show/hide-unmatched-lines))))
-
-
-;; (hercules-def
-;;  :show-funs #'(evil-multiedit-state
-;;                evil-multiedit-restore
-;;                evil-multiedit-match-all
-;;                evil-multiedit-match-and-next
-;;                evil-multiedit-next
-;;                evil-multiedit-prev
-;;                evil-multiedit-toggle-or-restrict-region
-;;                evil-multiedit-toggle-marker-here)
-;;  :hide-funs #'evil-multiedit-abort
-;;  :keymap 'evil-multiedit-state-map
-;;  :transient t)
 
 ;; major mode bindings
 (defun personal/python-config ()
   (map! :map python-mode-map
         :localleader
+        (:prefix ("e" . "[pip]env"))
         (:prefix ("r" . "repl")
-          :desc "python"  "p" #'+python/open-repl
-          :desc "ipython" "i" #'+python/open-ipython-repl
-          :desc "jupyter" "j" #'+python/open-jupyter-repl)
+          :desc "default" "r"      #'+eval/open-repl-other-window
+          :desc "python"  "p"      #'+python/open-repl
+          :desc "ipython" "i"      #'+python/open-ipython-repl
+          :desc "jupyter" "j"      #'+python/open-jupyter-repl
+          :desc "send to repl" "s" #'+eval/send-region-to-repl)
         (:prefix ("=" . "format")
           :desc "buffer" "=" #'+format/buffer))
   (map! :after ein

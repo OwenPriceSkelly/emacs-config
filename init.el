@@ -24,8 +24,8 @@
        ;;ido               ; the other *other* search engine...
        (ivy
         +fuzzy
-        +prescient)
-        ;; +childframe               ; a search engine for love and life
+        +prescient
+        +childframe)               ; a search engine for love and life
 
        :ui
        deft              ; notational velocity for Emacs
@@ -46,7 +46,7 @@
        ;; pretty-code       ; replace bits of code with pretty symbols
        ;; tabs              ; an tab bar for Emacs
        treemacs          ; a project drawer, like neotree but cooler
-       ;;unicode           ; extended unicode support for various languages
+       ;; unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
        window-select     ; visually switch windows
@@ -93,7 +93,7 @@
        :tools
        ;;ansible
        ;;debugger          ; FIXME stepping through code, to help you add bugs
-       ;;direnv
+       ;; direnv
        docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ein               ; tame Jupyter notebooks with emacs
@@ -162,7 +162,7 @@
        (python
         +ipython
         +pyenv
-        +lsp)            ; beautiful is better than ugly ;
+        +lsp)          ; beautiful is better than ugly ;
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        rest              ; Emacs as a REST client
