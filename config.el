@@ -9,6 +9,8 @@
 
         org-directory "~/.doom.d/org/"
         deft-directory org-directory
+        deft-recursive t
+        deft-use-filter-string-for-filename t
 
         which-key-side-window-location 'bottom
         display-line-numbers-type 'relative
@@ -16,6 +18,7 @@
 
         iedit-occurrence-context-lines 1
         fill-column 88
+        which-key-max-description-length nil
 
         doom-leader-key "SPC"
         doom-localleader-key ","))
@@ -23,36 +26,30 @@
 
 (defun personal/use-packages ()
   (use-package! treemacs
-    :defer-incrementally t
-    :config (treemacs-follow-mode 1))
+    :defer-incrementally t)
+  (use-package! org-roam
+    :commands
+    (org-roam-build-cache org-roam-find-file org-roam-mode org-roam-yesterday
+      org-roam-date org-roam-db org-roam-find-ref org-roam-switch-to-buffer
+      org-roam-today org-roam-update org-roam-show-graph org-roam-tomorrow
+      org-roam-backlinks-mode org-roam-sql org-roam-open-at-point
+      org-roam-insert org-roam-find-file org-roam)
+    :init
+    (setq org-roam-directory org-directory
+          org-roam-new-file-directory "~/.doom.d/org/roam/")
+    (map! :leader
+          :prefix "n"
+          (:prefix ("r" . "roam")
+            :desc "roam buffer" "r" #'org-roam
+            :desc "roam find"   "f" #'org-roam-find-file
+            :desc "roam insert" "i" #'org-roam-insert
+            :desc "roam today"  "t" #'org-roam-today
+            :desc "roam tomorrow"  "T" #'org-roam-tomorrow
+            :desc "roam graph"  "g" #'org-roam-show-graph))
+    :config
+    (org-roam-mode +1))
 
-  ;; (use-package! org-roam
-  ;;   :init
-  ;;   (setq! org-roam-directory "~/.doom.d/org/roam/"))
-  ;; (use-package! org-roam
-  ;;       :hook
-  ;;       (after-init . org-roam-mode)
-  ;;       :custom
-  ;;       (org-roam-directory "~/.doom.d/org/roam/")
-  ;;       :commands
-  ;;       :init (map! :leader
-  ;;                   (:prefix "n"
-  ;;                     (:prefix ("r" . "org-roam")
-  ;;                       (:map org-roam-mode-map
-  ;;                         :desc "org-roam popup" "l" #'org-roam
-  ;;                         :desc "find file" "f"      #'org-roam-find-file
-  ;;                         :desc "show graph" "g"     #'org-roam-show-graph)
-  ;;                       (:map org-mode-map
-  ;;                         :desc "org-roam insert"    #'org-roam-insert)))))
-        ;; :bind (:map org-roam-mode-map
-        ;;         (("C-c n l" . org-roam))
-        ;;         ("C-c n f" . org-roam-find-file)
-        ;;         ("C-c n g" . org-roam-show-graph)
-        ;;         :map org-mode-map
-        ;;         (("C-c n i" . org-roam-insert))))
-
-
-  (use-package expand-region
+  (use-package! expand-region
     :config
     (setq expand-region-contract-fast-key "V"))
 
@@ -92,6 +89,7 @@
   (map! :map ivy-minibuffer-map
         (:prefix "C-c"
           :desc "wgrep"              "e"       #'+ivy/woccur))
+
   ;; evil-multiedit
   (map! :nv "R" #'evil-multiedit-match-all
         :n "C-n" #'evil-multiedit-match-symbol-and-next
@@ -114,12 +112,13 @@
         (:prefix ("e" . "[pip]env"))
         (:prefix ("r" . "repl")
           :desc "default" "r"      #'+eval/open-repl-other-window
-          :desc "python"  "p"      #'+python/open-repl
+          ;; :desc "python"  "p"      #'+python/open-repl
           :desc "ipython" "i"      #'+python/open-ipython-repl
           :desc "jupyter" "j"      #'+python/open-jupyter-repl
           :desc "send to repl" "s" #'+eval/send-region-to-repl)
         (:prefix ("=" . "format")
           :desc "buffer" "=" #'+format/buffer))
+
   (map! :after ein
         :map ein:notebook-mode-map
         :localleader
@@ -151,7 +150,8 @@
 (personal/variables)
 (personal/use-packages)
 (personal/bind-keys)
-(after! python (personal/python-config))
+(after! python
+  (personal/python-config))
 
 ;; - `load!' for loading external *.el files relative to this one
 ;; -----------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 ;;; $DOOMDIR/packages.el
 
 ;; ----------------------------------------------------------------
-(package! org-roam :recipe (:host github :repo "jethrokuan/org-roam"))
+(package! org-roam :recipe (:host github :repo "jethrokuan/org-roam" :branch "develop"))
 (package! hercules)
 (package! evil-textobj-line)
 
