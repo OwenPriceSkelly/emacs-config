@@ -1,2 +1,2 @@
 #+TITLE: oddsAPI
-Roam backlinks here for oddsAPI component
+Roam links here for oddsAPI component

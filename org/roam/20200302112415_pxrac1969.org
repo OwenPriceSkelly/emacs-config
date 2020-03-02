@@ -1,10 +1,10 @@
 #+TITLE: pxrac-1969
-* Bugfix: [[file:20200302112454_oddsapi.org][oddsAPI]]
-* Part of [[file:../20200302133708_sprint44.org][sprint-44]]
+* Bugfix: [[file:20200302112454_oddsapi.org][oddsAPI]] (DONE)
+* Part of [[file:20200302161138_sprint_44.org][sprint-44]]
 ** JIRA link: https://jira.phoenix.local/browse/PXRAC-1969
 * Description:
 Per Harold: too many odds payoads returned for simple GET request
 ** Sample failing url
 [[https://live-scoring-sit.feeds-trading-sit.aws.phoenix/odds-api/odds/20200224AUBAT104?transactionid=test]]
 ** Should only be one payload per tote, instead there's one per timestamp(?)
-* TODO: look at confluence for example of new json structure
+* DONE: as of [[file:2020-03-02.org][2020-03-02]]
