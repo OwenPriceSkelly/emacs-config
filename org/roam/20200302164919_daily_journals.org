@@ -1,0 +1,2 @@
+#+TITLE: daily-journals
+[[file:2020-03-02.org][2020-03-02]]
