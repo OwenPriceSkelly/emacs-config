@@ -1,0 +1,6 @@
+#+TITLE: 2020-03-03
+* Tags:
+** Sprint: [[file:20200303164352_sprint_45.org][sprint 45]]
+** Project: [[file:20200302164919_daily_journals.org][daily-journals]]
+* Tasks:
+** TODO: finish [[file:20200302112415_pxrac1969.org][pxrac-1969]], confirm with derek or harold that format is ok.

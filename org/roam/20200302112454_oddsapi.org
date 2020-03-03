@@ -1,4 +1,49 @@
 #+TITLE: oddsAPI
-Roam links here for oddsAPI component
-* Tasks:
-** DONE [[file:20200302112415_pxrac1969.org][pxrac-1969]]
+Backlink here from individual pxrac files
+Contains links to repo and API endpoints
+* Tags:
+** WIP: [[file:20200302112415_pxrac1969.org][pxrac-1969]]
+** TODO: Option for just getting poolsize data, not odds
+** Project: [[file:20200302163448_global_racing.org][global-racing]]
+* Links:
+** Endpoints:
+*** Static dev: https://live-scoring-dev.feeds-dev.aws.phoenix/odds-api/
+**** Sample:
+#+begin_src restclient
+GET https://live-scoring-dev.feeds-dev.aws.phoenix/odds-api/healthcheck
+#+end_src
+
+#+RESULTS:
+#+begin_example
+,#+BEGIN_SRC html
+I am Alive!
+<!-- GET https://live-scoring-dev.feeds-dev.aws.phoenix/odds-api/healthcheck -->
+<!-- HTTP/1.1 200 OK -->
+<!-- Date: Tue, 03 Mar 2020 03:48:24 GMT -->
+<!-- Content-Type: text/html; charset=utf-8 -->
+<!-- Content-Length: 11 -->
+<!-- Connection: keep-alive -->
+<!-- Server: nginx/1.15.6 -->
+<!-- Request duration: 4.372368s -->
+,#+END_SRC
+#+end_example
+*** SIT: https://live-scoring-sit.feeds-trading-sit.aws.phoenix/odds-api/
+**** Sample:
+#+begin_src restclient
+GET https://live-scoring-sit.feeds-trading-sit.aws.phoenix/odds-api/healthcheck
+#+end_src
+
+#+RESULTS:
+#+begin_example
+,#+BEGIN_SRC html
+I am Alive!
+<!-- GET https://live-scoring-sit.feeds-trading-sit.aws.phoenix/odds-api/healthcheck -->
+<!-- HTTP/1.1 200 OK -->
+<!-- Date: Tue, 03 Mar 2020 03:28:07 GMT -->
+<!-- Content-Type: text/html; charset=utf-8 -->
+<!-- Content-Length: 11 -->
+<!-- Connection: keep-alive -->
+<!-- Server: nginx/1.15.6 -->
+<!-- Request duration: 0.259075s -->
+,#+END_SRC
+#+end_example

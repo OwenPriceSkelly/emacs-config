@@ -5,12 +5,12 @@
 
         doom-theme 'doom-gruvbox
         doom-font (font-spec :family "monospace" :size 14)
-        ;; doom-font (font-spec :family "Fira Mono" :size 14)
 
         org-directory "~/.doom.d/org/"
         deft-directory org-directory
         deft-recursive t
         deft-use-filter-string-for-filename t
+        org-bullets-bullet-list '( "◉" "○" "▶" "✸" "•" "▸" "★")
 
         which-key-side-window-location 'bottom
         display-line-numbers-type 'relative
@@ -21,7 +21,9 @@
         which-key-max-description-length nil
 
         doom-leader-key "SPC"
-        doom-localleader-key ","))
+        doom-leader-alt-key "C-SPC"
+        doom-localleader-key ","
+        doom-localleader-alt-key "C-,"))
 
 
 (defun personal/use-packages ()
@@ -29,7 +31,7 @@
     :defer-incrementally t)
   (use-package! org-roam
     :commands
-    (org-roam-build-cache org-roam-find-file org-roam-mode org-roam-yesterday
+    (org-roam-build-cache org-roam-mode org-roam-yesterday
       org-roam-date org-roam-db org-roam-find-ref org-roam-switch-to-buffer
       org-roam-today org-roam-update org-roam-show-graph org-roam-tomorrow
       org-roam-backlinks-mode org-roam-sql org-roam-open-at-point
@@ -40,12 +42,15 @@
     (map! :leader
           :prefix "n"
           (:prefix ("r" . "roam")
-            :desc "roam buffer" "r" #'org-roam
-            :desc "roam find"   "f" #'org-roam-find-file
-            :desc "roam insert" "i" #'org-roam-insert
-            :desc "roam today"  "t" #'org-roam-today
-            :desc "roam tomorrow"  "T" #'org-roam-tomorrow
-            :desc "roam graph"  "g" #'org-roam-show-graph))
+            :desc "toggle org-roam buffer" "r" #'org-roam
+            :desc "find org-roam file"   "f" #'org-roam-find-file
+            :desc "insert org-roam file" "i" #'org-roam-insert
+            :desc "show graph in browser"  "g" #'org-roam-show-graph
+            :desc "find today's org-roam file"  "t" #'org-roam-today
+            :desc "find tomorrow's org-roam file"  "T" #'org-roam-tomorrow
+            :desc "find yesterday's org-roam file" "y" #'org-roam-yesterday))
+    (map! (:map org-roam-backlinks-mode-map))
+
     :config
     (org-roam-mode +1))
 

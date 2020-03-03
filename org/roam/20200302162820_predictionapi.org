@@ -1,4 +1,12 @@
 #+TITLE: predictionAPI
-- Links for predictionAPI component
-* Tasks:
-** TODO [[file:20200302163234_pxrac_1970.org][pxrac-1970]] unit tests
+Notes on the predictionAPI component
+* Links:
+** [[file:~/Repositories/predictionapi/][Local Repository]]
+** [[https://gitlab01.aws.phoenix/trades/racing/GlobalRacing/predictionapi][GitLab]]
+** [[https://conf.phoenix.com.mt/display/STDM/Prediction+API][Documentation - Confluence]]
+
+* Tags:
+Project: [[file:20200302163448_global_racing.org][global-racing]]
+* Current Tasks:
+** TODO: [[file:20200303101755_pxrac_1939_predictions_unit_tests.org][pxrac-1939-predictions-unit-tests]]
+* Finished Tasks:

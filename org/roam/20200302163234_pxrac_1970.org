@@ -1,2 +1,0 @@
-#+TITLE: pxrac-1970
-* jira link: https://jira.phoenix.local/browse/PXRAC-1970

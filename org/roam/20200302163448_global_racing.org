@@ -1,4 +1,3 @@
 #+TITLE: global-racing
-* Components:
-** [[file:20200302162820_predictionapi.org][predictionAPI]]
-** [[file:20200302112454_oddsapi.org][oddsAPI]]
+* Links:
+** [[https://conf.phoenix.com.mt/display/STDM/Global+Racing+API+Contracts+-+Landing+Page][API contracts landing page - Confluence]]
