@@ -1,3 +1,0 @@
-#+TITLE: global-racing
-* Links:
-** [[https://conf.phoenix.com.mt/display/STDM/Global+Racing+API+Contracts+-+Landing+Page][API contracts landing page - Confluence]]

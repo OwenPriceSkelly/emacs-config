@@ -1,0 +1,21 @@
+#+TITLE: pxrac-1972-poolsize-only-option
+* Tags:
+** Project: [[file:20200309102950-oddsapi.org][oddsAPI]], [[file:20200309103005-sprint_45.org][sprint 45]]
+* Tasks:
+** [X] Realize that this functionality already exists
+* Requests:
+** SIT:
+#+begin_src restclient
+GET https://live-scoring-sit.feeds-trading-sit.aws.phoenix/odds-api/odds/20200217AUNWR108?oddstype=P&transactionid=abc123
+#+end_src
+
+** Dev:
+*** poolsize only
+#+begin_src restclient
+GET https://live-scoring-dev-pxrac-1969-too-many-payloads.feeds-dev.aws.phoenix/odds-api/odds/20190801AUMGR107?oddstype=P&transactionid=abc123
+#+end_src
+
+*** get everything
+#+begin_src restclient
+GET https://live-scoring-dev-pxrac-1969-too-many-payloads.feeds-dev.aws.phoenix/odds-api/odds/20190801AUMGR107?transactionid=abc123
+#+end_src

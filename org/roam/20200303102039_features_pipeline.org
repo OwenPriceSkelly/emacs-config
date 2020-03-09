@@ -1,3 +1,0 @@
-#+TITLE: features-pipeline
-* Tickets:
-** TODO: [[file:20200303101824_pxrac_1940_feature_pipeline_unit_tests.org][pxrac-1940-feature-pipeline-unit-tests]]

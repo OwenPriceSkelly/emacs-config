@@ -1,7 +1,0 @@
-#+TITLE: pxrac-1939-predictions-unit-tests
-* Tags:
-** Project: [[file:20200302162820_predictionapi.org][predictionAPI]]
-** Sprint: [[file:20200303164352_sprint_45.org][sprint 45]]
-** TODO: [[file:2020-03-03.org][2020-03-03]]
-* Links:
-** [[file:~/Repositories/predictionapi/tests/test_predictions.py][Tests file stub]]

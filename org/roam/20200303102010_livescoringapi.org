@@ -1,3 +1,0 @@
-#+TITLE: livescoringAPI
-* Tickets:
-** [[file:20200303101726_pxrac_1569_livescoring_unit_tests.org][pxrac-1569-livescoring-unit-tests]]

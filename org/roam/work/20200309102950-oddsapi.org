@@ -2,9 +2,7 @@
 Backlink here from individual pxrac files
 Contains links to repo and API endpoints
 * Tags:
-** WIP: [[file:20200302112415_pxrac1969.org][pxrac-1969]]
-** TODO: Option for just getting poolsize data, not odds
-** Project: [[file:20200302163448_global_racing.org][global-racing]]
+** Project: [[file:20200309101515-global_racing_components.org][Global Racing Components]]
 * Links:
 ** Endpoints:
 *** Static dev: https://live-scoring-dev.feeds-dev.aws.phoenix/odds-api/

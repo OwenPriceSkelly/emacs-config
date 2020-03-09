@@ -37,8 +37,8 @@
       org-roam-backlinks-mode org-roam-sql org-roam-open-at-point
       org-roam-insert org-roam-find-file org-roam)
     :init
-    (setq org-roam-directory org-directory
-          org-roam-new-file-directory "~/.doom.d/org/roam/")
+    (setq org-roam-directory (concat org-directory "roam/work/")
+          org-roam-buffer-width 0.30)
     (map! :leader
           :prefix "n"
           (:prefix ("r" . "roam")
@@ -49,8 +49,6 @@
             :desc "find today's org-roam file"  "t" #'org-roam-today
             :desc "find tomorrow's org-roam file"  "T" #'org-roam-tomorrow
             :desc "find yesterday's org-roam file" "y" #'org-roam-yesterday))
-    (map! (:map org-roam-backlinks-mode-map))
-
     :config
     (org-roam-mode +1))
 
@@ -77,6 +75,9 @@
         (:when (featurep! :ui workspaces)
           (:prefix "TAB"
             :desc "Switch workspace"   "TAB"     #'+workspace/switch-to))
+
+        (:prefix "w"
+          "w" #'other-window)
 
 
         (:prefix "b"

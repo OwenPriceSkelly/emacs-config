@@ -1,4 +1,0 @@
-#+TITLE: 2020-03-02
-* Tags:
-** Project: [[file:20200302164919_daily_journals.org][daily-journals]]
-** Sprint: [[file:20200303164352_sprint_45.org][sprint 45]]

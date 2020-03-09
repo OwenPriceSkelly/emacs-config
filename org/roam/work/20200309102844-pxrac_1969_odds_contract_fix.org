@@ -1,0 +1,169 @@
+#+TITLE: pxrac-1969-odds-contract-fix
+NOTE: vendortimestamputc is stored as a number in DDB currently and we format it
+as a string, but that gives us the weird isoformat "T" in the middle of the
+string and it's not clear that's what we should be doing.
+* Tags:
+** Projects: [[file:20200309102950-oddsapi.org][oddsAPI]], [[file:20200309103005-sprint_45.org][sprint 45]]
+* Links:
+** JIRA: https://jira.phoenix.local/browse/PXRAC-1969
+** local repo/file: [[file:~/Repositories/oddsapi/src/lib_odds/lib_odds_get.py][lib_odds_get.py]]
+* Description:
+Per Harold: too many odds payoads returned for simple GET request, unintuitive
+format for response
+* Sample links/payloads
+** Sample problem url
+#+begin_src restclient
+GET https://live-scoring-sit.feeds-trading-sit.aws.phoenix/odds-api/odds/20200224AUBAT104?transactionid=test
+#+end_src
+
+** Sample successful url
+#+begin_src restclient
+GET https://live-scoring-dev.feeds-dev.aws.phoenix/odds-api/odds/20200221AUAPK106?transactionid=test
+#+end_src
+
+** Dynamic Dev Tests:
+*** /healthcheck
+#+begin_src restclient
+GET https://live-scoring-dev-pxrac-1969-too-many-payloads.feeds-dev.aws.phoenix/odds-api/healthcheck
+#+end_src
+
+#+RESULTS:
+#+begin_example
+,#+BEGIN_SRC html
+I am Alive!
+<!-- GET https://live-scoring-dev-pxrac-1969-too-many-payloads.feeds-dev.aws.phoenix/odds-api/healthcheck -->
+<!-- HTTP/1.1 200 OK -->
+<!-- Date: Tue, 03 Mar 2020 04:07:13 GMT -->
+<!-- Content-Type: text/html; charset=utf-8 -->
+<!-- Content-Length: 11 -->
+<!-- Connection: keep-alive -->
+<!-- Server: nginx/1.15.6 -->
+<!-- Request duration: 4.438070s -->
+,#+END_SRC
+#+end_example
+
+
+*** PUT odds/
+#+begin_src restclient
+PUT https://live-scoring-dev-pxrac-1969-too-many-payloads.feeds-dev.aws.phoenix/odds-api/odds?transactionid=pxrac-1969
+Content-type: application/json
+< ~/Repositories/oddsapi/src/sample_responses/odds_put3.json
+#+end_src
+
+#+RESULTS:
+#+BEGIN_SRC js
+{
+  "message": "OK",
+  "response": "Odds Successfully Entered",
+  "transactionid": "pxrac-1969"
+}
+// PUT https://live-scoring-dev-pxrac-1969-too-many-payloads.feeds-dev.aws.phoenix/odds-api/odds?transactionid=pxrac-1969
+// HTTP/1.1 200 OK
+// Date: Tue, 03 Mar 2020 04:16:21 GMT
+// Content-Type: application/json
+// Content-Length: 98
+// Connection: keep-alive
+// Server: nginx/1.15.6
+// Request duration: 0.293257s
+#+END_SRC
+
+
+*** GET odds
+#+begin_src restclient
+GET https://live-scoring-dev-pxrac-1969-too-many-payloads.feeds-dev.aws.phoenix/odds-api/odds/20191205FRSAD105?transactionid=oddsGETsample
+#+end_src
+
+#+RESULTS:
+#+BEGIN_SRC js
+{
+  "message": "OK",
+  "response": {
+    "raceidentifiercode": "20191205FRSAD105",
+    "toteid": {
+      "PM": {
+        "poolid": {
+          "WN": {
+            "oddstypes": {
+              "odds": {
+                "combinations": [
+                  {
+                    "ck": "1",
+                    "x": 20
+                  },
+                  {
+                    "ck": "2",
+                    "x": 2.2
+                  },
+                  {
+                    "ck": "3",
+                    "x": 17
+                  },
+                  {
+                    "ck": "4",
+                    "x": 25
+                  },
+                  {
+                    "ck": "5",
+                    "x": 18
+                  },
+                  {
+                    "ck": "6",
+                    "x": 7.3
+                  },
+                  {
+                    "ck": "7",
+                    "x": 9.4
+                  },
+                  {
+                    "ck": "8",
+                    "x": 15
+                  },
+                  {
+                    "ck": "9",
+                    "x": 12
+                  },
+                  {
+                    "ck": "10",
+                    "x": 18
+                  },
+                  {
+                    "ck": "11",
+                    "x": 50
+                  },
+                  {
+                    "ck": "12",
+                    "x": 52
+                  },
+                  {
+                    "ck": "13",
+                    "x": 51
+                  },
+                  {
+                    "ck": "14",
+                    "x": 27
+                  }
+                ],
+                "vendortimestamputc": "2019-12-05T13:50:12.000000Z"
+              }
+            },
+            "poolsize": {
+              "vendorpoolsize": 93947.65,
+              "vendortimestamputc": "2019-12-05T13:50:12.000000Z"
+            }
+          }
+        }
+      }
+    }
+  },
+  "transactionid": "oddsGETsample"
+}
+// GET https://live-scoring-dev-pxrac-1969-too-many-payloads.feeds-dev.aws.phoenix/odds-api/odds/20191205FRSAD105?transactionid=oddsGETsample
+// HTTP/1.1 200 OK
+// Date: Tue, 03 Mar 2020 05:52:47 GMT
+// Content-Type: application/json
+// Content-Length: 1987
+// Connection: keep-alive
+// Server: nginx/1.15.6
+// Vary: Accept-Encoding
+// Request duration: 0.302869s
+#+END_SRC

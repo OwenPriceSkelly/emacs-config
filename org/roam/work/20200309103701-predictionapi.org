@@ -1,12 +1,14 @@
 #+TITLE: predictionAPI
+
 Notes on the predictionAPI component
+* Tags:
+** Projects: [[file:20200309101515-global_racing_components.org][Global Racing Components]]
 * Links:
 ** [[file:~/Repositories/predictionapi/][Local Repository]]
 ** [[https://gitlab01.aws.phoenix/trades/racing/GlobalRacing/predictionapi][GitLab]]
 ** [[https://conf.phoenix.com.mt/display/STDM/Prediction+API][Documentation - Confluence]]
-
-* Tags:
-Project: [[file:20200302163448_global_racing.org][global-racing]]
-* Current Tasks:
-** TODO: [[file:20200303101755_pxrac_1939_predictions_unit_tests.org][pxrac-1939-predictions-unit-tests]]
-* Finished Tasks:
+* Endpoints
+** Dev
+https://live-scoring-dev.feeds-dev.aws.phoenix/prediction-api/
+** SIT
+https://live-scoring-sit.feeds-trading-sit.aws.phoenix/prediction-api/
