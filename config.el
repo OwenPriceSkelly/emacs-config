@@ -10,7 +10,7 @@
         deft-directory org-directory
         deft-recursive t
         deft-use-filter-string-for-filename t
-        org-bullets-bullet-list '( "◉" "○" "▶" "✸" "•" "▸" "★")
+        org-bullets-bullet-list '( "▶" "◉" "○" "▸" "✸" "•" "★")
 
         which-key-side-window-location 'bottom
         display-line-numbers-type 'relative
@@ -31,22 +31,18 @@
     :defer-incrementally t)
   (use-package! org-roam
     :commands
-    (org-roam-build-cache org-roam-mode org-roam-yesterday
-      org-roam-date org-roam-db org-roam-find-ref org-roam-switch-to-buffer
-      org-roam-today org-roam-update org-roam-show-graph org-roam-tomorrow
-      org-roam-backlinks-mode org-roam-sql org-roam-open-at-point
-      org-roam-insert org-roam-find-file org-roam)
+    (org-roam org-roam-find-file org-roam-insert)
     :init
     (setq org-roam-directory (concat org-directory "roam/work/")
           org-roam-buffer-width 0.30)
     (map! :leader
           :prefix "n"
           (:prefix ("r" . "roam")
-            :desc "toggle org-roam buffer" "r" #'org-roam
-            :desc "find org-roam file"   "f" #'org-roam-find-file
-            :desc "insert org-roam file" "i" #'org-roam-insert
-            :desc "show graph in browser"  "g" #'org-roam-show-graph
-            :desc "find today's org-roam file"  "t" #'org-roam-today
+            :desc "toggle org-roam buffer" "r"         #'org-roam
+            :desc "find org-roam file"   "f"           #'org-roam-find-file
+            :desc "insert org-roam file" "i"           #'org-roam-insert
+            :desc "show graph in browser"  "g"         #'org-roam-show-graph
+            :desc "find today's org-roam file"  "t"    #'org-roam-today
             :desc "find tomorrow's org-roam file"  "T" #'org-roam-tomorrow
             :desc "find yesterday's org-roam file" "y" #'org-roam-yesterday))
     :config
@@ -65,51 +61,51 @@
   (general-auto-unbind-keys)
   ;; Leader-key bindings
   (map! :leader
-        :desc "Ivy M-x"                "SPC"     #'counsel-M-x
-        :desc "M-x"                    ":"       #'execute-extended-command
-        :desc "Search project"         "/"       #'+default/search-project
-        :desc "Visual expand"          "v"       #'er/expand-region
+        :desc "Ivy M-x"                "SPC"           #'counsel-M-x
+        :desc "M-x"                    ":"             #'execute-extended-command
+        :desc "Search project"         "/"             #'+default/search-project
+        :desc "Visual expand"          "v"             #'er/expand-region
 
         (:when (featurep! :ui treemacs)
-          :desc "Project sidebar"      "0"       #'treemacs-select-window)
+          :desc "Project sidebar"      "0"             #'treemacs-select-window)
         (:when (featurep! :ui workspaces)
           (:prefix "TAB"
-            :desc "Switch workspace"   "TAB"     #'+workspace/switch-to))
+            :desc "Switch workspace"   "TAB"           #'+workspace/switch-to))
 
         (:prefix "w"
-          "w" #'other-window)
+          "w"                                          #'other-window)
 
 
         (:prefix "b"
-          :desc "Fallback buffer"        "h"     #'+doom-dashboard/open
-          :desc "Messages buffer"        "m"     #'view-echo-area-messages
-          :desc "ibuffer (other window)" "I"     #'ibuffer-other-window))
+          :desc "Fallback buffer"        "h"           #'+doom-dashboard/open
+          :desc "Messages buffer"        "m"           #'view-echo-area-messages
+          :desc "ibuffer (other window)" "I"           #'ibuffer-other-window))
 
   (map! (:when (featurep! :ui tabs)
-          :n "L" #'centaur-tabs-forward-tab
-          :n "C-S-l" #'centaur-tabs-forward-tab-other-window
-          :n "H" #'centaur-tabs-backward-tab
-          :n "C-S-h" #'centaur-tabs-backward-tab-other-window))
+          :n "L"                                       #'centaur-tabs-forward-tab
+          :n "C-S-l"                                   #'centaur-tabs-forward-tab-other-window
+          :n "H"                                       #'centaur-tabs-backward-tab
+          :n "C-S-h"                                   #'centaur-tabs-backward-tab-other-window))
 
   ;; Search/replace bindings
   (map! :map ivy-minibuffer-map
         (:prefix "C-c"
-          :desc "wgrep"              "e"       #'+ivy/woccur))
+          :desc "Edit and replace"              "e"    #'+ivy/woccur))
 
   ;; evil-multiedit
-  (map! :nv "R" #'evil-multiedit-match-all
-        :n "C-n" #'evil-multiedit-match-symbol-and-next
-        :n "C-S-n" #'evil-multiedit-match-symbol-and-prev
-        :v "C-n" #'evil-multiedit-match-and-next
-        :v "C-S-n" #'evil-multiedit-match-and-prev
-        :nv "C-M-n" #'evil-multiedit-restore
-   (:after evil-multiedit
-     (:map evil-multiedit-state-map
-       "n"   #'evil-multiedit-next
-       "N"   #'evil-multiedit-prev
-       "C-n" #'evil-multiedit-match-and-next
-       "C-S-n" #'evil-multiedit-match-and-prev
-       "V"   #'iedit-show/hide-unmatched-lines))))
+  (map! :nv "R"                                        #'evil-multiedit-match-all
+        :n "C-n"                                       #'evil-multiedit-match-symbol-and-next
+        :n "C-S-n"                                     #'evil-multiedit-match-symbol-and-prev
+        :v "C-n"                                       #'evil-multiedit-match-and-next
+        :v "C-S-n"                                     #'evil-multiedit-match-and-prev
+        :nv "C-M-n"                                    #'evil-multiedit-restore
+        (:after evil-multiedit
+          (:map evil-multiedit-state-map
+            "n"                                             #'evil-multiedit-next
+            "N"                                             #'evil-multiedit-prev
+            "C-n"                                           #'evil-multiedit-match-and-next
+            "C-S-n"                                         #'evil-multiedit-match-and-prev
+            "V"                                             #'iedit-show/hide-unmatched-lines))))
 
 ;; major mode bindings
 (defun personal/python-config ()
@@ -117,18 +113,12 @@
         :localleader
         (:prefix ("e" . "[pip]env"))
         (:prefix ("r" . "repl")
-          :desc "default" "r"      #'+eval/open-repl-other-window
-          ;; :desc "python"  "p"      #'+python/open-repl
-          :desc "ipython" "i"      #'+python/open-ipython-repl
-          :desc "jupyter" "j"      #'+python/open-jupyter-repl
-          :desc "send to repl" "s" #'+eval/send-region-to-repl)
-        (:prefix ("=" . "format")
-          :desc "buffer" "=" #'+format/buffer))
+          :desc "default" "r"                          #'+eval/open-repl-other-window
+          ;; :desc "python"  "p"                       #'+python/open-repl
+          :desc "ipython" "i"                          #'+python/open-ipython-repl
+          :desc "jupyter" "j"                          #'+python/open-jupyter-repl
+          :desc "send to repl" "s"                     #'+eval/send-region-to-repl)))
 
-  (map! :after ein
-        :map ein:notebook-mode-map
-        :localleader
-        "," #'+ein/hydra/body))
 
 ;; -----------------------------------------------------------------------------
 ;; Misc. quality of life snippets
@@ -151,7 +141,7 @@
                         (frame-height)
                         (frame-parameter nil 'fullscreen))))
 
-(add-hook 'kill-emacs-hook #'save-frame-dimensions)
+(add-hook 'kill-emacs-hook                             #'save-frame-dimensions)
 
 (personal/variables)
 (personal/use-packages)

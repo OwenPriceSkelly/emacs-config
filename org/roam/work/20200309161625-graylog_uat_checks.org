@@ -1,0 +1,19 @@
+#+TITLE: Graylog UAT Checks
+* live-scoring API
+** kubernetes_labels_app:apps\-uat\-live\-scoring\-live\-scoring\-api AND levelname:ERROR
+** [[https://graylog.corporate.aws.phoenix/search?rangetype=relative&fields=message%2Csource&width=1920&highlightMessage=&relative=86400&q=kubernetes_labels_app%3Aapps%5C-uat%5C-live%5C-scoring%5C-live%5C-scoring%5C-api%20AND%20levelname%3AERROR][Graylog Web Interface]]
+* features API
+** kubernetes_labels_app:uat\-global\-racing\-live\-scoring\-features\-api\-* AND levelname:ERROR
+** [[https://graylog.corporate.aws.phoenix/search?rangetype=relative&fields=message%2Csource&width=1920&highlightMessage=&relative=86400&q=kubernetes_labels_app%3Auat%5C-global%5C-racing%5C-live%5C-scoring%5C-features%5C-api%5C-*%20AND%20levelname%3AERROR][Graylog Web Interface]]
+* raceCard ETL
+** kubernetes_container_image:631165420711.dkr.ecr.eu\-west\-1.amazonaws.com\/apps\/live\-scoring\/features\-pipeline\-racecard\-etl\:latest AND levelname:ERROR
+** [[https://graylog.corporate.aws.phoenix/search?rangetype=relative&fields=message%2Csource&width=1920&highlightMessage=&relative=86400&q=kubernetes_container_image%3A631165420711.dkr.ecr.eu%5C-west%5C-1.amazonaws.com%5C%2Fapps%5C%2Flive%5C-scoring%5C%2Ffeatures%5C-pipeline%5C-racecard%5C-etl%5C%3Alatest%20AND%20levelname%3AERROR][Graylog Web Interface]]
+* predictions API
+** kubernetes_labels_app:apps\-uat\-live\-scoring\-prediction\-api AND levelname:ERROR
+** [[https://graylog.corporate.aws.phoenix/search?rangetype=relative&fields=message%2Csource&width=1920&highlightMessage=&relative=86400&q=kubernetes_labels_app%3Aapps%5C-uat%5C-live%5C-scoring%5C-prediction%5C-api%20AND%20levelname%3AERROR][Graylog Web Interface]]
+* Race API
+** kubernetes_labels_app:apps\-uat\-live\-scoring\-race\-api AND levelname:ERROR
+** [[https://graylog.corporate.aws.phoenix/search?rangetype=relative&fields=message%2Csource&width=1920&highlightMessage=&relative=86400&q=kubernetes_labels_app%3Aapps%5C-uat%5C-live%5C-scoring%5C-race%5C-api%20AND%20levelname%3AERROR][Graylog Web Interface]]
+* Odds API
+** kubernetes_labels_app:apps\-uat\-live\-scoring\-odds\-api AND levelname:ERROR
+** [[https://graylog.corporate.aws.phoenix/search?rangetype=relative&fields=message%2Csource&width=1920&highlightMessage=&relative=86400&q=kubernetes_labels_app%3Aapps%5C-uat%5C-live%5C-scoring%5C-odds%5C-api%20AND%20levelname%3AERROR][Graylog Web Interface]]

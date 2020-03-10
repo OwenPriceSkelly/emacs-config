@@ -1,0 +1,7 @@
+#+TITLE: 2020-03-10
+* Projects: [[file:20200309103136-journals.org][Journals]], [[file:20200309103005-sprint_45.org][sprint 45]]
+* Tasks
+** Worked on [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]] briefly
+** continued work on [[file:20200309103608-pxrac_1939_predictions_unit_tests.org][pxrac-1939-predictions-unit-tests]]
+*** [-] unit tests can be simpler than I'd been thinking -- no need to try and byte-string whatever json sample data I use.
+*** [-] sample data is done and pytest fixture-ized, just need to try "extracting" from sample json dir.
