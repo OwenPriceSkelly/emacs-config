@@ -1,0 +1,19 @@
+#+TITLE: 2020-03-11
+* Tags:
+** Project: [[file:20200309103136-journals.org][Journals]], [[file:20200309103005-sprint_45.org][sprint 45]]
+* Tasks:
+** Finalize [[file:20200309103608-pxrac_1939_predictions_unit_tests.org][pxrac-1939-predictions-unit-tests]]
+** Get approval on [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]] timing decorator
+
+* [[file:20200309161625-graylog_uat_checks.org][Graylog UAT Checks]]:
+- livescoringAPI: All good
+- featuresAPI
+  - 338 issues, due to "unregistered task of type 'NAR_PRE' etc."
+- racecard ETL pipeline
+  - All good
+- PredictionAPI 288 issues
+  - 358 issues, due to exception thrown during decompression "_lzma.LZMAError: Corrupt input data"
+- RaceAPI
+  - All good
+- OddsAPI
+  - 29 issues, due to "502 Bad Gateway" when triggering livescoring

@@ -8,7 +8,38 @@ Notes on the predictionAPI component
 ** [[https://gitlab01.aws.phoenix/trades/racing/GlobalRacing/predictionapi][GitLab]]
 ** [[https://conf.phoenix.com.mt/display/STDM/Prediction+API][Documentation - Confluence]]
 * Endpoints
-** Dev
-https://live-scoring-dev.feeds-dev.aws.phoenix/prediction-api/
+** Dev: https://live-scoring-dev.feeds-dev.aws.phoenix/prediction-api/
+*** Healthcheck
+#+BEGIN_SRC restclient
+GET https://live-scoring-dev.feeds-dev.aws.phoenix/prediction-api/healthcheck
+#+END_SRC
+#+RESULTS:
+#+BEGIN_SRC html
+I am Alive!
+<!-- GET https://live-scoring-dev.feeds-dev.aws.phoenix/prediction-api/healthcheck -->
+<!-- HTTP/1.1 200 OK -->
+<!-- Date: Wed, 11 Mar 2020 00:41:43 GMT -->
+<!-- Content-Type: text/html; charset=utf-8 -->
+<!-- Content-Length: 11 -->
+<!-- Connection: keep-alive -->
+<!-- Server: nginx/1.15.6 -->
+<!-- Request duration: 0.282026s -->
+#+END_SRC
 ** SIT
-https://live-scoring-sit.feeds-trading-sit.aws.phoenix/prediction-api/
+*** Healthcheck
+#+BEGIN_SRC restclient
+GET https://live-scoring-sit.feeds-trading-sit.aws.phoenix/prediction-api/healthcheck
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_SRC html
+I am Alive!
+<!-- GET https://live-scoring-sit.feeds-trading-sit.aws.phoenix/prediction-api/healthcheck -->
+<!-- HTTP/1.1 200 OK -->
+<!-- Date: Wed, 11 Mar 2020 00:43:21 GMT -->
+<!-- Content-Type: text/html; charset=utf-8 -->
+<!-- Content-Length: 11 -->
+<!-- Connection: keep-alive -->
+<!-- Server: nginx/1.15.6 -->
+<!-- Request duration: 0.284905s -->
+#+END_SRC

@@ -4,6 +4,7 @@
 * Links:
 ** [[file:~/Repositories/predictionapi/tests/test_predictions.py][Tests file stub]]
 * Acceptance Criteria:
-** [ ] conftest.py with fixtures like oddsAPI
-** [ ] test api calling using moto
+** [X] conftest.py with fixtures like oddsAPI
+** [X] test api calling using moto
+** [ ] sign off by vishal
 ** [ ] sign off by modelling and bet

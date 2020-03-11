@@ -1,10 +1,12 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-(defun personal/variables ()
+(defun +my/variables ()
   (setq user-full-name "Owen Price-Skelly"
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
-        doom-theme 'doom-gruvbox
+        doom-theme 'doom-ephemeral
         doom-font (font-spec :family "monospace" :size 14)
+        solaire-mode-auto-swap-bg t
+        solaire-mode-remap-line-numbers t
 
         org-directory "~/.doom.d/org/"
         deft-directory org-directory
@@ -26,12 +28,12 @@
         doom-localleader-alt-key "C-,"))
 
 
-(defun personal/use-packages ()
-  (use-package! treemacs
-    :defer-incrementally t)
+(defun +my/use-packages ()
   (use-package! org-roam
     :commands
-    (org-roam org-roam-find-file org-roam-insert)
+    (org-roam org-roam-find-file org-roam-insert
+              org-roam-show-graph org-roam-today
+              org-roam-tomorrow org-roam-yesterday)
     :init
     (setq org-roam-directory (concat org-directory "roam/work/")
           org-roam-buffer-width 0.30)
@@ -54,10 +56,18 @@
 
   (use-package! evil-textobj-line
     :demand t))
-;; -----------------------------------------------------------------------------
+
+(defun +my/neotree-open ()
+  "Open the neotree window in the current project."
+  (interactive)
+  (require 'neotree)
+  (if (neo-global--window-exists-p)
+      (neotree-refresh)
+    (neotree-dir (or (doom-project-root)
+                     default-directory))));; -----------------------------------------------------------------------------
 ;; - Keybinding
 ;; -----------------------------------------------------------------------------
-(defun personal/bind-keys ()
+(defun +my/bind-keys ()
   (general-auto-unbind-keys)
   ;; Leader-key bindings
   (map! :leader
@@ -68,14 +78,14 @@
 
         (:when (featurep! :ui treemacs)
           :desc "Project sidebar"      "0"             #'treemacs-select-window)
+        (:when (featurep! :ui neotree)
+          :desc "Project sidebar" "0"                  #'+my/neotree-open)
         (:when (featurep! :ui workspaces)
           (:prefix "TAB"
             :desc "Switch workspace"   "TAB"           #'+workspace/switch-to))
 
         (:prefix "w"
           "w"                                          #'other-window)
-
-
         (:prefix "b"
           :desc "Fallback buffer"        "h"           #'+doom-dashboard/open
           :desc "Messages buffer"        "m"           #'view-echo-area-messages
@@ -101,14 +111,14 @@
         :nv "C-M-n"                                    #'evil-multiedit-restore
         (:after evil-multiedit
           (:map evil-multiedit-state-map
-            "n"                                             #'evil-multiedit-next
-            "N"                                             #'evil-multiedit-prev
-            "C-n"                                           #'evil-multiedit-match-and-next
-            "C-S-n"                                         #'evil-multiedit-match-and-prev
-            "V"                                             #'iedit-show/hide-unmatched-lines))))
+            "n"                                        #'evil-multiedit-next
+            "N"                                        #'evil-multiedit-prev
+            "C-n"                                      #'evil-multiedit-match-and-next
+            "C-S-n"                                    #'evil-multiedit-match-and-prev
+            "V"                                        #'iedit-show/hide-unmatched-lines))))
 
 ;; major mode bindings
-(defun personal/python-config ()
+(defun +my/python-config ()
   (map! :map python-mode-map
         :localleader
         (:prefix ("e" . "[pip]env"))
@@ -121,7 +131,6 @@
 
 
 ;; -----------------------------------------------------------------------------
-;; Misc. quality of life snippets
 ;; -----------------------------------------------------------------------------
 ;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))
@@ -143,11 +152,11 @@
 
 (add-hook 'kill-emacs-hook                             #'save-frame-dimensions)
 
-(personal/variables)
-(personal/use-packages)
-(personal/bind-keys)
+(+my/variables)
+(+my/use-packages)
+(+my/bind-keys)
 (after! python
-  (personal/python-config))
+  (+my/python-config))
 
 ;; - `load!' for loading external *.el files relative to this one
 ;; -----------------------------------------------------------------------------
