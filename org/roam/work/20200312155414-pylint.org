@@ -1,0 +1,2 @@
+#+TITLE: pylint
+** pylint: [[file:~/.config/pylintrc][pylintrc]]

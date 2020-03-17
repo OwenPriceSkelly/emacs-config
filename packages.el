@@ -3,7 +3,7 @@
 
 ;; ----------------------------------------------------------------
 (package! org-roam
-  :recipe (:host github :repo "jethrokuan/org-roam" :branch "develop"))
+  :recipe (:host github :repo "jethrokuan/org-roam"))
 (package! hercules)
 (package! evil-textobj-line)
 

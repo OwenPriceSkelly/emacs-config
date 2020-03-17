@@ -3,7 +3,7 @@
   (setq user-full-name "Owen Price-Skelly"
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
-        doom-theme 'doom-ephemeral
+        doom-theme 'doom-gruvbox
         doom-font (font-spec :family "monospace" :size 14)
         solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t
@@ -28,6 +28,9 @@
         doom-localleader-alt-key "C-,"))
 
 
+;; -----------------------------------------------------------------------------
+;; --------------------------- use-package configs -----------------------------
+;; -----------------------------------------------------------------------------
 (defun +my/use-packages ()
   (use-package! org-roam
     :commands
@@ -57,15 +60,27 @@
   (use-package! evil-textobj-line
     :demand t))
 
-(defun +my/neotree-open ()
-  "Open the neotree window in the current project."
+(defun +my/treemacs-sidebar ()
+  "Hacky; Found myself selecting window after changing project and needing to
+  close and reopen for treemacs to update to the next project's directory"
+  (interactive)
+  (require 'treemacs)
+  (treemacs-select-window)
+  (+treemacs/toggle)
+  (+treemacs/toggle))
+
+
+(defun +my/neotree-sidebar ()
   (interactive)
   (require 'neotree)
   (if (neo-global--window-exists-p)
       (neotree-refresh)
-    (neotree-dir (or (doom-project-root)
-                     default-directory))));; -----------------------------------------------------------------------------
-;; - Keybinding
+    (neotree-dir (or (doom-project-root
+                      default-directory)))))
+
+
+;; -----------------------------------------------------------------------------
+;; ----------------------------- Keybinding ------------------------------------
 ;; -----------------------------------------------------------------------------
 (defun +my/bind-keys ()
   (general-auto-unbind-keys)
@@ -75,11 +90,8 @@
         :desc "M-x"                    ":"             #'execute-extended-command
         :desc "Search project"         "/"             #'+default/search-project
         :desc "Visual expand"          "v"             #'er/expand-region
+        :desc "Project sidebar"        "0"             #'+treemacs/find-file
 
-        (:when (featurep! :ui treemacs)
-          :desc "Project sidebar"      "0"             #'treemacs-select-window)
-        (:when (featurep! :ui neotree)
-          :desc "Project sidebar" "0"                  #'+my/neotree-open)
         (:when (featurep! :ui workspaces)
           (:prefix "TAB"
             :desc "Switch workspace"   "TAB"           #'+workspace/switch-to))
@@ -123,11 +135,29 @@
         :localleader
         (:prefix ("e" . "[pip]env"))
         (:prefix ("r" . "repl")
-          :desc "default" "r"                          #'+eval/open-repl-other-window
-          ;; :desc "python"  "p"                       #'+python/open-repl
-          :desc "ipython" "i"                          #'+python/open-ipython-repl
-          :desc "jupyter" "j"                          #'+python/open-jupyter-repl
-          :desc "send to repl" "s"                     #'+eval/send-region-to-repl)))
+          :desc "default"     "r"                          #'+eval/open-repl-other-window
+          :desc "ipython"     "i"                          #'+python/open-ipython-repl
+          :desc "jupyter"     "j"                          #'+python/open-jupyter-repl
+          :desc "send region" "s"                          #'+eval/send-region-to-repl)
+        (:prefix ("s" . "skeletons")
+          :desc "if"     "i"  #'python-skeleton-if
+          :desc "def"    "d"  #'python-skeleton-def
+          :desc "for"    "f"  #'python-skeleton-for
+          :desc "try"    "t"  #'python-skeleton-try
+          :desc "class"  "c"  #'python-skeleton-class
+          :desc "while"  "w"  #'python-skeleton-while
+          :desc "import" "m"  #'python-skeleton-import))
+  (setq python-fill-docstring-style 'django
+        python-skeleton-autoinsert t)
+  (when (featurep! :tools lsp)
+    (map! :map lsp-ui-peek-mode-map
+          "C-j" #'lsp-ui-peek--select-next
+          "C-h" #'lsp-ui-peek--select-prev-file
+          "C-l" #'lsp-ui-peek--select-next-file
+          "C-k" #'lsp-ui-peek--select-prev)
+    (setq lsp-pyls-plugins-pylint-enabled t
+          lsp-pyls-plugins-pylint-args '("--rcfile=~/.config/pylintrc"))))
+
 
 
 ;; -----------------------------------------------------------------------------

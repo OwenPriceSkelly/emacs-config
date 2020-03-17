@@ -1,0 +1,24 @@
+#+TITLE: 2020-03-12
+* Tags:
+** Project: [[file:20200309103136-journals.org][Journals]], [[file:20200309103005-sprint_45.org][sprint 45]]
+* Tasks:
+** approval for [[file:20200309103608-pxrac_1939_predictions_unit_tests.org][pxrac-1939-predictions-unit-tests]]
+** approval for [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]] timing decorator
+** start/finish [[file:20200309105128-pxrac_1569_livescoring_unit_tests.org][pxrac-1569-livescoring-unit-tests]]
+
+* [[file:20200309161625-graylog_uat_checks.org][Graylog UAT Checks]]:
+- livescoringAPI
+  - 295 issues, due to "error on call to get race start info" (response code 204)
+- featuresAPI
+  - 1276 issues, due to "unregistered task of type 'NAR_PRE' etc."
+  - Should be ok even with these issues
+- racecard ETL pipeline
+  - All good
+- PredictionAPI 288 issues
+  - 436 issues, due to exception thrown during decompression "_lzma.LZMAError:
+    Corrupt input data" and "data ended before end-of-stream marker was reached"
+- RaceAPI
+  - All good
+- OddsAPI
+  - 43 issues (all from wed, none today), due to "502 Bad Gateway" when triggering livescoring
+  - Note: I think this is the result of restructuring the payload in [[file:20200309102844-pxrac_1969_odds_contract_fix.org][pxrac-1969-odds-contract-fix]]

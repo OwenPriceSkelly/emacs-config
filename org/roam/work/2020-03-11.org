@@ -4,7 +4,6 @@
 * Tasks:
 ** Finalize [[file:20200309103608-pxrac_1939_predictions_unit_tests.org][pxrac-1939-predictions-unit-tests]]
 ** Get approval on [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]] timing decorator
-
 * [[file:20200309161625-graylog_uat_checks.org][Graylog UAT Checks]]:
 - livescoringAPI: All good
 - featuresAPI
