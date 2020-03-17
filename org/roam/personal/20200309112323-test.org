@@ -1,2 +1,0 @@
-#+TITLE: test
-[[file:20200309112333-test_link.org][test link]]

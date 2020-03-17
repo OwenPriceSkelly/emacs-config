@@ -6,14 +6,3 @@
 *** [?] Block: waiting on new branch for missing modelling-predictions imports
 ** [X] approval for [[file:20200309103608-pxrac_1939_predictions_unit_tests.org][pxrac-1939-predictions-unit-tests]]
 ** [X] New apps-common branch with timing.py file instead of odds
-
-* Hey Vishal, here's where I'm at on a few tasks that are basically wrapped up:
-- predictionAPI unit tests: Tests are passing, I've opened an MR and assigned
-  you
-- livescoringAPI unit tests: Tests are failing due to a missing datetime import
-  in the new modelling predictions lib
-- Modelling predictions missing import: I've also opened an MR which cleans up
-  and fixes the imports and assigned you
-- apps-common timing utility: I've created a new file in apps-common called
-  timing.py containing the decorator I wrote and documented it. I've also opened
-  an MR and assigned you.

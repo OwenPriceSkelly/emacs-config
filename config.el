@@ -3,7 +3,7 @@
   (setq user-full-name "Owen Price-Skelly"
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
-        doom-theme 'doom-gruvbox
+        doom-theme 'doom-moonlight
         doom-font (font-spec :family "monospace" :size 14)
         solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t
@@ -26,7 +26,6 @@
         doom-leader-alt-key "C-SPC"
         doom-localleader-key ","
         doom-localleader-alt-key "C-,"))
-
 
 ;; -----------------------------------------------------------------------------
 ;; --------------------------- use-package configs -----------------------------
@@ -91,10 +90,16 @@
         :desc "Search project"         "/"             #'+default/search-project
         :desc "Visual expand"          "v"             #'er/expand-region
         :desc "Project sidebar"        "0"             #'+treemacs/find-file
+        :desc "Undo Tree"              "U"             #'undo-tree-visualize
 
         (:when (featurep! :ui workspaces)
           (:prefix "TAB"
             :desc "Switch workspace"   "TAB"           #'+workspace/switch-to))
+
+        (:when (featurep! :completion company)
+          (:prefix "i"
+            :desc "Show Completions"   "i"             #'+company/complete))
+
 
         (:prefix "w"
           "w"                                          #'other-window)
@@ -156,12 +161,10 @@
           "C-l" #'lsp-ui-peek--select-next-file
           "C-k" #'lsp-ui-peek--select-prev)
     (setq lsp-pyls-plugins-pylint-enabled t
+          lsp-pyls-plugins-pycodestyle-enabled nil
+          lsp-pyls-plugins-flake8-enabled nil
           lsp-pyls-plugins-pylint-args '("--rcfile=~/.config/pylintrc"))))
 
-
-
-;; -----------------------------------------------------------------------------
-;; -----------------------------------------------------------------------------
 ;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))
   (cl-destructuring-bind ((left . top) width height fullscreen) dims
@@ -185,14 +188,4 @@
 (+my/variables)
 (+my/use-packages)
 (+my/bind-keys)
-(after! python
-  (+my/python-config))
-
-;; - `load!' for loading external *.el files relative to this one
-;; -----------------------------------------------------------------------------
-;; - `use-package' `use-package!'for configuring packages
-;; -----------------------------------------------------------------------------
-;; - `after!' for running code after a package has loaded
-;; -----------------------------------------------------------------------------
-;; - `add-load-path!' for adding directories to the `load-path', where Emacs
-;;   looks when you load packages with `require' or `use-package'.
+(after! python (+my/python-config))
