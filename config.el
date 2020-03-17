@@ -12,7 +12,7 @@
         deft-directory org-directory
         deft-recursive t
         deft-use-filter-string-for-filename t
-        org-bullets-bullet-list '( "▶" "◉" "○" "▸" "✸" "•" "★")
+        org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
 
         which-key-side-window-location 'bottom
         display-line-numbers-type 'relative
@@ -21,6 +21,8 @@
         iedit-occurrence-context-lines 1
         fill-column 88
         which-key-max-description-length nil
+
+        undo-tree-visualizer-diff nil
 
         doom-leader-key "SPC"
         doom-leader-alt-key "C-SPC"
