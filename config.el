@@ -19,6 +19,7 @@
         which-key-sort-order 'which-key-key-order-alpha
 
         display-line-numbers-type 'relative
+
         ranger-override-dired t
 
         iedit-occurrence-context-lines 1
@@ -93,7 +94,7 @@
 ;; -----------------------------------------------------------------------------
 ;; ----------------------------- Keybinding ------------------------------------
 ;; -----------------------------------------------------------------------------
-(defun +my/bind-keys ()
+(defun +my/keybindings ()
   (general-auto-unbind-keys)
   ;; Leader-key bindings
   (map! :leader
@@ -114,17 +115,12 @@
 
 
         (:prefix "w"
-          "w"                                          #'other-window)
+                                         "w"           #'other-window)
+
         (:prefix "b"
           :desc "Fallback buffer"        "h"           #'+doom-dashboard/open
           :desc "Messages buffer"        "m"           #'view-echo-area-messages
           :desc "ibuffer (other window)" "I"           #'ibuffer-other-window))
-
-  (map! (:when (featurep! :ui tabs)
-          :n "L"                                       #'centaur-tabs-forward-tab
-          :n "C-S-l"                                   #'centaur-tabs-forward-tab-other-window
-          :n "H"                                       #'centaur-tabs-backward-tab
-          :n "C-S-h"                                   #'centaur-tabs-backward-tab-other-window))
 
   ;; Search/replace bindings
   (map! :map ivy-minibuffer-map
@@ -144,7 +140,9 @@
             "N"                                        #'evil-multiedit-prev
             "C-n"                                      #'evil-multiedit-match-and-next
             "C-S-n"                                    #'evil-multiedit-match-and-prev
-            "V"                                        #'iedit-show/hide-unmatched-lines))))
+            "V"                                        #'iedit-show/hide-unmatched-lines)))
+
+  (map! :m  "SPC j"                                    #'+evil/easymotion))
 
 ;; major mode bindings
 (defun +my/python-config ()
@@ -189,7 +187,12 @@
           lsp-pyls-plugins-flake8-enabled nil
           lsp-pyls-plugins-pyflakes-enabled nil
           lsp-pyls-plugins-pylint-args ["--rcfile=~/.config/pylintrc"
-                                        "--disable=print-statement,line-too-long,missing-module-doctring,bad-continuation,c-extension-no-member"])
+                                        (concat "--disable="
+                                                "print-statement,"
+                                                "line-too-long,"
+                                                "missing-module-doctring,"
+                                                "bad-continuation,"
+                                                "c-extension-no-member")])
     (when (featurep! :tools lsp +peek)
       (map! :map lsp-ui-peek-mode-map
             "C-j" #'lsp-ui-peek--select-next
@@ -199,8 +202,8 @@
       (after! lsp-ui
         (lsp-ui-doc-enable t)
         (setq lsp-ui-doc-position 'top
-              lsp-ui-doc-max-height 100
-              lsp-ui-doc-max-width 80
+              lsp-ui-doc-max-height 35
+              lsp-ui-doc-max-width 35
               lsp-ui-doc-delay 0.4)))))
 
 
@@ -226,5 +229,5 @@
 
 (+my/variables)
 (+my/use-packages)
-(+my/bind-keys)
+(+my/keybindings)
 (after! python (+my/python-config))
