@@ -3,8 +3,9 @@
   (setq user-full-name "Owen Price-Skelly"
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
-        doom-theme 'doom-moonlight
+        doom-theme 'doom-peacock
         doom-font (font-spec :family "monospace" :size 14)
+
         solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t
 
@@ -15,6 +16,8 @@
         org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
 
         which-key-side-window-location 'bottom
+        which-key-sort-order 'which-key-key-order-alpha
+
         display-line-numbers-type 'relative
         ranger-override-dired t
 
@@ -44,13 +47,16 @@
     (map! :leader
           :prefix "n"
           (:prefix ("r" . "roam")
-            :desc "toggle org-roam buffer" "r"         #'org-roam
-            :desc "find org-roam file"   "f"           #'org-roam-find-file
-            :desc "insert org-roam file" "i"           #'org-roam-insert
-            :desc "show graph in browser"  "g"         #'org-roam-show-graph
-            :desc "find today's org-roam file"  "t"    #'org-roam-today
+            :desc "toggle org-roam buffer"         "r" #'org-roam
+            :desc "find org-roam file"             "f" #'org-roam-find-file
+            :desc "insert org-roam file"           "i" #'org-roam-insert
+            :desc "show graph in browser"          "g" #'org-roam-show-graph
+            :desc "find today's org-roam file"     "t" #'org-roam-today
             :desc "find tomorrow's org-roam file"  "T" #'org-roam-tomorrow
             :desc "find yesterday's org-roam file" "y" #'org-roam-yesterday))
+    (map! :map org-roam-backlinks-mode-map
+          "TAB"  #'org-next-link
+          [tab]  #'org-next-link)
     :config
     (org-roam-mode +1))
 
@@ -70,15 +76,19 @@
   (+treemacs/toggle)
   (+treemacs/toggle))
 
-
-(defun +my/neotree-sidebar ()
+(defun +my/project-sidebar ()
   (interactive)
-  (require 'neotree)
-  (if (neo-global--window-exists-p)
-      (neotree-refresh)
-    (neotree-dir (or (doom-project-root
-                      default-directory)))))
+  (cond (featurep! :ui treemacs)
+        (progn (require 'treemacs)
+               (treemacs-select-window)
+               (+treemacs/toggle)
+               (+treemacs/toggle))
 
+        (featurep! :ui neotree)
+        (progn (require 'neotree)
+               (if (neo-global--window-exists-p)
+                   (neotree-refresh)
+                 (neotree-dir (or (doom-project-root default-directory)))))))
 
 ;; -----------------------------------------------------------------------------
 ;; ----------------------------- Keybinding ------------------------------------
@@ -91,7 +101,7 @@
         :desc "M-x"                    ":"             #'execute-extended-command
         :desc "Search project"         "/"             #'+default/search-project
         :desc "Visual expand"          "v"             #'er/expand-region
-        :desc "Project sidebar"        "0"             #'+treemacs/find-file
+        :desc "Project sidebar"        "0"             #'+my/treemacs-sidebar
         :desc "Undo Tree"              "U"             #'undo-tree-visualize
 
         (:when (featurep! :ui workspaces)
@@ -140,32 +150,59 @@
 (defun +my/python-config ()
   (map! :map python-mode-map
         :localleader
-        (:prefix ("e" . "[pip]env"))
+        (:prefix "e"
+         "a"      nil
+         "d"      nil
+         "i"      nil
+         "l"      nil
+         "o"      nil
+         "r"      nil
+         "s"      nil
+         "u"      nil)
+        (:prefix ("p" . "pipenv")
+          :desc "activate"    "a" #'pipenv-activate
+          :desc "deactivate"  "d" #'pipenv-deactivate
+          :desc "install"     "i" #'pipenv-install
+          :desc "lock"        "l" #'pipenv-lock
+          :desc "open module" "o" #'pipenv-open
+          :desc "run"         "r" #'pipenv-run
+          :desc "shell"       "s" #'pipenv-shell
+          :desc "uninstall"   "u" #'pipenv-uninstall)
         (:prefix ("r" . "repl")
-          :desc "default"     "r"                          #'+eval/open-repl-other-window
-          :desc "ipython"     "i"                          #'+python/open-ipython-repl
-          :desc "jupyter"     "j"                          #'+python/open-jupyter-repl
-          :desc "send region" "s"                          #'+eval/send-region-to-repl)
+          :desc "default"              "r"              #'+python/open-repl
+          :desc "ipython"              "i"              #'+python/open-ipython-repl
+          :desc "jupyter"              "j"              #'+python/open-jupyter-repl)
         (:prefix ("s" . "skeletons")
-          :desc "if"     "i"  #'python-skeleton-if
-          :desc "def"    "d"  #'python-skeleton-def
-          :desc "for"    "f"  #'python-skeleton-for
-          :desc "try"    "t"  #'python-skeleton-try
-          :desc "class"  "c"  #'python-skeleton-class
-          :desc "while"  "w"  #'python-skeleton-while
-          :desc "import" "m"  #'python-skeleton-import))
-  (setq python-fill-docstring-style 'django
-        python-skeleton-autoinsert t)
-  (when (featurep! :tools lsp)
-    (map! :map lsp-ui-peek-mode-map
-          "C-j" #'lsp-ui-peek--select-next
-          "C-h" #'lsp-ui-peek--select-prev-file
-          "C-l" #'lsp-ui-peek--select-next-file
-          "C-k" #'lsp-ui-peek--select-prev)
+          :desc "if"                   "i"              #'python-skeleton-if
+          :desc "def"                  "d"              #'python-skeleton-def
+          :desc "for"                  "f"              #'python-skeleton-for
+          :desc "try"                  "t"              #'python-skeleton-try
+          :desc "class"                "c"              #'python-skeleton-class
+          :desc "while"                "w"              #'python-skeleton-while
+          :desc "import"               "m"              #'python-skeleton-import))
+  (setq python-fill-docstring-style 'django)
+
+  (when (and (featurep! :tools lsp)
+             (featurep! :lang python +lsp))
     (setq lsp-pyls-plugins-pylint-enabled t
           lsp-pyls-plugins-pycodestyle-enabled nil
           lsp-pyls-plugins-flake8-enabled nil
-          lsp-pyls-plugins-pylint-args '("--rcfile=~/.config/pylintrc"))))
+          lsp-pyls-plugins-pyflakes-enabled nil
+          lsp-pyls-plugins-pylint-args ["--rcfile=~/.config/pylintrc"
+                                        "--disable=print-statement,line-too-long,missing-module-doctring,bad-continuation,c-extension-no-member"])
+    (when (featurep! :tools lsp +peek)
+      (map! :map lsp-ui-peek-mode-map
+            "C-j" #'lsp-ui-peek--select-next
+            "C-h" #'lsp-ui-peek--select-prev-file
+            "C-l" #'lsp-ui-peek--select-next-file
+            "C-k" #'lsp-ui-peek--select-prev)
+      (after! lsp-ui
+        (lsp-ui-doc-enable t)
+        (setq lsp-ui-doc-position 'top
+              lsp-ui-doc-max-height 100
+              lsp-ui-doc-max-width 80
+              lsp-ui-doc-delay 0.4)))))
+
 
 ;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))

@@ -1,0 +1,8 @@
+#+TITLE: 2020-03-19
+* Tags:
+** Projects: [[file:20200309103136-journals.org][Journals]], [[file:20200318102941-sprint_46.org][sprint 46]]
+* Tasks
+** [X] Merge Request for [[file:20200309105128-pxrac_1569_livescoring_unit_tests.org][pxrac-1569-livescoring-unit-tests]]
+** [-] Try and finish [[file:20200318172740-pxrac_2014_raceapi_use_standard_tf_module.org][pxrac-2014-raceapi-use-standard-tf-module]]
+** [-] BLOCK: raceAPI is substantially different in structure from featuresAPI,
+   should talk to vishal about what to do.

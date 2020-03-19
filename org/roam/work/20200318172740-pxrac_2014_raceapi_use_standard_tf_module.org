@@ -1,0 +1,118 @@
+#+TITLE: pxrac-2014-raceapi-use-standard-tf-module
+* Tags:
+** projects: [[file:20200309114243-raceapi.org][raceAPI]]. [[file:20200318102941-sprint_46.org][sprint 46]], [[file:20200318104438-pxrac_2012_use_standard_tf_module.org][pxrac-2012-use-standard-tf-module]]
+* Links:
+** JIRA: https://jira.phoenix.local/browse/PXRAC-2014
+** gitlab readme: [[https://gitlab01.aws.phoenix/cloud-infrastructure/terraform-modules/tree/master/phx-standard-app][gitlab: phx-standard-app]]
+** local repo for terraform module: [[file:~/Repositories/terraform-modules/phx-standard-app/][repo]]
+* Notes:
+** Use what's already been done in e.g. featuresAPI for reference
+*** Skimming vishal's [[https://gitlab01.aws.phoenix/trades/racing/GlobalRacing/featuresAPI/merge_requests/6/diffs?view=parallel][merge]] to featuresAPI last week:
+**** app.tf:
+Was an empty file, now reads:
+#+BEGIN_SRC terraform
+module "app" {
+  source = "git::https://gitlab01.aws.phoenix/cloud-infrastructure/terraform-modules.git//phx-celery-stack?ref=phx-celery-stack.v1.0.8"
+  # Common variables provided by the pipeline (aws context, project metadata, environment, image tag, etc)
+  common_variables = "${local.common_variables}"
+  log_level = "${var.log_level}"
+  api_ingress_sub_path = ""
+  environment_variables = {
+    JOBS_API_URL = "https://global-racing-features-${var.static_environment}.${var.aws_account_name}.aws.phx/job-api/jobs"
+  }
+}
+
+#+END_SRC
+**** locals.tf:
+unchanged, still reads:
+#+BEGIN_SRC terraform
+locals {
+  release_name = "${var.team}-${var.environment}-${var.system}-${var.component}"
+}
+#+END_SRC
+**** variables.tf
+Removals, was
+#+BEGIN_SRC terraform
+variable "api_replicas" {
+  default = 1
+  description = "Number of API server containers"
+}
+
+variable "worker_replicas" {
+  default = 2
+  description = "Number of worker containers"
+}
+variable "log_level" {
+  default = "INFO"
+}
+#+END_SRC
+Now just reads:
+#+BEGIN_SRC terraform
+variable "log_level" {
+  default = "INFO"
+}
+#+END_SRC
+**** common.tf:
+only additions, presumably to conform with latest common.tf:
+#+BEGIN_SRC terraform
+terraform {
+  backend "s3" {}
+}
+
+provider "helm" {
+  kubernetes {}
+}
+
+variable "aws_region" {}
+variable "aws_account_id" {}
+variable "aws_account_name" {}
+
+variable "namespace" {}
+variable "environment" {}
+variable "static_environment" {}
+variable "team" {}
+variable "country" {}
+variable "sport" {}
+variable "system" {}
+variable "component" {}
+
+variable "instance" {
+  default = "default"
+}
+
+variable "docker_image_repo" {
+  default = ""
+}
+
+variable "docker_image_tag" {
+  default = ""
+}
+
+variable "ingress_host_dns_zone" {}
+
+variable "ingress_host_include_environment" {
+  default = true
+}
+
+locals {
+  common_variables = {
+    "aws_region"                       = "${var.aws_region}"
+    "aws_account_id"                   = "${var.aws_account_id}"
+    "aws_account_name"                 = "${var.aws_account_name}"
+    "namespace"                        = "${var.namespace}"
+    "environment"                      = "${var.environment}"
+    "static_environment"               = "${var.static_environment}"
+    "team"                             = "${var.team}"
+    "country"                          = "${var.country}"
+    "sport"                            = "${var.sport}"
+    "system"                           = "${var.system}"
+    "component"                        = "${var.component}"
+    "instance"                         = "${var.instance}"
+    "docker_image_repo"                = "${var.docker_image_repo}"
+    "docker_image_tag"                 = "${var.docker_image_tag}"
+    "ingress_host_dns_zone"            = "${var.ingress_host_dns_zone}"
+    "ingress_host_include_environment" = "${var.ingress_host_include_environment}"
+  }
+}
+#+END_SRC
+

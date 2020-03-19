@@ -15,8 +15,10 @@
 ;;      directory (for easy access to its source code).
 
 (doom! :completion
-       (company) ;; +childframe) ; the ultimate code completion backend
-       (ivy +fuzzy +prescient +childframe)  ; a search engine for love and life
+       (company) ;; +childframe)
+                                        ; the ultimate code completion backend
+       (ivy +fuzzy +prescient +childframe)
+                                        ; a search engine for love and life
 
        :ui
        ;; deft              ; notational velocity for Emacs
@@ -35,7 +37,8 @@
        treemacs          ; a project drawer, like neotree but cooler
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
-       (window-select +numbers)     ; visually switch windows
+       (window-select) ;; +numbers)
+                                        ; visually switch windows
        workspaces        ; tab emulation, persistence & separate workspaces
        ;;zen               ; distraction-free coding or writing
 
@@ -68,7 +71,8 @@
        ;;vterm             ; another terminals in Emacs
 
        :checkers
-       (syntax +childframe)       ; tasing you for every semicolon you forget
+       (syntax  +childframe)
+                                        ; tasing you for every semicolon you forget
        ;;spell             ; tasing you for misspelling mispelling
        ;;grammar           ; tasing grammar mistake every you make
 
@@ -155,7 +159,6 @@
        ;;scala             ; java, but good
        ;;scheme            ; a fully conniving family of lisps
        (sh
-        +lsp
         +fish)                ; she sells {ba,z,fi}sh shells on the C xor
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?

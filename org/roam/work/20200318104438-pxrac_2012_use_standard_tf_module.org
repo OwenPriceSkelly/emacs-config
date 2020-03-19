@@ -1,0 +1,4 @@
+#+TITLE: pxrac-2012-use-standard-tf-module
+* Tags: [[file:20200318102941-sprint_46.org][sprint 46]]
+
+* Module readme: [[https://gitlab01.aws.phoenix/cloud-infrastructure/terraform-modules/tree/master/phx-standard-app][gitlab: phx-standard-app]]
