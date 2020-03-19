@@ -68,6 +68,7 @@
   (use-package! evil-textobj-line
     :demand t))
 
+
 (defun +my/treemacs-sidebar ()
   "Hacky; Found myself selecting window after changing project and needing to
   close and reopen for treemacs to update to the next project's directory"
