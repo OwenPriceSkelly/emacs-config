@@ -1,0 +1,23 @@
+#+TITLE: 2020-03-20
+* Tags: [[file:20200309103136-journals.org][Journals]], [[file:20200318102941-sprint_46.org][sprint 46]]
+* Tasks:
+** [ ] Raceapi terraform updates: waiting to meet with vishal
+** [ ] oddsAPI UAT problem: message harold [[file:20200320153757-pxrac_2053_odds_uat_503_get.org][pxrac-2053-odds-uat-503-get]]
+** [ ] Work on logging cleanup: [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
+*** [-] OddsAPI  (pending merge) [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]]
+
+* UAT Graylog Daily Checks
+- livescoringAPI
+  - all good
+- featuresAPI
+  - all good
+  - 554 messages, due to "unregistered task of type 'NAR_PRE' etc."
+- racecard ETL pipeline
+  - All good
+- PredictionAPI
+  - 1776 issues, due to exceptions thrown during decompression "_lzma.LZMAError:
+    Corrupt input data" and "data ended before end-of-stream marker was reached"
+- RaceAPI
+  - All good
+- OddsAPI
+  - 119 issues due to "502 Bad Gateway" when triggering livescoring

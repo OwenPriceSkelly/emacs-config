@@ -3,7 +3,10 @@
   (setq user-full-name "Owen Price-Skelly"
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
-        doom-theme 'doom-peacock
+        doom-theme 'doom-gruvbox
+        doom-acario-light-brighter-modeline t
+        doom-acario-light-comment-bg t
+
         doom-font (font-spec :family "monospace" :size 14)
 
         solaire-mode-auto-swap-bg t

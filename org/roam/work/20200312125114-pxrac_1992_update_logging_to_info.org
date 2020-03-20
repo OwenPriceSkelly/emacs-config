@@ -1,4 +1,11 @@
 #+TITLE: pxrac-1992-update-logging-to-info
-* Projects: [[file:20200309131148-pxrac_1946_performance_issues.org][pxrac-1946-performance-issues]], [[file:20200309102950-oddsapi.org][oddsAPI]], [[file:20200309103701-predictionapi.org][predictionAPI]],[[file:20200309114243-rajceapi.org][raceAPI]], [[file:20200309114216-featuresapi.org][featuresAPI]], [[file:20200309104228-livescoringapi.org][livescoringAPI]], [[file:20200312123429-modelling_predictions.org][modelling-predictions]] (?)
+* Projects:
+- [[file:20200309131148-pxrac_1946_performance_issues.org][pxrac-1946-performance-issues]],
+- [[file:20200309102950-oddsapi.org][oddsAPI]], [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]]
+- [[file:20200309103701-predictionapi.org][predictionAPI]], [[file:20200320125813-pxrac_1992_predictions_info_logs.org][pxrac-1992-predictions-info-logs]]
+- [[file:20200309114243-rajceapi.org][raceAPI]]
+- [[file:20200309114216-featuresapi.org][featuresAPI]]
+- [[file:20200309104228-livescoringapi.org][livescoringAPI]],
+- [[file:20200312123429-modelling_predictions.org][modelling-predictions]] (?)
 * Link: https://jira.phoenix.local/browse/PXRAC-1992
 * Related: [[file:20200318122422-pxrac_2037_apps_common_timing.org][pxrac-2037-apps-common-timing]]

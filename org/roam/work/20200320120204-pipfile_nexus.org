@@ -1,0 +1,9 @@
+#+TITLE: Pipfile nexus
+#+BEGIN_SRC toml
+    [[source]]
+    url = "https://nexus.build.aws.phoenix/repository/pypi-hosted/simple"
+    trusted-host = "nexus.build.aws.phoenix"
+    verify_ssl = false
+    name = "nexus"
+#+END_SRC
+* Tags: [[file:20200312123524-nexus_common_repos.org][Nexus Common Repos]]
