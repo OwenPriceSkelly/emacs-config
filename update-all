@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-doom clean && doom up && doom build && doom compile :core && doom run
