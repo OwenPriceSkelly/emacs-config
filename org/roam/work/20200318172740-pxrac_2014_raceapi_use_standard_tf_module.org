@@ -119,5 +119,20 @@ locals {
 **** app.tf
 - Almost identical changes as were made in featuresAPI, but changed source to
   point to standard-app rather than the celery one.
+**** iam.tf
+- Problem with "app" parameter in iam.tf
+  #+BEGIN_SRC sh
+    Error: module "k8s_iam_role": "app" is not a valid argument
+    ERROR: Job failed: command terminated with exit code 1
+  #+END_SRC
+- tried changing to "component", got different errors
+- tried deleting;
+  #+BEGIN_SRC sh
+    Error: Error applying plan:
+    1 error occurred:
+        * module.app.helm_release.app: 1 error occurred:
+        * helm_release.app: "devterraformupdate-glo-liv-rac-ffd8ac6" has no deployed releases
+  #+END_SRC
+
 ** Questions:
 *** Should I delete dynamo.tf?
