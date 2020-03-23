@@ -120,4 +120,4 @@ locals {
 - Almost identical changes as were made in featuresAPI, but changed source to
   point to standard-app rather than the celery one.
 ** Questions:
-*** What's the problem with
+*** Should I delete dynamo.tf?

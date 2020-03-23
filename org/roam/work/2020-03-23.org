@@ -3,6 +3,8 @@
 ** Projects: [[file:20200309103136-journals.org][Journals]], [[file:20200318102941-sprint_46.org][sprint 46]]
 * Tasks
 ** Raceapi naive terraform changes  [[file:20200318172740-pxrac_2014_raceapi_use_standard_tf_module.org][pxrac-2014-raceapi-use-standard-tf-module]]
-*** chat group with reuben and vishal
+*** [-] chat group with reuben and vishal
+*** [-] Pushed to remote (failing?)
 ** go over apps-common and odds api logging summary [[file:20200318122422-pxrac_2037_apps_common_timing.org][pxrac-2037-apps-common-timing]], [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
 *** Merge requests open for apps-common timing.py and for odds.py
+**** NOTE: opened new MR for timing
