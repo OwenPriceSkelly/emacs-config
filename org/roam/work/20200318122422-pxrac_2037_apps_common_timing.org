@@ -3,4 +3,5 @@
 ** [[file:20200318102941-sprint_46.org][sprint 46]]
 * Notes:
 ** implemented timing.py for use in consolidating logs
+** Bumps to 0.1.14
 ** completed as of [[file:2020-03-18.org][2020-03-18]]
