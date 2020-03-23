@@ -1,2 +1,8 @@
 #!/usr/bin/env bash
-doom clean && doom up -y && doom build && doom compile -y && doom run
+cd ~/.doom.d
+git pull --rebase && \
+doom clean && \
+doom upgrade -y  && \
+doom build  && \
+doom compile -y  && \
+doom run &

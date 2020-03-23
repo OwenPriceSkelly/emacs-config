@@ -1,6 +1,6 @@
 #+TITLE: pxrac-1946-performance-issues
 
-* Projects: [[file:20200309102950-oddsapi.org][oddsAPI]], [[file:20200309103701-predictionapi.org][predictionAPI]],[[file:20200309114243-rajceapi.org][raceAPI]], [[file:20200309114216-featuresapi.org][featuresAPI]], [[file:20200309104228-livescoringapi.org][livescoringAPI]], [[file:20200312123429-modelling_predictions.org][modelling-predictions]] (?)
+* Projects: [[file:20200309103005-sprint_45.org][sprint 45]], [[file:20200318102941-sprint_46.org][sprint 46]]
 * Subtasks: [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]], [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
 * Acceptance Criteria
 - identify performance metrics
@@ -10,4 +10,5 @@
 - [[https://jira.phoenix.local/browse/PXRAC-1946][Phoenix JIRA]]
 * Notes:
 ** Decorator in [[file:~/Repositories/oddsapi/src/lib_odds/lib_odds_timing.py][lib_odds_timing]] is basically complete, pending approval/ further testing
+*** Note: changed to apps-common timing.py
 ** Will this require changes to either [[file:20200312123429-modelling_predictions.org][modelling-predictions]] or [[file:20200312123707-apps_common.org][apps-common]]?

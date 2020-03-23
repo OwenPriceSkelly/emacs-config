@@ -1,4 +1,4 @@
-#+TITLE: 20200320153757 Pxrac 2053 Odds Uat 503 Get
+#+TITLE:  pxrac-2053-Odds-Uat-503-Get
 * Tags:
 ** projects: [[file:20200309102950-oddsapi.org][oddsAPI]], [[file:20200318102941-sprint_46.org][sprint 46]]
 * Link: https://jira.phoenix.local/browse/PXRAC-2053

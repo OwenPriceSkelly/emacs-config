@@ -1,9 +1,9 @@
 #+TITLE: 2020-03-20
 * Tags: [[file:20200309103136-journals.org][Journals]], [[file:20200318102941-sprint_46.org][sprint 46]]
 * Tasks:
-** [ ] Raceapi terraform updates: waiting to meet with vishal
+** [X] Raceapi terraform updates: waiting to meet with vishal
 ** [ ] oddsAPI UAT problem: message harold [[file:20200320153757-pxrac_2053_odds_uat_503_get.org][pxrac-2053-odds-uat-503-get]]
-** [ ] Work on logging cleanup: [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
+** [-] Work on logging cleanup: [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
 *** [-] OddsAPI  (pending merge) [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]]
 
 * UAT Graylog Daily Checks

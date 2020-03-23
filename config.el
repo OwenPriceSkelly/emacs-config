@@ -3,7 +3,7 @@
   (setq user-full-name "Owen Price-Skelly"
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
-        doom-theme 'doom-dark+
+        doom-theme 'doom-city-lights
 
         doom-vibrant-lighter-modeline t
         doom-vibrant-brighter-modeline t
