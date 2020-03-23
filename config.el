@@ -5,10 +5,6 @@
 
         doom-theme 'doom-city-lights
 
-        doom-vibrant-lighter-modeline t
-        doom-vibrant-brighter-modeline t
-        ;; doom-acario-light-brighter-modeline t
-        ;; doom-acario-light-comment-bg t
 
         doom-font (font-spec :family "monospace" :size 14)
 

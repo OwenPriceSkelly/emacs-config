@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-cd ~/.doom.d
-git pull --rebase && \
-doom clean && \
-doom upgrade -y  && \
-doom build  && \
-doom compile -y  && \
-doom run &

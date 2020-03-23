@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# runs the doom commands I found myself re-running to
+# build with all the optimizations available
+cd ~/.doom.d
+git pull --rebase && \
+doom upgrade  && \
+doom build  && \
+doom compile
