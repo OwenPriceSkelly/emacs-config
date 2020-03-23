@@ -5,7 +5,6 @@
 ** [ ] oddsAPI UAT problem: message harold [[file:20200320153757-pxrac_2053_odds_uat_503_get.org][pxrac-2053-odds-uat-503-get]]
 ** [-] Work on logging cleanup: [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
 *** [-] OddsAPI  (pending merge) [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]]
-
 * UAT Graylog Daily Checks
 - livescoringAPI
   - all good

@@ -29,6 +29,7 @@
         which-key-max-description-length nil
 
         undo-tree-visualizer-diff nil
+        +workspaces-on-switch-project-behavior t
 
         doom-leader-key "SPC"
         doom-leader-alt-key "C-SPC"
