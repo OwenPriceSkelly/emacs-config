@@ -6,6 +6,7 @@
   :recipe (:host github :repo "jethrokuan/org-roam"))
 (package! hercules)
 (package! evil-textobj-line)
+(package! doom-themes :pin nil)
 ;; ----------------------------------------------------------------
 ;;
 ;; This is where you install packages, by declaring them with the `package!'

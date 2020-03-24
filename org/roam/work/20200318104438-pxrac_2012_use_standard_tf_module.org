@@ -1,3 +1,4 @@
 #+TITLE: pxrac-2012-use-standard-tf-module
 * Tags: [[file:20200318102941-sprint_46.org][sprint 46]]
 * Module readme: [[https://gitlab01.aws.phoenix/cloud-infrastructure/terraform-modules/tree/master/phx-standard-app][gitlab: phx-standard-app]]
+* Sub-tasks: [[file:20200318172740-pxrac_2014_raceapi_use_standard_tf_module.org][pxrac-2014-raceapi-use-standard-tf-module]], [[file:20200324143118-pxrac_2013_oddsapi_use_standard_tf_module.org][pxrac-2013-oddsapi-use-standard-tf-module]]

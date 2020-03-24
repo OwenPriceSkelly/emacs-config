@@ -5,7 +5,6 @@
 
         doom-theme 'doom-city-lights
 
-
         doom-font (font-spec :family "monospace" :size 14)
 
         solaire-mode-auto-swap-bg t
@@ -63,11 +62,9 @@
           [tab]  #'org-next-link)
     :config
     (org-roam-mode +1))
-
   (use-package! expand-region
     :config
     (setq expand-region-contract-fast-key "V"))
-
   (use-package! evil-textobj-line
     :demand t))
 
@@ -80,21 +77,6 @@
   (treemacs-select-window)
   (+treemacs/toggle)
   (+treemacs/toggle))
-
-(defun +my/project-sidebar ()
-  (interactive)
-  (cond (featurep! :ui treemacs)
-        (progn (require 'treemacs)
-               (treemacs-select-window)
-               (+treemacs/toggle)
-               (+treemacs/toggle))
-
-        (featurep! :ui neotree)
-        (progn (require 'neotree)
-               (if (neo-global--window-exists-p)
-                   (neotree-refresh)
-                 (neotree-dir (or (doom-project-root default-directory)))))))
-
 ;; -----------------------------------------------------------------------------
 ;; ----------------------------- Keybinding ------------------------------------
 ;; -----------------------------------------------------------------------------
@@ -150,17 +132,9 @@
 
 ;; major mode bindings
 (defun +my/python-config ()
+  (setq python-fill-docstring-style 'django)
   (map! :map python-mode-map
         :localleader
-        (:prefix "e"
-         "a"      nil
-         "d"      nil
-         "i"      nil
-         "l"      nil
-         "o"      nil
-         "r"      nil
-         "s"      nil
-         "u"      nil)
         (:prefix ("p" . "pipenv")
           :desc "activate"    "a" #'pipenv-activate
           :desc "deactivate"  "d" #'pipenv-deactivate
@@ -173,30 +147,15 @@
         (:prefix ("r" . "repl")
           :desc "default"              "r"              #'+python/open-repl
           :desc "ipython"              "i"              #'+python/open-ipython-repl
-          :desc "jupyter"              "j"              #'+python/open-jupyter-repl)
-        (:prefix ("s" . "skeletons")
-          :desc "if"                   "i"              #'python-skeleton-if
-          :desc "def"                  "d"              #'python-skeleton-def
-          :desc "for"                  "f"              #'python-skeleton-for
-          :desc "try"                  "t"              #'python-skeleton-try
-          :desc "class"                "c"              #'python-skeleton-class
-          :desc "while"                "w"              #'python-skeleton-while
-          :desc "import"               "m"              #'python-skeleton-import))
-  (setq python-fill-docstring-style 'django)
-
+          :desc "jupyter"              "j"              #'+python/open-jupyter-repl))
   (when (and (featurep! :tools lsp)
              (featurep! :lang python +lsp))
     (setq lsp-pyls-plugins-pylint-enabled t
+          lsp-pyls-plugins-pylint-args ["--disable=C,logging-format-interpolation,useless-return"]
           lsp-pyls-plugins-pycodestyle-enabled nil
           lsp-pyls-plugins-flake8-enabled nil
-          lsp-pyls-plugins-pyflakes-enabled nil
-          lsp-pyls-plugins-pylint-args ["--rcfile=~/.config/pylintrc"
-                                        (concat "--disable="
-                                                "print-statement,"
-                                                "line-too-long,"
-                                                "missing-module-doctring,"
-                                                "bad-continuation,"
-                                                "c-extension-no-member")])
+          lsp-pyls-plugins-pyflakes-enabled nil)
+
     (when (featurep! :tools lsp +peek)
       (map! :map lsp-ui-peek-mode-map
             "C-j" #'lsp-ui-peek--select-next
@@ -209,7 +168,6 @@
               lsp-ui-doc-max-height 35
               lsp-ui-doc-max-width 35
               lsp-ui-doc-delay 0.4)))))
-
 
 ;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))
@@ -229,7 +187,7 @@
                         (frame-height)
                         (frame-parameter nil 'fullscreen))))
 
-(add-hook 'kill-emacs-hook                             #'save-frame-dimensions)
+(add-hook 'kill-emacs-hook  #'save-frame-dimensions)
 
 (+my/variables)
 (+my/use-packages)
