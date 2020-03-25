@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 # runs the doom commands I found myself re-running to
 # build with all the optimizations available
+
 cd ~/.doom.d
-git pull --rebase && \
-doom upgrade  && \
-doom build  && \
-doom compile
+git stash 
+git pull --rebase 
+git stash pop -q 
+
+doom upgrade && \
+doom build && \
+doom compile :core
