@@ -4,9 +4,7 @@
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
         doom-theme 'doom-city-lights
-
         doom-font (font-spec :family "monospace" :size 14)
-
         solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t
 
@@ -15,7 +13,24 @@
         deft-recursive t
         deft-use-filter-string-for-filename t
         org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
-
+        org-todo-keywords '((sequence "TODO(T)"  ; A task that needs doing & is ready to do
+                                      "START(S)" ; Start a larger task that cannot be completed in one step
+                                      "PROG(P)"  ; Mark a task as in-progress
+                                      "WAIT(W)"  ; Something is holding up this task or it is paused
+                                      "|"
+                                      "DONE(D)"  ; Task successfully completed
+                                      "DROP(K)") ; Task was cancelled, aborted or is no longer applicable
+                            (sequence "[ ](t)"   ; Describe a subtask
+                                      "[~](p)"   ; Subtask currently in-progress
+                                      "[-](w)"   ; Task is being held up or paused
+                                      "|"
+                                      "[X](d)")) ; Task was completed
+        org-todo-keyword-faces '(("[-]"   . +org-todo-active)
+                                 ("[~]"   . +org-todo-active)
+                                 ("PROG"  . +org-todo-active)
+                                 ("START" . +org-todo-project)
+                                 ("[-]"   . +org-todo-onhold)
+                                 ("WAIT"  . +org-todo-onhold))
         which-key-side-window-location 'bottom
         which-key-sort-order 'which-key-key-order-alpha
 
@@ -41,22 +56,22 @@
 (defun +my/use-packages ()
   (use-package! org-roam
     :commands
-    (org-roam org-roam-find-file org-roam-insert
-              org-roam-show-graph org-roam-today
-              org-roam-tomorrow org-roam-yesterday)
+    (org-roam org-roam-find-file org-roam-insert)
     :init
     (setq org-roam-directory (concat org-directory "roam/work/")
-          org-roam-buffer-width 0.30)
+          org-roam-buffer-width 0.33)
     (map! :leader
-          :prefix "n"
+          :prefix "n" ; "notes"
           (:prefix ("r" . "roam")
             :desc "toggle org-roam buffer"         "r" #'org-roam
             :desc "find org-roam file"             "f" #'org-roam-find-file
             :desc "insert org-roam file"           "i" #'org-roam-insert
             :desc "show graph in browser"          "g" #'org-roam-show-graph
+            :desc "capture"                        "x" #'org-roam-capture
             :desc "find today's org-roam file"     "t" #'org-roam-today
             :desc "find tomorrow's org-roam file"  "T" #'org-roam-tomorrow
-            :desc "find yesterday's org-roam file" "y" #'org-roam-yesterday))
+            :desc "find yesterday's org-roam file" "y" #'org-roam-yesterday
+            :desc "find <date> org-roam file"      "d" #'org-roam-date))
     (map! :map org-roam-backlinks-mode-map
           "TAB"  #'org-next-link
           [tab]  #'org-next-link)
@@ -81,7 +96,6 @@
 ;; ----------------------------- Keybinding ------------------------------------
 ;; -----------------------------------------------------------------------------
 (defun +my/keybindings ()
-  (general-auto-unbind-keys)
   ;; Leader-key bindings
   (map! :leader
         :desc "Ivy M-x"                "SPC"           #'counsel-M-x
@@ -101,7 +115,7 @@
 
 
         (:prefix "w"
-                                         "w"           #'other-window)
+          "w"           #'other-window)
 
         (:prefix "b"
           :desc "Fallback buffer"        "h"           #'+doom-dashboard/open
@@ -188,6 +202,7 @@
                         (frame-parameter nil 'fullscreen))))
 
 (add-hook 'kill-emacs-hook  #'save-frame-dimensions)
+(general-auto-unbind-keys)
 
 (+my/variables)
 (+my/use-packages)

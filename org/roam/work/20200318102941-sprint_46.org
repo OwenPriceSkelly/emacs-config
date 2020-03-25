@@ -1,29 +1,27 @@
 #+TITLE: sprint 46
 * Link: https://jira.phoenix.local/secure/RapidBoard.jspa?rapidView=246
 * Standup Status:
-** [[file:20200318122422-pxrac_2037_apps_common_timing.org][pxrac-2037-apps-common-timing]]: Waiting
+** WAIT [[file:20200318122422-pxrac_2037_apps_common_timing.org][pxrac-2037-apps-common-timing]]
   - Done; just waiting to be merged and made available on nexus.
 
-** [[file:20200309131148-pxrac_1946_performance_issues.org][pxrac-1946-performance-issues]]: In Progress
-*** [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]: In Progress
-**** [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]]: Waiting
+** WAIT [[file:20200309131148-pxrac_1946_performance_issues.org][pxrac-1946-performance-issues]]
+*** [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
+**** WAIT [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]]
 - Waiting on apps-common update 0.1.14
 - Waiting on merge request approval
-**** [[file:20200320125813-pxrac_1992_predictions_info_logs.org][pxrac-1992-predictions-info-logs]]: Waiting
+**** WAIT [[file:20200320125813-pxrac_1992_predictions_info_logs.org][pxrac-1992-predictions-info-logs]]
 - Waiting on apps-common update 0.1.14.
 - Waiting on merge request approval
 
-** [[file:20200320153757-pxrac_2053_odds_uat_503_get.org][pxrac-2053-Odds-Uat-503-Get]]: Done
-- Handed off to platforms.
- 
-** [[file:20200318104438-pxrac_2012_use_standard_tf_module.org][pxrac-2012-use-standard-tf-module]]: In Progress
+** WAIT [[file:20200318104438-pxrac_2012_use_standard_tf_module.org][pxrac-2012-use-standard-tf-module]]: In Progress
 *** [[file:20200318172740-pxrac_2014_raceapi_use_standard_tf_module.org][pxrac-2014-raceapi-use-standard-tf-module]]: Waiting
 - Currently unable to deploy to dev.
 - Naively trying to mimic changes made in featureAPI and livescoringAPI was
   really the best I was able to do here, tbh would be more surprised if it
   worked.
-*** [[file:20200324143118-pxrac_2013_oddsapi_use_standard_tf_module.org][pxrac-2013-oddsapi-use-standard-tf-module]]: Waiting
-- Same approach as raceAPI, but additionally blocked waiting for apps-common
-  update 0.1.14 to make it to nexus.
-- As with raceAPI, would be surprised if it works without someone more
-  experienced cleaning up after my first attempt.
+*** DONE [[file:20200324143118-pxrac_2013_oddsapi_use_standard_tf_module.org][pxrac-2013-oddsapi-use-standard-tf-module]]:
+- Rebased onto origin/master and opened merge request
+*** DONE [[file:20200325115544-pxrac_2016_predsapi_use_standard_tf_module.org][pxrac-2016-predsapi-use-standard-tf-module]]
+- Rebased and opened merge request
+** DONE [[file:20200320153757-pxrac_2053_odds_uat_503_get.org][pxrac-2053-Odds-Uat-503-Get]]:
+- Handed off to platforms.
