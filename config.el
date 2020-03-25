@@ -9,28 +9,7 @@
         solaire-mode-remap-line-numbers t
 
         org-directory "~/.doom.d/org/"
-        deft-directory org-directory
-        deft-recursive t
-        deft-use-filter-string-for-filename t
-        org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
-        org-todo-keywords '((sequence "TODO(T)"  ; A task that needs doing & is ready to do
-                                      "START(S)" ; Start a larger task that cannot be completed in one step
-                                      "PROG(P)"  ; Mark a task as in-progress
-                                      "WAIT(W)"  ; Something is holding up this task or it is paused
-                                      "|"
-                                      "DONE(D)"  ; Task successfully completed
-                                      "DROP(K)") ; Task was cancelled, aborted or is no longer applicable
-                            (sequence "[ ](t)"   ; Describe a subtask
-                                      "[~](p)"   ; Subtask currently in-progress
-                                      "[-](w)"   ; Task is being held up or paused
-                                      "|"
-                                      "[X](d)")) ; Task was completed
-        org-todo-keyword-faces '(("[-]"   . +org-todo-active)
-                                 ("[~]"   . +org-todo-active)
-                                 ("PROG"  . +org-todo-active)
-                                 ("START" . +org-todo-project)
-                                 ("[-]"   . +org-todo-onhold)
-                                 ("WAIT"  . +org-todo-onhold))
+
         which-key-side-window-location 'bottom
         which-key-sort-order 'which-key-key-order-alpha
 
@@ -50,13 +29,35 @@
         doom-localleader-key ","
         doom-localleader-alt-key "C-,"))
 
+(defun +my/org-config ()
+  (setq deft-directory org-directory
+        deft-recursive t
+        deft-use-filter-string-for-filename t
+        org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
+        org-todo-keywords '((sequence "[ ](t)"   ; A subtask
+                                      "[~](p)"   ; Subtask currently in-progress
+                                      "[*](w)"   ; Subtask is being held up or paused
+                                      "|"
+                                      "[X](d)") ; Subtask was completed
+                            (sequence "TODO(T)"  ; A task that needs doing & is ready to do
+                                      "START(S)" ; Start a larger task that cannot be completed in one step
+                                      "PROG(P)"  ; Mark a task as in-progress
+                                      "WAIT(W)"  ; Something is holding up this task or it is paused
+                                      "|"
+                                      "DONE(D)"  ; Task successfully completed
+                                      "DROP(K)")) ; Task was cancelled or is no longer applicable
+        org-todo-keyword-faces '(("[~]"   . +org-todo-active)
+                                 ("[*]"   . +org-todo-onhold)
+                                 ("START" . org-agenda-date)
+                                 ("PROG"  . +org-todo-active)
+                                 ("WAIT"  . +org-todo-onhold))))
 ;; -----------------------------------------------------------------------------
 ;; --------------------------- use-package configs -----------------------------
 ;; -----------------------------------------------------------------------------
 (defun +my/use-packages ()
   (use-package! org-roam
     :commands
-    (org-roam org-roam-find-file org-roam-insert)
+    (org-roam org-roam-today org-roam-find-file org-roam-insert)
     :init
     (setq org-roam-directory (concat org-directory "roam/work/")
           org-roam-buffer-width 0.33)
@@ -204,8 +205,10 @@
 
 (general-auto-unbind-keys)
 
+(after! python (+my/python-config))
+(after! org (+my/org-config))
+
 (+my/persist-frame-size)
 (+my/variables)
 (+my/use-packages)
 (+my/keybindings)
-(after! python (+my/python-config))
