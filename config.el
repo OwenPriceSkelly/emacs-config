@@ -50,7 +50,10 @@
                                  ("[*]"   . +org-todo-onhold)
                                  ("START" . org-agenda-date)
                                  ("PROG"  . +org-todo-active)
-                                 ("WAIT"  . +org-todo-onhold))))
+                                 ("WAIT"  . +org-todo-onhold)))
+  (map! :map org-mode-map
+        :localleader
+        :desc "Sort"     "S"     #'org-sort))
 ;; -----------------------------------------------------------------------------
 ;; --------------------------- use-package configs -----------------------------
 ;; -----------------------------------------------------------------------------
@@ -68,7 +71,7 @@
             :desc "find org-roam file"             "f" #'org-roam-find-file
             :desc "insert org-roam file"           "i" #'org-roam-insert
             :desc "show graph in browser"          "g" #'org-roam-show-graph
-            :desc "capture"                        "x" #'org-roam-capture
+            ;; :desc "capture"                        "x" #'org-roam-capture
             :desc "find today's org-roam file"     "t" #'org-roam-today
             :desc "find tomorrow's org-roam file"  "T" #'org-roam-tomorrow
             :desc "find yesterday's org-roam file" "y" #'org-roam-yesterday
