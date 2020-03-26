@@ -9,6 +9,7 @@
         solaire-mode-remap-line-numbers t
 
         org-directory "~/.doom.d/org/"
+        org-agenda-files '("~/.doom.d/org/roam/work/")
 
         which-key-side-window-location 'bottom
         which-key-sort-order 'which-key-key-order-alpha
