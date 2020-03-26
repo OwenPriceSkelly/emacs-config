@@ -9,7 +9,11 @@
         solaire-mode-remap-line-numbers t
 
         org-directory "~/.doom.d/org/"
-        org-agenda-files '("~/.doom.d/org/roam/work/")
+        org-agenda-files '("~/.doom.d/"
+                           "~/.doom.d/org/"
+                           "~/.doom.d/org/roam/"
+                           "~/.doom.d/org/roam/work/")
+        ;; "~/.doom.d/org/roam/personal")
 
         which-key-side-window-location 'bottom
         which-key-sort-order 'which-key-key-order-alpha
@@ -35,17 +39,17 @@
         deft-recursive t
         deft-use-filter-string-for-filename t
         org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
-        org-todo-keywords '((sequence "[ ](t)"   ; A subtask
-                                      "[~](p)"   ; Subtask currently in-progress
-                                      "[*](w)"   ; Subtask is being held up or paused
+        org-todo-keywords '((sequence "[ ](t)"    ; A subtask
+                                      "[~](p)"    ; Subtask currently in-progress
+                                      "[*](w)"    ; Subtask is being held up or paused
                                       "|"
-                                      "[X](d)") ; Subtask was completed
-                            (sequence "TODO(T)"  ; A task that needs doing & is ready to do
-                                      "START(S)" ; Start a larger task that cannot be completed in one step
-                                      "PROG(P)"  ; Mark a task as in-progress
-                                      "WAIT(W)"  ; Something is holding up this task or it is paused
+                                      "[X](d)")   ; Subtask was completed
+                            (sequence "TODO(T)"   ; A task that needs doing & is ready to do
+                                      "START(S)"  ; Start a larger task that cannot be completed in one step
+                                      "PROG(P)"   ; Mark a task as in-progress
+                                      "WAIT(W)"   ; Something is holding up this task or it is paused
                                       "|"
-                                      "DONE(D)"  ; Task successfully completed
+                                      "DONE(D)"   ; Task successfully completed
                                       "DROP(K)")) ; Task was cancelled or is no longer applicable
         org-todo-keyword-faces '(("[~]"   . +org-todo-active)
                                  ("[*]"   . +org-todo-onhold)

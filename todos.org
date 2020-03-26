@@ -1,0 +1,3 @@
+#+TITLE: todos
+* TODO refactor org-roam notes to be less of a mess
+* TODO play around with adding advice to org follow link

@@ -3,19 +3,18 @@
 * Standup Status:
 ** WAIT [[file:20200318122422-pxrac_2037_apps_common_timing.org][pxrac-2037-apps-common-timing]]
   - Done; just waiting to be merged and made available on nexus.
-
-** PROG [[file:20200309131148-pxrac_1946_performance_issues.org][pxrac-1946-performance-issues]]
-*** [~] [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
+** WAIT [[file:20200309131148-pxrac_1946_performance_issues.org][pxrac-1946-performance-issues]]
+*** [*] [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
 **** [*] [[file:20200309170205-pxrac_1946_odds.org][pxrac-1946-odds]]
 - Waiting on apps-common update 0.1.14
 - Waiting on merge request approval
 **** [*] [[file:20200320125813-pxrac_1992_predictions_info_logs.org][pxrac-1992-predictions-info-logs]]
 - Waiting on apps-common update 0.1.14.
 - Waiting on merge request approval
-**** [ ] raceapi update logs
-**** [ ] livescoringAPI update logs
-
-** PROG [[file:20200318104438-pxrac_2012_use_standard_tf_module.org][pxrac-2012-use-standard-tf-module]]
+**** [*] [[file:20200326133428-pxrac_1992_raceapi_info_logs.org][pxrac-1992-raceapi-info-logs]]
+**** [*] livescoringAPI update logs
+ - Wait to review with vishal since this one is excessive
+** WAIT [[file:20200318104438-pxrac_2012_use_standard_tf_module.org][pxrac-2012-use-standard-tf-module]]
 *** [*] [[file:20200318172740-pxrac_2014_raceapi_use_standard_tf_module.org][pxrac-2014-raceapi-use-standard-tf-module]]
 - Currently unable to deploy to dev.
 - Naively trying to mimic changes made in featureAPI and livescoringAPI was
@@ -25,5 +24,7 @@
 - Rebased and opened merge request
 *** [X] [[file:20200325115544-pxrac_2016_predsapi_use_standard_tf_module.org][pxrac-2016-predsapi-use-standard-tf-module]]
 - Rebased and opened merge request
-** DONE [[file:20200320153757-pxrac_2053_odds_uat_503_get.org][pxrac-2053-Odds-Uat-503-Get]]:
+*** DROP Livescoring-use-standard-tf-module
+    Seems like it's been taken care of already by platforms
+** DROP [[file:20200320153757-pxrac_2053_odds_uat_503_get.org][pxrac-2053-Odds-Uat-503-Get]]:
 - Handed off to platforms.

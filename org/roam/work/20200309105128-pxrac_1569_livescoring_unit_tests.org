@@ -11,6 +11,6 @@
 Need to set up test odds server, etc?
 
 * Acceptance Criteria:
-** [ ] create a conftest.py with dynamodb tables as fixtures using moto. (why moto?)
-** [ ] test the end to end api calling using mocker (similar to Odds API)
-** [ ] validate API calls are returning correct data  (Sign off by modelling and bet)
+** [X] create a conftest.py with dynamodb tables as fixtures using moto. (why moto?)
+** [X] test the end to end api calling using mocker (similar to Odds API)
+** [X] validate API calls are returning correct data  (Sign off by modelling and bet)

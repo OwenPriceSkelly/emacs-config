@@ -3,7 +3,7 @@
 * Tasks
 ** [-] odds api timer branch
 *** as part of logging cleanup per [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
-** [ ] pxrac-2012 terraform module - [[file:20200318104438-pxrac_2012_use_standard_tf_module.org][pxrac-2012-use-standard-tf-module]]
+** [X] pxrac-2012 terraform module - [[file:20200318104438-pxrac_2012_use_standard_tf_module.org][pxrac-2012-use-standard-tf-module]]
 *** raceAPI specifically - [[file:20200318172740-pxrac_2014_raceapi_use_standard_tf_module.org][pxrac-2014-raceapi-use-standard-tf-module]]
 **** see e.g. featuresAPI usage
 * Merge Requests

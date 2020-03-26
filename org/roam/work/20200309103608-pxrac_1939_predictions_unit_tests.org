@@ -6,5 +6,5 @@
 * Acceptance Criteria:
 ** [X] conftest.py with fixtures like oddsAPI
 ** [X] test api calling using moto
-** [ ] sign off by vishal
-** [ ] sign off by modelling and bet
+** [X] sign off by vishal
+** [X] sign off by modelling and bet

@@ -3,8 +3,7 @@
 ** projects: [[file:20200309114243-raceapi.org][raceAPI]]. [[file:20200318102941-sprint_46.org][sprint 46]], [[file:20200318104438-pxrac_2012_use_standard_tf_module.org][pxrac-2012-use-standard-tf-module]]
 * Links:
 ** JIRA: https://jira.phoenix.local/browse/PXRAC-2014
-** gitlab readme: [[https://gitlab01.aws.phoenix/cloud-infrastructure/terraform-modules/tree/master/phx-standard-app][gitlab: phx-standard-app]]
-** local repo for terraform module: [[file:~/Repositories/terraform-modules/phx-standard-app/][repo]]
+** Gitlab:
 * Notes:
 ** Use what's already been done in e.g. featuresAPI for reference
 *** Skimming vishal's [[https://gitlab01.aws.phoenix/trades/racing/GlobalRacing/featuresAPI/merge_requests/6/diffs?view=parallel][merge]] to featuresAPI last week:
