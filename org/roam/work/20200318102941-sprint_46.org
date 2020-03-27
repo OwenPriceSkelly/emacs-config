@@ -1,13 +1,13 @@
 #+TITLE: sprint 46
 * SPRINT 46
-SCHEDULED: <2020-03-16 Mon>-<2020-03-27>
+SCHEDULED: <2020-03-16 Mon>-<2020-03-27 Fri>
 ** Link: https://jira.phoenix.local/secure/RapidBoard.jspa?rapidView=246
 ** Standup Status:
 *** PROG [[file:20200309131148-pxrac_1946_performance_issues.org][pxrac-1946-performance-issues]]
 **** [~] [[file:20200312125114-pxrac_1992_update_logging_to_info.org][pxrac-1992-update-logging-to-info]]
-***** [~] [[file:20200320125813-pxrac_1992_predictions_info_logs.org][pxrac-1992-predictions-info-logs]]
+***** [ ] [[file:20200320125813-pxrac_1992_predictions_info_logs.org][pxrac-1992-predictions-info-logs]]
 - [X] Waiting on apps-common update 0.1.14.
-- Haven't opened MR yet
+- [ ] Open Merge Request
 ***** [*] [[file:20200326133428-pxrac_1992_raceapi_info_logs.org][pxrac-1992-raceapi-info-logs]]
 ***** [*] livescoringAPI update logs
  - Wait to review with vishal since this one is excessive

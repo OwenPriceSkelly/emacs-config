@@ -11,7 +11,6 @@
         org-directory "~/.doom.d/org/"
         org-agenda-files '("~/.doom.d/"
                            "~/.doom.d/org/"
-                           "~/.doom.d/org/roam/"
                            "~/.doom.d/org/roam/work/")
 
         which-key-side-window-location 'bottom
@@ -58,33 +57,12 @@
   (map! :map org-mode-map
         :localleader
         :desc "Sort"     "S"     #'org-sort))
+
 ;; -----------------------------------------------------------------------------
 ;; --------------------------- use-package configs -----------------------------
 ;; -----------------------------------------------------------------------------
 (defun +my/use-packages ()
-  (use-package! org-roam
-    :commands
-    (org-roam org-roam-today org-roam-find-file org-roam-insert)
-    :init
-    (setq org-roam-directory (concat org-directory "roam/work/")
-          org-roam-buffer-width 0.33)
-    (map! :leader
-          :prefix "n" ; "notes"
-          (:prefix ("r" . "roam")
-            :desc "toggle org-roam buffer"         "r" #'org-roam
-            :desc "find org-roam file"             "f" #'org-roam-find-file
-            :desc "insert org-roam file"           "i" #'org-roam-insert
-            :desc "show graph in browser"          "g" #'org-roam-show-graph
-            ;; :desc "capture"                        "x" #'org-roam-capture
-            :desc "find today's org-roam file"     "t" #'org-roam-today
-            :desc "find tomorrow's org-roam file"  "T" #'org-roam-tomorrow
-            :desc "find yesterday's org-roam file" "y" #'org-roam-yesterday
-            :desc "find <date> org-roam file"      "d" #'org-roam-date))
-    (map! :map org-roam-backlinks-mode-map
-          "TAB"  #'org-next-link
-          [tab]  #'org-next-link)
-    :config
-    (org-roam-mode +1))
+
   (use-package! expand-region
     :config
     (setq expand-region-contract-fast-key "V"))
