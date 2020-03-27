@@ -36,6 +36,7 @@
   (setq deft-directory org-directory
         deft-recursive t
         deft-use-filter-string-for-filename t
+        deft-default-extension "org"
         org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
         org-todo-keywords '((sequence "[ ](t)"     ; A subtask
                                       "[~](p!)"    ; Subtask currently in-progress

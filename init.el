@@ -15,7 +15,7 @@
 ;;      directory (for easy access to its source code).
 
 (doom! :notes
-       zettel
+       roam
 
        :completion
        company              ; the ultimate code completion backend
