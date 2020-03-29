@@ -14,15 +14,17 @@
 ;;      Alternatively, press 'gd' (or 'C-c g d') on a module to browse its
 ;;      directory (for easy access to its source code).
 
-(doom! :notes
-       zettel
+(doom! :my
+       notes
 
        :completion
        company              ; the ultimate code completion backend
        (ivy
         +fuzzy
         +prescient
+        ;; +icons
         +childframe)        ; a search engine for love and life
+
        :ui
        deft                 ; notational velocity for Emacs
        doom                 ; what makes DOOM look the way it does
@@ -36,12 +38,10 @@
        (popup               ; tame sudden yet inevitable temporary windows
         +all                ; catch all popups that start with an asterix
         +defaults)          ; default popup rules
-       ;; neotree           ; a project drawer, like NERDTree for vim
        treemacs             ; a project drawer, like neotree but cooler
        vc-gutter            ; vcs diff in the fringe
        vi-tilde-fringe      ; fringe tildes to mark beyond EOB
-       window-select ;; +numbers)
-                                        ; visually switch windows
+       window-select        ; visually switch windows
        workspaces           ; tab emulation, persistence & separate workspaces
        zen                  ; distraction-free coding or writing
 
@@ -74,8 +74,7 @@
        ;; vterm                ; another terminals in Emacs
 
        :checkers
-       (syntax  +childframe)
-                                        ; tasing you for every semicolon you forget
+       (syntax  +childframe) ; tasing you for every semicolon you forget
        ;;spell              ; tasing you for misspelling mispelling
        ;;grammar            ; tasing grammar mistake every you make
 
@@ -95,7 +94,7 @@
        macos                ; MacOS-specific commands
        magit                ; a git porcelain for Emacs
        ;;make               ; run make tasks from Emacs
-       ;;pass               ; password manager for nerds
+       pass               ; password manager for nerds
        pdf                  ; pdf enhancements
        ;;prodigy            ; FIXME managing external services & code builders
        rgb                  ; creating color strings
@@ -170,15 +169,15 @@
        ;;web                ; the tubes
 
        :email
-       ;;(mu4e +gmail)
-       ;;notmuch
+       ;; (mu4e +gmail)
+       ;; notmuch
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar
+       calendar
        ;;irc                ; how neckbeards socialize
        ;;(rss +org)         ; emacs as an RSS reader
-       ;;twitter            ; twitter client https://twitter.com/vnought
+       twitter            ; twitter client https://twitter.com/vnought
 
        :config
        ;;literate

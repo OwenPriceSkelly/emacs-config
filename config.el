@@ -3,15 +3,13 @@
   (setq user-full-name "Owen Price-Skelly"
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
-        doom-theme 'doom-city-lights
+        doom-theme 'doom-rouge
         doom-font (font-spec :family "monospace" :size 14)
         solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t
 
-        org-directory "~/.doom.d/org/"
-        org-agenda-files '("~/.doom.d/"
-                           "~/.doom.d/org/"
-                           "~/.doom.d/org/roam/work/")
+        org-directory "~/.org.d/"
+        org-agenda-files '("~/.org.d/")
 
         which-key-side-window-location 'bottom
         which-key-sort-order 'which-key-key-order-alpha
@@ -36,7 +34,9 @@
   (setq deft-directory org-directory
         deft-recursive t
         deft-use-filter-string-for-filename t
+        deft-default-extension "org"
         org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
+        org-startup-folded nil
         org-todo-keywords '((sequence "[ ](t)"     ; A subtask
                                       "[~](p!)"    ; Subtask currently in-progress
                                       "[*](w@)"    ; Subtask is being held up or paused
@@ -57,7 +57,6 @@
   (map! :map org-mode-map
         :localleader
         :desc "Sort"     "S"     #'org-sort))
-
 ;; -----------------------------------------------------------------------------
 ;; --------------------------- use-package configs -----------------------------
 ;; -----------------------------------------------------------------------------
@@ -68,8 +67,6 @@
     (setq expand-region-contract-fast-key "V"))
   (use-package! evil-textobj-line
     :demand t))
-
-
 (defun +my/treemacs-sidebar ()
   "Hacky; Found myself selecting window after changing project and needing to
   close and reopen for treemacs to update to the next project's directory"
@@ -168,7 +165,6 @@
               lsp-ui-doc-max-height 35
               lsp-ui-doc-max-width 35
               lsp-ui-doc-delay 0.4)))))
-
 ;; persist frame size/fullscreen across sessions
 (defun +my/persist-frame-size ()
   (when-let (dims (doom-cache-get 'last-frame-size))
