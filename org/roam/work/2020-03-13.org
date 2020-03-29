@@ -1,8 +1,0 @@
-#+TITLE: 2020-03-13
-* Tags:
-** Projects: [[file:20200309103136-journals.org][Journals]], [[file:20200309103005-sprint_45.org][sprint 45]]
-* Tasks:
-** livescoringapi finished - [[file:20200309105128-pxrac_1569_livescoring_unit_tests.org][pxrac-1569-livescoring-unit-tests]]
-
-* Notes:
-** Worked from home

@@ -1,6 +1,0 @@
-#+TITLE: 2020-03-03
-* Tags:
-** Project: [[file:20200309103136-journals.org][Journals]], [[file:20200309103005-sprint_45.org][sprint 45]]
-* Tasks:
-** Finished [[file:20200309102844-pxrac_1969_odds_contract_fix.org][pxrac-1969-odds-contract-fix]]
-** Started  [[file:20200309103347-pxrac_1972_poolsize_only_option.org][pxrac-1972-poolsize-only-option]]

@@ -1,2 +1,0 @@
-#+TITLE: features ETL pipeline
-* Project: [[file:20200309101515-global_racing_components.org][Global Racing Components]]
