@@ -1,3 +1,0 @@
-#+TITLE: modelling-predictions
-* Tags:
-** Projects: [[file:20200312123524-nexus_common_repos.org][Nexus Common Repos]], [[file:20200309101515-global_racing_components.org][Global Racing Components]]

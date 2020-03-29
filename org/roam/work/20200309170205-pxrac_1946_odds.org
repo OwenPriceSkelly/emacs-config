@@ -1,9 +1,0 @@
-#+TITLE: pxrac-1946-odds
-* Projects: [[file:20200309131148-pxrac_1946_performance_issues.org][pxrac-1946-performance-issues]], [[file:20200309102950-oddsapi.org][oddsAPI]], [[file:20200309103005-sprint_45.org][sprint 45]]
-* Notes:
-** Started [[file:2020-03-09.org][2020-03-09]]
-*** Naive search/replace to change all info calls to debug
-*** created and tested decorator class to time functions
-*** wrapped all lib_odds functions
-** NOTE: should the behavior be to simply overwrite on subsequent calls or do we want to keep everything?
-*** as of [[file:2020-03-10.org][2020-03-10]], clears cache after each info log

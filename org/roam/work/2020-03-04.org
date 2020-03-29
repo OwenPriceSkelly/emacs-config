@@ -1,8 +1,0 @@
-#+TITLE: 2020-03-04
-* Tags:
-** Project: [[file:20200309103136-journals.org][Journals]], [[file:20200309103005-sprint_45.org][sprint 45]]
-* Notes:
-- Worked on [[file:20200309103608-pxrac_1939_predictions_unit_tests.org][pxrac-1939-predictions-unit-tests]]
-- For local testing, also set up local DDB docker image
-- TODO: test against odds api or something?
-- Finished [[file:20200309103347-pxrac_1972_poolsize_only_option.org][pxrac-1972-poolsize-only-option]]

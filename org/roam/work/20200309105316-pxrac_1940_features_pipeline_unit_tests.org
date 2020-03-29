@@ -1,2 +1,0 @@
-#+TITLE: pxrac-1940-features-pipeline-unit-tests
-* Project: [[file:20200309104341-features_etl_pipeline.org][features ETL pipeline]]
