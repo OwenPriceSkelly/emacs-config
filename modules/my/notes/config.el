@@ -1,3 +1,4 @@
+;;; $DOOMDIR/modules/my/notes/config.el -*- lexical-binding: t; -*-
 
 (use-package! org-roam
   :defer-incrementally t
@@ -17,7 +18,9 @@
         org-roam-completion-fuzzy-match t
         org-roam-date-title-format "%Y-%m-%d-%A"
         org-roam-graph-max-title-length 50
-        ;; org-roam-graph-viewer "open"
+        org-roam-buffer-position 'right
+        org-roam-graph-viewer "open"
+        org-roam-graph-exclude-matcher "old/"
         org-roam-capture-templates '(("d" "default" entry (function org-roam-capture--get-point)
                                       "%?"
                                       :file-name "%<%Y-%m-%d>-${slug}"

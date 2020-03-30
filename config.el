@@ -8,8 +8,6 @@
         solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t
 
-        org-directory "~/.org.d/"
-        org-agenda-files '("~/.org.d/")
 
         which-key-side-window-location 'bottom
         which-key-sort-order 'which-key-key-order-alpha
@@ -25,6 +23,8 @@
         undo-tree-visualizer-diff nil
         +workspaces-on-switch-project-behavior t
 
+        +latex-viewers '(pdf-tools)
+
         doom-leader-key "SPC"
         doom-leader-alt-key "C-SPC"
         doom-localleader-key ","
@@ -35,6 +35,14 @@
         deft-recursive t
         deft-use-filter-string-for-filename t
         deft-default-extension "org"
+        ;; org-preview-latex-default-process 'dvipng
+        org-preview-latex-default-process 'dvisvgm
+        ;; org-preview-latex-default-process 'imagemagick
+        org-format-latex-options '(:foreground default :background default :scale 1.0
+                                               :html-foreground "Black" :html-background "Transparent"
+                                               :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
+        org-directory "~/.org.d/"
+        org-agenda-files '("~/.org.d/")
         org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
         org-startup-folded nil
         org-todo-keywords '((sequence "[ ](t)"     ; A subtask
@@ -56,7 +64,8 @@
                                  ("WAIT"  . +org-todo-onhold)))
   (map! :map org-mode-map
         :localleader
-        :desc "Sort"     "S"     #'org-sort))
+        :desc "Sort"     "S"          #'org-sort
+        :desc "preview fragments" "L" #'org-latex-preview))
 ;; -----------------------------------------------------------------------------
 ;; --------------------------- use-package configs -----------------------------
 ;; -----------------------------------------------------------------------------
