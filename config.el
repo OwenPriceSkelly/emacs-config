@@ -38,14 +38,14 @@
         org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
         org-startup-folded nil
         org-todo-keywords '((sequence "[ ](t)"     ; A subtask
-                                      "[~](p!)"    ; Subtask currently in-progress
-                                      "[*](w@)"    ; Subtask is being held up or paused
+                                      "[~](p)"    ; Subtask currently in-progress
+                                      "[*](w!)"    ; Subtask is being held up or paused
                                       "|"
                                       "[X](d!)")   ; Subtask was completed
                             (sequence "TODO(T)"    ; A task that needs doing & is ready to do
                                       ;; "START(S)"   ; Start a larger task that cannot be completed in one step
-                                      "PROG(P!)"   ; Mark a task as in-progress
-                                      "WAIT(W@)"   ; Something is holding up this task or it is paused
+                                      "PROG(P)"   ; Mark a task as in-progress
+                                      "WAIT(W!)"   ; Something is holding up this task or it is paused
                                       "|"
                                       "DONE(D!)"   ; Task successfully completed
                                       "DROP(K@)")) ; Task was cancelled or is no longer applicable
