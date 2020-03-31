@@ -8,6 +8,10 @@
         solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t
 
+        highlight-indent-guides-method 'character
+        highlight-indent-guides-responsive 'stack
+        highlight-indent-guides-delay 0.2
+
 
         which-key-side-window-location 'bottom
         which-key-sort-order 'which-key-key-order-alpha
@@ -46,13 +50,13 @@
         org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
         org-startup-folded nil
         org-todo-keywords '((sequence "[ ](t)"     ; A subtask
-                                      "[~](p)"    ; Subtask currently in-progress
+                                      "[~](p)"     ; Subtask currently in-progress
                                       "[*](w!)"    ; Subtask is being held up or paused
                                       "|"
-                                      "[X](d!)")   ; Subtask was completed
+                                      "[X](d!)"    ; Subtask was completed ; ; ;
+                                      "[-](k@)")   ; Subtask was dropped
                             (sequence "TODO(T)"    ; A task that needs doing & is ready to do
-                                      ;; "START(S)"   ; Start a larger task that cannot be completed in one step
-                                      "PROG(P)"   ; Mark a task as in-progress
+                                      "PROG(P)"    ; Mark a task as in-progress
                                       "WAIT(W!)"   ; Something is holding up this task or it is paused
                                       "|"
                                       "DONE(D!)"   ; Task successfully completed
@@ -105,6 +109,16 @@
           (:prefix "i"
             :desc "Show Completions"   "i"             #'+company/complete))
 
+        (:prefix ("n" . "notes")
+          :desc "roam buffer"        "r"   #'org-roam
+          :desc "find/new"           "f"   #'org-roam-find-file
+          :desc "find/new"           "n"   #'org-roam-find-file
+          :desc "insert/new"         "i"   #'org-roam-insert
+          :desc "graph"              "g"   #'org-roam-graph-show
+          :desc "today's file"       "t"   #'org-roam-today
+          :desc "tomorrow's file"    "T"   #'org-roam-tomorrow
+          :desc "yesterday's file"   "y"   #'org-roam-yesterday
+          :desc "<date>'s file"      "d"   #'org-roam-date)
 
         (:prefix "w"
           "w"           #'other-window)

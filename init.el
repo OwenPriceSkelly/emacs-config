@@ -7,7 +7,7 @@
        (ivy
         +fuzzy
         +prescient
-        ;; +icons
+        +icons
         +childframe)        ; a search engine for love and life
 
        :ui
@@ -65,18 +65,18 @@
 
        :tools
        ;;ansible
-       ;;debugger           ; FIXME stepping through code, to help you add bugs
+       debugger           ; FIXME stepping through code, to help you add bugs
        ;; direnv
        docker
        ;;editorconfig       ; let someone else argue about tabs vs spaces
-       ein                  ; tame Jupyter notebooks with emacs
+       ;; ein                  ; tame Jupyter notebooks with emacs
        (eval +overlay)      ; run code, run (also, repls)
        ;;gist               ; interacting with github gists
        (lookup              ; helps you navigate your code and documentation
         +docsets)           ; ...or in Dash docsets locally
        (lsp
         +peek)
-       macos                ; MacOS-specific commands
+       (:if IS-MAC macos)                ; MacOS-specific commands
        magit                ; a git porcelain for Emacs
        ;;make               ; run make tasks from Emacs
        pass               ; password manager for nerds
@@ -113,7 +113,10 @@
        ;;javascript         ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia              ; a better, faster MATLAB
        ;;kotlin             ; a better, slicker Java(Script)
-       (latex +cdlatex)                ; writing papers in Emacs has never been so fun
+                       ; writing papers in Emacs has never been so fun
+       (:if IS-MAC
+           (latex +cdlatex)
+         latex)
        ;;lean
        ;;factor
        ;;ledger             ; an accounting system in Emacs
