@@ -4,7 +4,7 @@
         user-mail-address "Owen.Price.Skelly@gmail.com"
 
         doom-theme 'doom-rouge
-        doom-font (font-spec :family "monospace" :size 14)
+        doom-font (font-spec :family (if IS-MAC "Anonymous Pro" "monospace") :size 14)
         solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t
 
@@ -40,6 +40,7 @@
         deft-use-filter-string-for-filename t
         deft-default-extension "org"
         ;; org-preview-latex-default-process 'dvipng
+        org-startup-with-latex-preview t
         org-preview-latex-default-process 'dvisvgm
         ;; org-preview-latex-default-process 'imagemagick
         org-format-latex-options '(:foreground default :background default :scale 1.0

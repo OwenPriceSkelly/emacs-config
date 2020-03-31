@@ -1,6 +1,10 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/modules/notes/zettel/packages.el
-(package! org-roam :pin nil)
+
+(package! company-org-roam
+  :recipe (:host github :repo "jethrokuan/org-roam")
+  :pin nil)
+
 (when (featurep! :completion company)
   (package! company-org-roam
       :recipe (:host github :repo "jethrokuan/company-org-roam")
