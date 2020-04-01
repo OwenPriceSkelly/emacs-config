@@ -1,8 +1,5 @@
 ;;; init.el -*- lexical-binding: t; -*-
-(doom! :my
-       notes
-
-       :completion
+(doom! :completion
        company              ; the ultimate code completion backend
        (ivy
         +fuzzy
