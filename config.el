@@ -58,5 +58,5 @@
 (add-hook 'kill-emacs-hook  #'save-frame-dimensions)
 
 (load! "+keybindings")
-(load! "+notes")
-(load! "+lsp")
+(after! org (load! "+notes"))
+(after! lsp (load! "+lsp"))

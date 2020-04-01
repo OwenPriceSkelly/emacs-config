@@ -1,6 +1,6 @@
 ;;; init.el -*- lexical-binding: t; -*-
-(doom! :personal
-       (config +keybindings +notes +lsp)
+(doom! ;; :personal
+       ;; (config +keybindings +notes +lsp)
 
       :completion
        company              ; the ultimate code completion backend
