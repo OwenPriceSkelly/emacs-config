@@ -1,7 +1,8 @@
-;;; $DOOMDIR/+keybindings.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/modules/personal/config/+keybindings.el -*- lexical-binding: t; -*-
 
 (defun +toplevel-bindings ()
   (map!
+   :n [backtab]                                    #'+fold/toggle
    :m "g SPC"                                      #'+evil/easymotion  ; lazy-load `evil-easymotion'
    (:after (evil-org evil-easymotion)
      :map evil-org-mode-map
@@ -121,7 +122,7 @@
               :desc "tomorrow's file"    "T"       #'org-roam-tomorrow
               :desc "yesterday's file"   "y"       #'org-roam-yesterday
               :desc "<date>'s file"      "d"       #'org-roam-date)))))
-;;; actually apply the bindings
+
 (general-auto-unbind-keys)
 (+toplevel-bindings)
 (+localleader-key-bindings)

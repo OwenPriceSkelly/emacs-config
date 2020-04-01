@@ -1,3 +1,6 @@
+;;; personal/config/+notes.el -*- lexical-binding: t; -*-
+;;; Configure org and org-roam for notes
+
 (use-package! org
   :init
   (setq org-directory                   "~/.org.d/")
@@ -13,17 +16,17 @@
           org-agenda-files '("~/.org.d/")
           org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
           org-startup-folded 'content
-          org-todo-keywords '((sequence "[ ](t)"     ; A subtask
+          org-todo-keywords '((sequence "[ ](t/!)"     ; A subtask
                                         "[~](p)"     ; Subtask currently in-progress
-                                        "[*](w!)"    ; Subtask is being held up or paused
+                                        "[*](w@)"    ; Subtask is being held up or paused
                                         "|"
-                                        "[X](d!)"    ; Subtask was completed ; ; ;
+                                        "[X](d@)"    ; Subtask was completed ; ; ;
                                         "[-](k@)")   ; Subtask was dropped
-                              (sequence "TODO(T)"    ; A task that needs doing & is ready to do
+                              (sequence "TODO(T/!)"    ; A task that needs doing & is ready to do
                                         "PROG(P)"    ; Mark a task as in-progress
-                                        "WAIT(W!)"   ; Something is holding up this task or it is paused
+                                        "WAIT(W@)"   ; Something is holding up this task or it is paused
                                         "|"
-                                        "DONE(D!)"   ; Task successfully completed
+                                        "DONE(D@)"   ; Task successfully completed
                                         "DROP(K@)")) ; Task was cancelled or is no longer applicable
           org-todo-keyword-faces '(("[~]"   . +org-todo-active)
                                    ("[*]"   . +org-todo-onhold)
@@ -48,10 +51,9 @@
         org-roam-completion-fuzzy-match t
         org-roam-date-filename-format   "%Y-%m-%d-%A"   ; YYYY-mm-dd-Weekday
         org-roam-date-title-format      "%A, %B %d, %Y" ; Weekday, Month dd, YYYY
-        org-roam-graph-max-title-length 50
+        org-roam-graph-max-title-length 40
         org-roam-buffer-position        'right
-        org-roam-graph-viewer           (if IS-MAC "open"
-                                          "firefox")
+        org-roam-graph-viewer           (if IS-MAC "open" "firefox")
         org-roam-graph-exclude-matcher  "old/"
         org-roam-capture-templates      '(("d" "default" entry (function org-roam-capture--get-point)
                                            "%?"

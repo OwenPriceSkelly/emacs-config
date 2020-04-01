@@ -11,7 +11,6 @@
       highlight-indent-guides-responsive 'stack
       highlight-indent-guides-delay 0.2
 
-
       which-key-side-window-location 'bottom
       which-key-sort-order 'which-key-key-order-alpha
 
@@ -39,27 +38,6 @@
 
 (use-package! evil-textobj-line
   :demand t)
-
-
-(defun +python-lsp-config ()
-  (when (and (featurep! :tools lsp)
-             (featurep! :lang python +lsp))
-    (setq lsp-pyls-plugins-pylint-enabled t
-          lsp-pyls-plugins-pylint-args ["--disable=C,logging-format-interpolation,useless-return"]
-          lsp-pyls-plugins-pycodestyle-enabled nil
-          lsp-pyls-plugins-flake8-enabled nil
-          lsp-pyls-plugins-pyflakes-enabled nil)
-    (when (featurep! :tools lsp +peek)
-      (after! lsp-ui
-        (lsp-ui-doc-enable t)
-        (setq lsp-ui-doc-position 'top
-              lsp-ui-doc-max-height 35
-              lsp-ui-doc-max-width 35
-              lsp-ui-doc-delay 0.4)))))
-
-(after! python (+python-lsp-config))
-(after! org (load! "+org-config.el"))
-(load! "+keybindings")
 
 ;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))
