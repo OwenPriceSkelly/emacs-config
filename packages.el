@@ -5,6 +5,10 @@
 (package! hercules)
 (package! evil-textobj-line)
 (package! doom-themes :pin nil)
+(package! org-roam
+  :recipe (:host github :repo "jethrokuan/org-roam") :pin nil)
+(package! company-org-roam
+  :recipe (:host github :repo "jethrokuan/company-org-roam") :pin nil)
 ;; ----------------------------------------------------------------
 ;;
 ;; This is where you install packages, by declaring them with the `package!'

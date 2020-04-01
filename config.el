@@ -56,3 +56,7 @@
                         (frame-height)
                         (frame-parameter nil 'fullscreen))))
 (add-hook 'kill-emacs-hook  #'save-frame-dimensions)
+
+(load! "+keybindings")
+(load! "+notes")
+(load! "+lsp")
