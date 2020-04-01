@@ -9,6 +9,7 @@
   :recipe (:host github :repo "jethrokuan/org-roam") :pin nil)
 (package! company-org-roam
   :recipe (:host github :repo "jethrokuan/company-org-roam") :pin nil)
+(package! atomic-chrome)
 ;; ----------------------------------------------------------------
 ;;
 ;; This is where you install packages, by declaring them with the `package!'

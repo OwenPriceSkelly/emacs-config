@@ -3,7 +3,7 @@
 
 (use-package! org
   :init
-  (setq org-directory                   "~/.org.d/")
+  (setq org-directory                   "~/.org/")
   :config
   (setq org-startup-folded              'content
           ;; org-preview-latex-default-process 'dvipng
@@ -13,7 +13,7 @@
           org-format-latex-options '(:foreground default :background default :scale 1.0
                                                 :html-foreground "Black" :html-background "Transparent"
                                                 :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-          org-agenda-files '("~/.org.d/")
+          org-agenda-files '("~/.org/")
           org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
           org-startup-folded 'content
           org-todo-keywords '((sequence "[ ](t/!)"     ; A subtask
@@ -33,6 +33,8 @@
                                    ("PROG"  . +org-todo-active)
                                    ("WAIT"  . +org-todo-onhold))))
 
+;;TODO
+(defun toggle-exclude-journals ())
 
 (use-package! org-roam
   :defer-incrementally org
@@ -46,7 +48,7 @@
             org-roam-date)
   :config
   (setq org-roam-directory              org-directory
-        org-roam-db-location            (concat       org-roam-directory "org-roam.db")
+        org-roam-db-location            (concat org-roam-directory "org-roam.db")
         org-roam-buffer-width           0.30
         org-roam-completion-fuzzy-match t
         org-roam-date-filename-format   "%Y-%m-%d-%A"   ; YYYY-mm-dd-Weekday
@@ -54,12 +56,12 @@
         org-roam-graph-max-title-length 40
         org-roam-buffer-position        'right
         org-roam-graph-viewer           (if IS-MAC "open" "firefox")
-        org-roam-graph-exclude-matcher  "old/"
-        org-roam-capture-templates      '(("d" "default" entry (function org-roam-capture--get-point)
-                                           "%?"
-                                           :file-name "%<%Y-%m-%d>-${slug}"
-                                           :head "#+TITLE: ${title}\n* Tags:\n** From: [[file:%F][${captured-from}]]\n** Category: \n* Description: "
-                                           :unnarrowed t))
+        org-roam-graph-exclude-matcher  (list "old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+        org-roam-capture-templates      (list (list "d" "default" 'entry (list 'function #'org-roam-capture--get-point)
+                                                    "%?"
+                                                    :file-name "%<%Y-%m-%d>-${slug}"
+                                                    :head "#+TITLE: ${title}\n* Tags:\n** From: [[file:%F][${captured-from}]]\n** Category: \n* Description: "
+                                                    :unnarrowed t))
         org-capture-templates           org-roam-capture-templates)
   (org-roam-mode +1))
 

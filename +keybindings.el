@@ -101,8 +101,8 @@
 
           (:when (featurep! :ui workspaces)
             (:prefix "TAB"
-              :desc "Main workspace"      "`"      #'+workspace/other
-              :desc "Previous workspace"   "TAB"   #'+workspace/switch-to-0))
+              :desc "Main workspace"       "`"     #'+workspace/switch-to-0
+              :desc "Previous workspace"   "TAB"   #'+workspace/other))
 
           (:when (featurep! :completion ivy)
             :desc "Ivy M-x"                "SPC"   #'counsel-M-x)

@@ -2,9 +2,9 @@
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
 
-      doom-theme 'doom-rouge
-      doom-font (font-spec :family (if IS-MAC "Anonymous Pro" "monospace") :size 14)
-      solaire-mode-auto-swap-bg t
+      doom-theme 'doom-moonlight
+      doom-font (font-spec :family (if IS-MAC "Hack" "monospace") :size 13)
+      ;; solaire-mode-auto-swap-bg t
       solaire-mode-remap-line-numbers t
 
       highlight-indent-guides-method 'character
@@ -39,6 +39,11 @@
 (use-package! evil-textobj-line
   :demand t)
 
+(use-package! atomic-chrome
+  :defer-incrementally t
+  :config
+  (setq atomic-chrome-buffer-open-style 'frame))
+
 ;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))
   (cl-destructuring-bind ((left . top) width height fullscreen) dims
@@ -60,3 +65,4 @@
 (load! "+keybindings")
 (after! org (load! "+notes"))
 (after! lsp (load! "+lsp"))
+;; (+default/restart-server)
