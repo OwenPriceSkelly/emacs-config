@@ -37,9 +37,9 @@
 (defun toggle-exclude-journals ())
 
 (use-package! org-roam
-  :defer-incrementally org
   :commands
   (org-roam org-roam-find-file
+            org-roam-buffer
             org-roam-insert
             org-roam-graph-show
             org-roam-today
