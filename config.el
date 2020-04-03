@@ -23,7 +23,7 @@
       which-key-max-description-length nil
 
       undo-tree-visualizer-diff nil
-      +workspaces-on-switch-project-behavior t
+      +workspaces-on-switch-project-behavior 'non-empty
 
       +latex-viewers '(pdf-tools)
 
@@ -43,6 +43,9 @@
   :defer-incrementally t
   :config
   (setq atomic-chrome-buffer-open-style 'frame))
+(use-package! evil-string-inflection
+  :demand t
+  :init (map! :o "g~" #'evil-operator-string-inflection))
 
 ;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))

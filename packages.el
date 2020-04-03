@@ -10,6 +10,7 @@
 (package! company-org-roam
   :recipe (:host github :repo "jethrokuan/company-org-roam") :pin nil)
 (package! atomic-chrome)
+(package! evil-string-inflection)
 ;; ----------------------------------------------------------------
 ;;
 ;; This is where you install packages, by declaring them with the `package!'
