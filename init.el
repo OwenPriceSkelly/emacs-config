@@ -3,7 +3,7 @@
        ;; (config +keybindings +notes +lsp)
 
       :completion
-       company              ; the ultimate code completion backend
+       (company +childframe)              ; the ultimate code completion backend
        (ivy
         +fuzzy
         +prescient
@@ -47,15 +47,14 @@
         +ranger
         +icons)             ; making dired pretty [functional]
        electric             ; smarter, keyword-based electric-indent
-       (ibuffer
-        +icons)             ; interactive buffer management
+       (ibuffer +icons)             ; interactive buffer management
        vc                   ; version-control and Emacs, sitting in a tree
 
        :term
        eshell               ; a consistent, cross-platform shell (WIP)
        ;; shell             ; a terminal REPL for Emacs
-       term               ; terminals in Emacs
-       ;; vterm                ; another terminals in Emacs
+       (:if IS-MAC vterm
+         term)                ; another terminals in Emacs
 
        :checkers
        (syntax  +childframe) ; tasing you for every semicolon you forget
@@ -71,8 +70,8 @@
        ;; ein                  ; tame Jupyter notebooks with emacs
        (eval +overlay)      ; run code, run (also, repls)
        ;;gist               ; interacting with github gists
-       (lookup              ; helps you navigate your code and documentation
-        +docsets)           ; ...or in Dash docsets locally
+       (lookup)              ; helps you navigate your code and documentation
+        ;; +docsets)           ; ...or in Dash docsets locally
        (lsp
         +peek)
        (:if IS-MAC macos)                ; MacOS-specific commands
@@ -81,7 +80,7 @@
        pass               ; password manager for nerds
        pdf                  ; pdf enhancements
        ;;prodigy            ; FIXME managing external services & code builders
-       rgb                  ; creating color strings
+       ;; rgb                  ; creating color strings
        terraform            ; infrastructure as code
        ;;tmux               ; an API for interacting with tmux
        upload               ; map local to remote projects via ssh/ftp
@@ -127,7 +126,7 @@
        (org                 ; organize your plain life in plain text
         +roam
         ;; +journal
-        ;;+dragndrop        ; drag & drop files/images into org buffers
+        +dragndrop        ; drag & drop files/images into org buffers
         +gnuplot
         +hugo               ; use Emacs for hugo blogging
         ;;+jupyter          ; ipython/jupyter support for babel
@@ -139,7 +138,6 @@
        ;;plantuml           ; diagrams for confusing people more
        ;;purescript         ; javascript, but functional
        (python
-        +pyenv
         +lsp)               ; beautiful is better than ugly ;
        ;;qt                 ; the 'cutest' gui framework ever
        ;;racket             ; a DSL for DSLs
@@ -162,7 +160,7 @@
        ;;(wanderlust +gmail)
 
        :app
-       calendar
+       ;; calendar
        ;;irc                ; how neckbeards socialize
        ;;(rss +org)         ; emacs as an RSS reader
        twitter            ; twitter client https://twitter.com/vnought
