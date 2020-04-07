@@ -1,9 +1,9 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      doom-theme 'doom-solarized-light
-      doom-font (font-spec :family (if IS-MAC "Iosevka Extralight Extended" "monospace") :size 14)
-      doom-variable-pitch-font (font-spec :family (if IS-MAC "Iosevka Etoile Extralight" "serif") :size 16)
+      doom-theme 'doom-gruvbox
+      doom-font (font-spec :family "Iosevka Extralight Extended" :size 14)
+      doom-variable-pitch-font (font-spec :family "Iosevka Etoile Extralight" :size 16)
       ;; solaire-mode-auto-swap-bg t
       solaire-mode-remap-line-numbers t
       highlight-indent-guides-method 'character
