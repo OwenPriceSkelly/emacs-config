@@ -18,7 +18,9 @@
                                                :html-foreground "Black" :html-background "Transparent"
                                                :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
         org-agenda-files (list org-directory)
-        org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
+        ;; org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
+        org-ellipsis " ▾ "
+        org-bullets-bullet-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷" "☷" "☷" "☷")
         org-startup-folded 'content
         org-todo-keywords '((sequence "[ ](t/!)"     ; A subtask
                                       "[~](p)"     ; Subtask currently in-progress

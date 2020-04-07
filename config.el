@@ -2,9 +2,8 @@
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
       doom-theme 'doom-solarized-light
-      doom-font (font-spec :family (if IS-MAC "Iosevka" "monospace") :size 14)
-      doom-variable-pitch-font (font-spec :family (if IS-MAC "ETBookOT"))
-      ;; doom-unicode-font (font-spec :family (if IS-MAC "Iosevka Sparkle"))
+      doom-font (font-spec :family (if IS-MAC "Iosevka Extralight Extended" "monospace") :size 14)
+      doom-variable-pitch-font (font-spec :family (if IS-MAC "Iosevka Etoile Extralight" "serif") :size 16)
       ;; solaire-mode-auto-swap-bg t
       solaire-mode-remap-line-numbers t
       highlight-indent-guides-method 'character
@@ -23,7 +22,11 @@
       doom-leader-key "SPC"
       doom-leader-alt-key "C-SPC"
       doom-localleader-key ","
-      doom-localleader-alt-key "C-,")
+      doom-localleader-alt-key "C-,"
+      evil-split-window-below t
+      evil-split-window-right t)
+
+;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 
 (use-package! expand-region
   :config
