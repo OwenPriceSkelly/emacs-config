@@ -57,8 +57,13 @@
                                    "** Tag: [[file:2020-04-02-math.org][::math]]\n"
                                    "** Tag:  \n"
                                    "** Tag:  \n"
-                                   "* Description: \n"
-                                   "* Related: \n")
+                                   "* Description: ")
+      +my/work-roam-header (concat "#+TITLE: ${title}\n"
+                                   "* Tags:\n"
+                                   "** Sprint: [[file:2020-03-30-sprint_47.org][sprint 47]]"
+                                   "** Category:  \n"
+                                   "** Project:  \n"
+                                   "* Description: ")
       +my/org-roam-capture-templates (if IS-MAC (list (list "d" "default" 'entry (list 'function #'org-roam-capture--get-point)
                                                             "%?"
                                                             :file-name "%<%Y-%m-%d>-${slug}"
@@ -73,6 +78,11 @@
                                                    "%?"
                                                    :file-name "%<%Y-%m-%d>-${slug}"
                                                    :head +my/default-roam-header
+                                                   :unnarrowed t)
+                                             (list "d" "default" 'entry (list 'function #'org-roam-capture--get-point)
+                                                   "%?"
+                                                   :file-name "%<%Y-%m-%d>-${slug}"
+                                                   :head +my/work-roam-header
                                                    :unnarrowed t))))
 
 
