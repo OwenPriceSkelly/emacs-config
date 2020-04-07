@@ -10,15 +10,16 @@
   (sp-local-pair '(org-mode) "$" "$") ; For inline latex stuff
   (setq org-startup-folded              'content
         ;; org-preview-latex-default-process 'dvipng
-        org-startup-with-latex-preview t
+        org-startup-with-latex-preview nil
 
         org-preview-latex-default-process 'dvisvgm
-        ;; org-preview-latex-default-process 'imagemagick
         org-format-latex-options '(:foreground default :background default :scale 1.0
                                                :html-foreground "Black" :html-background "Transparent"
                                                :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
         org-agenda-files (list org-directory)
-        org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
+        ;; org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
+        org-ellipsis " ▾ "
+        org-bullets-bullet-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷" "☷" "☷" "☷")
         org-startup-folded 'content
         org-todo-keywords '((sequence "[ ](t/!)"     ; A subtask
                                       "[~](p)"     ; Subtask currently in-progress
