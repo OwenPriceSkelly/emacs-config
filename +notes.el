@@ -5,13 +5,13 @@
   :init
   (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
   (add-hook! (org-mode) #'(+org-pretty-mode  variable-pitch-mode))
-  (add-hook! org-mode :local (setq display-line-numbers 0))
+  (add-hook! org-mode :local (hl-line-mode 0))
   :config
+  (doom-themes-org-config)
   (sp-local-pair '(org-mode) "$" "$") ; For inline latex stuff
   (setq org-startup-folded              'content
         ;; org-preview-latex-default-process 'dvipng
         org-startup-with-latex-preview t
-
         org-preview-latex-default-process 'dvisvgm
         ;; org-preview-latex-default-process 'imagemagick
         org-format-latex-options '(:foreground default :background default :scale 1.0

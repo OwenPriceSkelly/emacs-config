@@ -11,8 +11,8 @@
         +childframe)        ; a search engine for love and life
 
        :ui
-       (pretty-code
-        +iosevka)
+       ;; (pretty-code
+       ;;  +iosevka)
        ;; deft                 ; notational velocity for Emacs
        doom                 ; what makes DOOM look the way it does
        doom-dashboard       ; a nifty splash screen for Emacs
