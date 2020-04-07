@@ -4,11 +4,14 @@
 (use-package! org
   :init
   (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
+  (add-hook! (org-mode) #'(+org-pretty-mode  variable-pitch-mode))
+  (add-hook! org-mode :local (setq display-line-numbers 0))
   :config
   (sp-local-pair '(org-mode) "$" "$") ; For inline latex stuff
   (setq org-startup-folded              'content
         ;; org-preview-latex-default-process 'dvipng
         org-startup-with-latex-preview t
+
         org-preview-latex-default-process 'dvisvgm
         ;; org-preview-latex-default-process 'imagemagick
         org-format-latex-options '(:foreground default :background default :scale 1.0
@@ -45,13 +48,15 @@
                                       "** Tag:  \n"
                                       "** Tag:  \n"
                                       "** Tag:  \n"
-                                      "* Description: ")
+                                      "* Description: \n"
+                                      "* Related: \n")
       +my/math-roam-header (concat "#+TITLE: ${title}\n"
                                    "* Tags:\n"
                                    "** Tag: [[file:2020-04-02-math.org][::math]]\n"
                                    "** Tag:  \n"
                                    "** Tag:  \n"
-                                   "* Description: ")
+                                   "* Description: \n"
+                                   "* Related: \n")
       +my/org-roam-capture-templates (if IS-MAC (list (list "d" "default" 'entry (list 'function #'org-roam-capture--get-point)
                                                             "%?"
                                                             :file-name "%<%Y-%m-%d>-${slug}"

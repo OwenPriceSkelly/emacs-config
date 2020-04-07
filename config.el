@@ -1,8 +1,10 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      doom-theme 'doom-rouge
-      doom-font (font-spec :family (if IS-MAC "Source Code Pro" "monospace") :size 14)
+      doom-theme 'doom-solarized-light
+      doom-font (font-spec :family (if IS-MAC "Iosevka" "monospace") :size 14)
+      doom-variable-pitch-font (font-spec :family (if IS-MAC "ETBookOT"))
+      ;; doom-unicode-font (font-spec :family (if IS-MAC "Iosevka Sparkle"))
       ;; solaire-mode-auto-swap-bg t
       solaire-mode-remap-line-numbers t
       highlight-indent-guides-method 'character
@@ -10,7 +12,7 @@
       highlight-indent-guides-delay 0.2
       which-key-side-window-location 'bottom
       which-key-sort-order 'which-key-key-order-alpha
-      display-line-numbers-type 'relative
+      display-line-numbers-type t
       ranger-override-dired t
       iedit-occurrence-context-lines 1
       fill-column 88
