@@ -11,14 +11,14 @@
         +childframe)        ; a search engine for love and life
 
        :ui
-       ;; (pretty-code
-       ;;  +iosevka)
+       (pretty-code
+        +iosevka)
        ;; deft                 ; notational velocity for Emacs
        doom                 ; what makes DOOM look the way it does
        doom-dashboard       ; a nifty splash screen for Emacs
        hl-todo              ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
-       indent-guides        ; highlighted indent columns
+       ;; indent-guides        ; highlighted indent columns
        modeline             ; snazzy, Atom-inspired modeline, plus API
        nav-flash            ; blink the current line after jumping
        ophints              ; highlight the region an operation acts on

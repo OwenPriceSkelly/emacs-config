@@ -84,7 +84,7 @@
   (map! (:leader
           :desc "Search project"         "/"        #'+default/search-project
           :desc "Visual expand"          "v"        #'er/expand-region
-          :desc "Undo Tree"              "U"        #'undo-tree-visualize
+          ;; :desc "Undo Tree"              "U"        #'undo-tree-visualize
 
           (:prefix ("w" . "window")
             :desc "Switch to last window" "w"       #'evil-window-mru)
@@ -95,7 +95,7 @@
             :desc "ibuffer (other window)" "I"      #'ibuffer-other-window)
 
           (:when (featurep! :ui treemacs)
-            :desc "Project sidebar"        "0"      #'+my-treemacs-sidebar)
+            :desc "Project sidebar"        "0"      #'+treemacs/toggle)
 
           (:when (featurep! :ui workspaces)
             (:prefix "TAB"

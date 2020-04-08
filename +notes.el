@@ -22,17 +22,17 @@
         org-ellipsis " ▾ "
         org-bullets-bullet-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷" "☷" "☷" "☷")
         org-startup-folded 'content
-        org-todo-keywords '((sequence "[ ](t/!)"     ; A subtask
+        org-todo-keywords '((sequence "[ ](t)"     ; A subtask
                                       "[~](p)"     ; Subtask currently in-progress
-                                      "[*](w@)"    ; Subtask is being held up or paused
+                                      "[*](w)"    ; Subtask is being held up or paused
                                       "|"
-                                      "[X](d@)"    ; Subtask was completed ; ; ;
+                                      "[X](d!)"    ; Subtask was completed ; ; ;
                                       "[-](k@)")   ; Subtask was dropped
-                            (sequence "TODO(T/!)"    ; A task that needs doing & is ready to do
+                            (sequence "TODO(T)"    ; A task that needs doing & is ready to do
                                       "PROG(P)"    ; Mark a task as in-progress
-                                      "WAIT(W@)"   ; Something is holding up this task or it is paused
+                                      "WAIT(W)"   ; Something is holding up this task or it is paused
                                       "|"
-                                      "DONE(D@)"   ; Task successfully completed
+                                      "DONE(D!)"   ; Task successfully completed
                                       "DROP(K@)")) ; Task was cancelled or is no longer applicable
         org-todo-keyword-faces '(("[~]"   . +org-todo-active)
                                  ("[*]"   . +org-todo-onhold)
