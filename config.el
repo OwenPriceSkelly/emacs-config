@@ -2,13 +2,12 @@
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
       doom-theme 'doom-gruvbox
-      doom-font (font-spec :family "Iosevka Extralight Extended" :size 14)
-      doom-variable-pitch-font (font-spec :family "Iosevka Etoile Extralight" :size 16)
+      doom-font (font-spec :family "Iosevka Extended" :size 16)
+      doom-variable-pitch-font (font-spec :family "Iosevka Sparkle" :size 18)
+      ;; doom-font (font-spec :family "Iosevka Extended" :size 16)
+      ;; doom-variable-pitch-font (font-spec :family "Iosevka Etoile" :size 16)
       ;; solaire-mode-auto-swap-bg t
       solaire-mode-remap-line-numbers t
-      highlight-indent-guides-method 'character
-      highlight-indent-guides-responsive 'stack
-      highlight-indent-guides-delay 0.2
       which-key-side-window-location 'bottom
       which-key-sort-order 'which-key-key-order-alpha
       display-line-numbers-type t
@@ -17,15 +16,17 @@
       fill-column 88
       which-key-max-description-length nil
       undo-tree-visualizer-diff nil
-      +workspaces-on-switch-project-behavior 'non-empty
+      +workspaces-on-switch-project-behavior t
       +latex-viewers '(pdf-tools)
       doom-leader-key "SPC"
       doom-leader-alt-key "C-SPC"
       doom-localleader-key ","
       doom-localleader-alt-key "C-,"
       evil-split-window-below t
-      evil-split-window-right t)
-
+      evil-split-window-right t
+      +pretty-code-enabled-modes (list 'not 'python-mode))
+(set-pretty-symbols! 'python-mode nil)
+;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 (use-package! expand-region
   :config
   (setq expand-region-contract-fast-key "V"))
