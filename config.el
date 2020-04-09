@@ -1,6 +1,7 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
+
       doom-theme 'doom-gruvbox
       doom-font (font-spec :family "Iosevka" :size 16)
       doom-variable-pitch-font (font-spec :family "Iosevka Sparkle" :size 18)
@@ -17,18 +18,29 @@
       iedit-occurrence-context-lines 1
       fill-column 88
       which-key-max-description-length nil
-      undo-tree-visualizer-diff nil
       +workspaces-on-switch-project-behavior t
+
       +latex-viewers '(pdf-tools)
+
       doom-leader-key "SPC"
       doom-leader-alt-key "C-SPC"
       doom-localleader-key ","
       doom-localleader-alt-key "C-,"
       evil-split-window-below t
-      evil-split-window-right t
-      +pretty-code-enabled-modes (list 'not 'python-mode))
+      evil-vsplit-window-right t)
+
+
+
+(use-package! zone
+  :demand t
+  :config
+  (zone-when-idle 300)
+  (setq zone-programs [zone-pgm-random-life]
+        zone-pgm-random-life-wait 1))
+
+(zone-when-idle 300)
 (set-pretty-symbols! 'python-mode nil)
-;; (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+
 (use-package! expand-region
   :config
   (setq expand-region-contract-fast-key "V"))
@@ -61,7 +73,7 @@
 (add-hook 'kill-emacs-hook  #'save-frame-dimensions)
 
 (load! "+dashboard")
-(load! "+keybindings")
+(load! "+bindings")
 (after! org (load! "+org"))
 (after! lsp (load! "+lsp"))
 ;; (+default/restart-server)

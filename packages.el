@@ -9,3 +9,6 @@
   :recipe (:host github :repo "jethrokuan/company-org-roam"))
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el"))
+
+;; (package! undo-fu :disable t)
+;; (package! undo-fu-session :disable t)
