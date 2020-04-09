@@ -104,7 +104,7 @@
                                                    :file-name "%<%Y-%m-%d>-${slug}"
                                                    :head +my/default-roam-header
                                                    :unnarrowed t)
-                                             (list "w" "default" 'entry (list 'function #'org-roam-capture--get-point)
+                                             (list "w" "work" 'entry (list 'function #'org-roam-capture--get-point)
                                                    "%?"
                                                    :file-name "%<%Y-%m-%d>-${slug}"
                                                    :head +my/work-roam-header
