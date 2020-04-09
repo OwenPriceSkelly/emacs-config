@@ -1,26 +1,52 @@
-;;; personal/config/+notes.el -*- lexical-binding: t; -*-
+;;; personal/config/+org.el -*- lexical-binding: t; -*-
 ;;; Configure org and org-roam for notes
 
 (use-package! org
   :init
   (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
-  (add-hook! (org-mode) #'(+org-pretty-mode  variable-pitch-mode))
-  (add-hook! org-mode :local (hl-line-mode 0))
-  :config
   (doom-themes-org-config)
   (sp-local-pair '(org-mode) "$" "$") ; For inline latex stuff
-  (setq org-startup-folded              'content
-        ;; org-preview-latex-default-process 'dvipng
-        org-startup-with-latex-preview nil
+  (add-hook! (org-mode)
+             #'(+org-pretty-mode  variable-pitch-mode))
 
+  (setq org-entities-user
+        '(("A"   "\\mathbb{A}" t "&x1D538" "A" "A"  "𝔸")
+          ("B"   "\\mathbb{B}" t "&x1D539" "B" "B"  "𝔹")
+          ("C"   "\\mathbb{C}" t "&x2102"  "C" "C"  "ℂ")
+          ("D"   "\\mathbb{D}" t "&x1D53B" "D" "D"  "𝔻")
+          ("E"   "\\mathbb{E}" t "&x1D53C" "E" "E"  "𝔼")
+          ("F"   "\\mathbb{F}" t "&x1D53D" "F" "F"  "𝔽")
+          ("G"   "\\mathbb{G}" t "&x1D53E" "G" "G"  "𝔾")
+          ("H"   "\\mathbb{H}" t "&x210D"  "H" "H"  "ℍ")
+          ("I"   "\\mathbb{I}" t "&x1D540" "I" "I"  "𝕀")
+          ("J"   "\\mathbb{J}" t "&x1D541" "J" "J"  "𝕁")
+          ("K"   "\\mathbb{K}" t "&x1D542" "K" "K"  "𝕂")
+          ("L"   "\\mathbb{L}" t "&x1D543" "L" "L"  "𝕃")
+          ("M"   "\\mathbb{M}" t "&x1D544" "M" "M"  "𝕄")
+          ("N"   "\\mathbb{N}" t "&x2115"  "N" "N"  "ℕ")
+          ("O"   "\\mathbb{O}" t "&x1D546" "O" "O"  "𝕆")
+          ("P"   "\\mathbb{P}" t "&x2119"  "P" "P"  "ℙ")
+          ("Q"   "\\mathbb{Q}" t "&x211A"  "Q" "Q"  "ℚ")
+          ("R"   "\\mathbb{R}" t "&x211D"  "R" "R"  "ℝ")
+          ("S"   "\\mathbb{S}" t "&x1D54A" "S" "S"  "𝕊")
+          ("T"   "\\mathbb{T}" t "&x1D54B" "T" "T"  "𝕋")
+          ("U"   "\\mathbb{U}" t "&x1D54C" "U" "U"  "𝕌")
+          ("V"   "\\mathbb{V}" t "&x1D54D" "V" "V"  "𝕍")
+          ("W"   "\\mathbb{W}" t "&x1D54E" "W" "W"  "𝕎")
+          ("X"   "\\mathbb{X}" t "&x1D54F" "X" "X"  "𝕏")
+          ("Y"   "\\mathbb{Y}" t "&x1D550" "Y" "Y"  "𝕐")
+          ("Z"   "\\mathbb{Z}" t "&x2124"  "Z" "Z"  "ℤ")))
+  :config
+  (setq org-startup-folded              'content
+        org-startup-with-latex-preview nil
+        org-highlight-latex-and-related nil
         org-preview-latex-default-process 'dvisvgm
         org-format-latex-options '(:foreground default :background default :scale 1.0
                                                :html-foreground "Black" :html-background "Transparent"
                                                :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
         org-agenda-files (list org-directory)
-        ;; org-bullets-bullet-list '( "▶" "◉" "▸" "○" "✸" "•" "★")
         org-ellipsis " ▾ "
-        org-bullets-bullet-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷" "☷" "☷" "☷")
+        org-bullets-bullet-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷")
         org-startup-folded 'content
         org-todo-keywords '((sequence "[ ](t)"     ; A subtask
                                       "[~](p)"     ; Subtask currently in-progress
@@ -38,7 +64,6 @@
                                  ("[*]"   . +org-todo-onhold)
                                  ("PROG"  . +org-todo-active)
                                  ("WAIT"  . +org-todo-onhold))))
-
 (defun +toggle-exclude-journals ()
   (setq org-roam-graph-exclude-matcher
         (if (eq org-roam-graph-exclude-matcher "old/")
@@ -79,7 +104,7 @@
                                                    :file-name "%<%Y-%m-%d>-${slug}"
                                                    :head +my/default-roam-header
                                                    :unnarrowed t)
-                                             (list "d" "default" 'entry (list 'function #'org-roam-capture--get-point)
+                                             (list "w" "default" 'entry (list 'function #'org-roam-capture--get-point)
                                                    "%?"
                                                    :file-name "%<%Y-%m-%d>-${slug}"
                                                    :head +my/work-roam-header
@@ -128,3 +153,7 @@
   (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
         mathpix-app-key           "0b3d8ae26f3762b4d5b8"
         mathpix-screenshot-method "screencapture -i %s"))
+
+
+
+
