@@ -2,7 +2,7 @@
 
 (defun +toplevel-bindings ()
   (map!
-   :n [backtab]                                     #'+fold/toggle
+   ;; :n [backtab]                                     #'+fold/toggle
    (:when (featurep! :completion company)
      :i "C-i"                                       #'+company/complete)
    ;; multiedit
