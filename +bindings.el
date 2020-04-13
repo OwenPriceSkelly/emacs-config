@@ -54,7 +54,8 @@
         (:when (featurep! :lang org)
           (:map org-mode-map
             :desc "Sort"     "S"                    #'org-sort
-            :desc "preview fragments" "L"           #'org-latex-preview))
+            :desc "preview fragments" "L"           #'org-latex-preview
+            :desc "toggle pretty entities" "p"      #'+org-pretty-mode))
         (:when (featurep! :lang python)
           (:map python-mode-map
             (:prefix ("p" . "pipenv")
@@ -111,13 +112,14 @@
               :desc "find/new"           "f"        #'org-roam-find-file
               :desc "find/new"           "n"        #'org-roam-find-file
               :desc "insert/new"         "i"        #'org-roam-insert
-              :desc "graph backlinks"    "g"        #'org-roam-graph-show
               :desc "today's file"       "t"        #'org-roam-today
               :desc "tomorrow's file"    "T"        #'org-roam-tomorrow
               :desc "yesterday's file"   "y"        #'org-roam-yesterday
               :desc "<date>'s file"      "d"        #'org-roam-date
               :desc "mathpix.el"         "m"        #'mathpix-screenshot
-              "C-j"                                 #'+toggle-exclude-journals)))))
+              (:prefix ("g" . "graph")
+                :desc "graph all"       "g" #'org-roam-graph-show
+                :desc "graph connected" "c" #'org-roam-graph-show-connected-component))))))
 
 (general-auto-unbind-keys)
 (+toplevel-bindings)

@@ -3,8 +3,8 @@
       user-mail-address "Owen.Price.Skelly@gmail.com"
 
       doom-theme 'doom-gruvbox
-      doom-font (font-spec :family "Iosevka" :size 16)
-      doom-variable-pitch-font (font-spec :family "Iosevka Sparkle" :size 18)
+      doom-font (font-spec :family "Iosevka Extended" :size 16)
+      doom-variable-pitch-font (font-spec :family "Iosevka Etoile" :size 18)
 
       solaire-mode-auto-swap-bg t
       solaire-mode-remap-line-numbers t
@@ -32,13 +32,10 @@
 
 
 (use-package! zone
-  :demand t
+  :defer-incrementally t
   :config
-  (zone-when-idle 300)
-  (setq zone-programs [zone-pgm-random-life]
-        zone-pgm-random-life-wait 1))
+  (zone-when-idle 300))
 
-(zone-when-idle 300)
 (set-pretty-symbols! 'python-mode nil)
 
 (use-package! expand-region
