@@ -9,33 +9,37 @@
   (add-hook! (org-mode)
              #'(+org-pretty-mode  variable-pitch-mode))
 
+  ;; TODO make other capital letters just bold caps
   (setq org-entities-user
-        '(("A"   "\\mathbb{A}" t "&x1D538" "A" "A"  "𝔸")
-          ("B"   "\\mathbb{B}" t "&x1D539" "B" "B"  "𝔹")
-          ("C"   "\\mathbb{C}" t "&x2102"  "C" "C"  "ℂ")
-          ("D"   "\\mathbb{D}" t "&x1D53B" "D" "D"  "𝔻")
-          ("E"   "\\mathbb{E}" t "&x1D53C" "E" "E"  "𝔼")
-          ("F"   "\\mathbb{F}" t "&x1D53D" "F" "F"  "𝔽")
-          ("G"   "\\mathbb{G}" t "&x1D53E" "G" "G"  "𝔾")
-          ("H"   "\\mathbb{H}" t "&x210D"  "H" "H"  "ℍ")
-          ("I"   "\\mathbb{I}" t "&x1D540" "I" "I"  "𝕀")
-          ("J"   "\\mathbb{J}" t "&x1D541" "J" "J"  "𝕁")
-          ("K"   "\\mathbb{K}" t "&x1D542" "K" "K"  "𝕂")
-          ("L"   "\\mathbb{L}" t "&x1D543" "L" "L"  "𝕃")
-          ("M"   "\\mathbb{M}" t "&x1D544" "M" "M"  "𝕄")
-          ("N"   "\\mathbb{N}" t "&x2115"  "N" "N"  "ℕ")
-          ("O"   "\\mathbb{O}" t "&x1D546" "O" "O"  "𝕆")
-          ("P"   "\\mathbb{P}" t "&x2119"  "P" "P"  "ℙ")
-          ("Q"   "\\mathbb{Q}" t "&x211A"  "Q" "Q"  "ℚ")
-          ("R"   "\\mathbb{R}" t "&x211D"  "R" "R"  "ℝ")
-          ("S"   "\\mathbb{S}" t "&x1D54A" "S" "S"  "𝕊")
-          ("T"   "\\mathbb{T}" t "&x1D54B" "T" "T"  "𝕋")
-          ("U"   "\\mathbb{U}" t "&x1D54C" "U" "U"  "𝕌")
-          ("V"   "\\mathbb{V}" t "&x1D54D" "V" "V"  "𝕍")
-          ("W"   "\\mathbb{W}" t "&x1D54E" "W" "W"  "𝕎")
-          ("X"   "\\mathbb{X}" t "&x1D54F" "X" "X"  "𝕏")
-          ("Y"   "\\mathbb{Y}" t "&x1D550" "Y" "Y"  "𝕐")
-          ("Z"   "\\mathbb{Z}" t "&x2124"  "Z" "Z"  "ℤ")))
+        ;; org |latex |mathp|html         |ascii|latin1|utf-8
+        '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
+          ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
+          ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
+          ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
+          ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
+          ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
+          ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ")
+          ("<"   "\\langle"    t "&lang;"    "<" "<"  "⟨")
+          (">"   "\\rangle"    t "&rang;"    ">" ">"  "⟩")
+          ("B"   "\\mathbb{B}" t "&#x1D539;" "B" "B"  "𝔹")
+          ("D"   "\\mathbb{D}" t "&#x1D53B;" "D" "D"  "𝔻")
+          ("E"   "\\mathbb{E}" t "&#x1D53C;" "E" "E"  "𝔼")
+          ("F"   "\\mathbb{F}" t "&#x1D53D;" "F" "F"  "𝔽")
+          ("G"   "\\mathbb{G}" t "&#x1D53E;" "G" "G"  "𝔾")
+          ("I"   "\\mathbb{I}" t "&#x1D540;" "I" "I"  "𝕀")
+          ("J"   "\\mathbb{J}" t "&#x1D541;" "J" "J"  "𝕁")
+          ("K"   "\\mathbb{K}" t "&#x1D542;" "K" "K"  "𝕂")
+          ("L"   "\\mathbb{L}" t "&#x1D543;" "L" "L"  "𝕃")
+          ("M"   "\\mathbb{M}" t "&#x1D544;" "M" "M"  "𝕄")
+          ("O"   "\\mathbb{O}" t "&#x1D546;" "O" "O"  "𝕆")
+          ("S"   "\\mathbb{S}" t "&#x1D54A;" "S" "S"  "𝕊")
+          ("T"   "\\mathbb{T}" t "&#x1D54B;" "T" "T"  "𝕋")
+          ("U"   "\\mathbb{U}" t "&#x1D54C;" "U" "U"  "𝕌")
+          ("V"   "\\mathbb{V}" t "&#x1D54D;" "V" "V"  "𝕍")
+          ("W"   "\\mathbb{W}" t "&#x1D54E;" "W" "W"  "𝕎")
+          ("X"   "\\mathbb{X}" t "&#x1D54F;" "X" "X"  "𝕏")
+          ("Y"   "\\mathbb{Y}" t "&#x1D550;" "Y" "Y"  "𝕐")
+          ("A"   "\\mathbb{A}" t "&#x1D538;" "A" "A"  "𝔸")))
   :config
   (setq org-startup-folded              'content
         org-startup-with-latex-preview nil
@@ -70,48 +74,11 @@
             (list "old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
           "old/")))
 
-(setq +my/default-roam-header (concat "#+TITLE: ${title}\n"
-                                      "* Tags:\n"
-                                      "** Tag:  \n"
-                                      "** Tag:  \n"
-                                      "** Tag:  \n"
-                                      "* Description: \n"
-                                      "* Related: \n")
-      +my/math-roam-header (concat "#+TITLE: ${title}\n"
-                                   "* Tags:\n"
-                                   "** Tag: [[file:2020-04-02-math.org][::math]]\n"
-                                   "** Tag:  \n"
-                                   "** Tag:  \n"
-                                   "* Description: ")
-      +my/work-roam-header (concat "#+TITLE: ${title}\n"
-                                   "* Tags:\n"
-                                   "** Sprint: [[file:2020-03-30-sprint_47.org][sprint 47]]"
-                                   "** Category:  \n"
-                                   "** Project:  \n"
-                                   "* Description: ")
-      +my/org-roam-capture-templates (if IS-MAC (list (list "d" "default" 'entry (list 'function #'org-roam-capture--get-point)
-                                                            "%?"
-                                                            :file-name "%<%Y-%m-%d>-${slug}"
-                                                            :head +my/default-roam-header
-                                                            :unnarrowed t)
-                                                      (list "m" "math" 'entry (list 'function #'org-roam-capture--get-point)
-                                                            "%?"
-                                                            :file-name "%<%Y-%m-%d>-${slug}"
-                                                            :head +my/math-roam-header
-                                                            :unnarrowed t))
-                                       (list (list "w" "work" 'entry (list 'function #'org-roam-capture--get-point)
-                                                   "%?"
-                                                   :file-name "%<%Y-%m-%d>-${slug}"
-                                                   :head +my/default-roam-header
-                                                   :unnarrowed t)
-                                             (list "w" "work" 'entry (list 'function #'org-roam-capture--get-point)
-                                                   "%?"
-                                                   :file-name "%<%Y-%m-%d>-${slug}"
-                                                   :head +my/work-roam-header
-                                                   :unnarrowed t))))
+
 
 
 (use-package! org-roam
+
   :commands
   (org-roam org-roam-find-file
             org-roam-buffer
@@ -122,7 +89,59 @@
             org-roam-yesterday
             org-roam-date)
   :config
+  (setq +my/default-roam-header (concat "#+TITLE: ${title}\n"
+                                        "* Tags:\n"
+                                        "- Tag:  \n"
+                                        "- Tag:  \n"
+                                        "- Tag:  \n"
+                                        "* Description: \n"
+                                        "* Related: \n")
+        +my/math-roam-header (concat "#+TITLE: ${title}\n"
+                                     "* Tags:\n"
+                                     "- Tag: [[file:2020-04-02-math.org][::math]]\n"
+                                     "- Tag:  \n"
+                                     "- Tag:  \n"
+                                     "* Description: ")
+        +my/work-roam-header (concat "#+TITLE: ${title}\n"
+                                     "* Tags:\n"
+                                     "- Sprint: [[file:2020-03-30-sprint_47.org][sprint 47]]\n"
+                                     "- Category:  \n"
+                                     "- Project:  \n"
+                                     "* Description: ")
+        +my/roam-ref-header (concat "#+TITLE: ${title}\n"
+                                    "#+ROAM_KEY: ${ref}\n"
+                                    "* Tags:\n"
+                                    "- Tag:  \n"
+                                    "- Tag:  \n"
+                                    "- Tag:  \n"
+                                    "* Description: ")
+        +my/org-roam-ref-templates (list (list "r" "ref" 'entry (list 'function #'org-roam-capture--get-point)
+                                               "%?"
+                                               :file-name "${slug}"
+                                               :head +my/roam-ref-header
+                                               :unnarrowed t))
+        +my/org-roam-capture-templates (if IS-MAC (list (list "d" "default" 'entry (list 'function #'org-roam-capture--get-point)
+                                                              "%?"
+                                                              :file-name "%<%Y-%m-%d>-${slug}"
+                                                              :head +my/default-roam-header
+                                                              :unnarrowed t)
+                                                        (list "m" "math" 'entry (list 'function #'org-roam-capture--get-point)
+                                                              "%?"
+                                                              :file-name "%<%Y-%m-%d>-${slug}"
+                                                              :head +my/math-roam-header
+                                                              :unnarrowed t))
+                                         (list (list "w" "work" 'entry (list 'function #'org-roam-capture--get-point)
+                                                     "%?"
+                                                     :file-name "%<%Y-%m-%d>-${slug}"
+                                                     :head +my/default-roam-header
+                                                     :unnarrowed t)
+                                               (list "w" "work" 'entry (list 'function #'org-roam-capture--get-point)
+                                                     "%?"
+                                                     :file-name "%<%Y-%m-%d>-${slug}"
+                                                     :head +my/work-roam-header
+                                                     :unnarrowed t))))
   (setq org-roam-directory              org-directory
+        org-roam-verbose                t
         org-roam-db-location            (concat org-roam-directory "org-roam.db")
         org-roam-buffer-width           0.3
         org-roam-completion-system      'ivy
@@ -134,7 +153,7 @@
         org-roam-graph-viewer           (if IS-MAC "open" "firefox")
         org-roam-graph-exclude-matcher  (list "old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
         org-roam-capture-templates      +my/org-roam-capture-templates
-
+        org-roam-capture-ref-templates  +my/org-roam-ref-templates
         org-capture-templates           org-roam-capture-templates)
   (org-roam-mode +1))
 
