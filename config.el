@@ -29,14 +29,13 @@
       evil-split-window-below t
       evil-vsplit-window-right t)
 
+(setq +pretty-code-enabled-modes '(org-mode))
 
 
 (use-package! zone
   :defer-incrementally t
   :config
   (zone-when-idle 300))
-
-(set-pretty-symbols! 'python-mode nil)
 
 (use-package! expand-region
   :config
@@ -47,9 +46,11 @@
 
 (use-package! mathpix.el
   :commands (mathpix-screenshot)
-  :custom ((mathpix-app-id "owenpriceskelly_gmail_com_2bbd51")
-           (mathpix-app-key "0b3d8ae26f3762b4d5b8")
-           (mathpix-screenshot-method "screencapture -i %s")))
+  :config (setq
+            mathpix-app-id "owenpriceskelly_gmail_com_2bbd51"
+            mathpix-app-key "0b3d8ae26f3762b4d5b8"
+            mathpix-screenshot-method "screencapture -i %s"))
+
 
 ;; persist frame size/fullscreen across sessions
 (when-let (dims (doom-cache-get 'last-frame-size))
@@ -69,8 +70,7 @@
                         (frame-parameter nil 'fullscreen))))
 (add-hook 'kill-emacs-hook  #'save-frame-dimensions)
 
-(load! "+dashboard")
-(load! "+bindings")
-(after! org (load! "+org"))
-(after! lsp (load! "+lsp"))
-;; (+default/restart-server)
+(load! "+extras/dashboard")
+(load! "+extras/bindings")
+(load! "+extras/lsp")
+(after! org (load! "+extras/org"))

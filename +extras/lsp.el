@@ -5,8 +5,8 @@
         lsp-pyls-plugins-pylint-args ["--disable=C,line-too-long,logging-format-interpolation,useless-return"]
         lsp-pyls-plugins-pycodestyle-enabled nil
         lsp-pyls-plugins-flake8-enabled nil
-        lsp-pyls-plugins-jedi-use-pyenv-environment t
         lsp-pyls-plugins-pyflakes-enabled nil))
+
 (use-package! lsp-ui
   :init
   (setq lsp-ui-doc-enable t

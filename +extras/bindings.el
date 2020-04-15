@@ -2,7 +2,6 @@
 
 (defun +toplevel-bindings ()
   (map!
-   ;; :n [backtab]                                     #'+fold/toggle
    (:when (featurep! :completion company)
      :i "C-i"                                       #'+company/complete)
    ;; multiedit
@@ -73,19 +72,11 @@
               :desc "jupyter"              "j"      #'+python/open-jupyter-repl)
             "e" nil))))
 
-(defun +my-treemacs-sidebar ()
-  "Hacky; Found myself selecting window after changing project and needing to
-  close and reopen for treemacs to update to the next project's directory"
-  (interactive)
-  (treemacs-select-window)
-  (+treemacs/toggle)
-  (+treemacs/toggle))
 
 (defun +leader-key-bindings ()
   (map! (:leader
           :desc "Search project"         "/"        #'+default/search-project
           :desc "Visual expand"          "v"        #'er/expand-region
-          ;; :desc "Undo Tree"              "U"        #'undo-tree-visualize
 
           (:prefix ("w" . "window")
             :desc "Switch to last window" "w"       #'evil-window-mru)
@@ -95,6 +86,9 @@
             :desc "Messages buffer"        "m"      #'view-echo-area-messages
             :desc "ibuffer (other window)" "I"      #'ibuffer-other-window)
 
+          (:when (featurep! :emacs undo +tree)
+            :desc "Undo Tree"              "U"        #'undo-tree-visualize)
+         
           (:when (featurep! :ui treemacs)
             :desc "Project sidebar"        "0"      #'+treemacs/toggle)
 

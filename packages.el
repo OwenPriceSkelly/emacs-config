@@ -11,3 +11,7 @@
   :pin nil)
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el"))
+(package! org-superstar
+  :recipe (:host github :repo "integral-dw/org-superstar-mode"))
+(package! org-pdftools
+  :recipe (:host github :repo "fuxialexander/org-pdftools"))
