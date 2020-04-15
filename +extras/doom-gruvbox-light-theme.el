@@ -1,4 +1,3 @@
-;;; ~/.doom.d/+extras/doom-gruvbox-light-theme.el -*- lexical-binding: t; -*-
 ;; doom-gruvbox-light-theme.el --- inspired by morhetz Gruvbox -*- no-byte-compile: t; -*-
 (require 'doom-themes)
 
@@ -42,32 +41,39 @@ determine the exact padding."
    (base7      '("#3c3836" "#3c3836" "brightblack"))
    (base8      '("#282828" "#282828"  "black"))
 
-   (red        '("#cc241d" "#cc241d" "red"))
-   (green      '("#b8bb26" "#b8bb26" "green"))
-   (olive      '("#98971a" "#98971a" "green"))
-   (yellow     '("#fabd2f" "#fabd2f" "yellow"))
-   (blue       '("#076678" "#076678" "cyan"))
-   (violet     '("#8f3f71" "#8f3f71" "brightmagenta"))
-   (magenta     '("#b16286" "#b16286" "magenta"))
-   (aqua       '("#689d6a" "#689d6a" "green"))
-   (grey       '("#928374" "#928374" "brightblack"))
-   (orange     '("#d65d0e" "#d65d0e" "orange"))
+   ;; see https://github.com/morhetz/gruvbox
+   (red              '("#9d0006" "#9d0006" "red"))
+   (light-red        '("#cc241d" "#cc241d" "red"))
+   (green            '("#98971a" "#98971a" "green"))
+   (light-green      '("#b8bb26" "#b8bb26" "green"))
+   (yellow           '("#b57614" "#b57614" "yellow"))
+   (light-yellow     '("#fabd2f" "#fabd2f" "yellow"))
+   (blue             '("#076678" "#076678" "cyan"))
+   (light-blue       '("#458588" "#458588" "brightcyan"))
+   (purple           '("#8f3f71" "#8f3f71" "brightmagenta"))
+   (light-purple     '("#b16286" "#b16286" "magenta"))
+   (aqua             '("#427b58" "#427b58" "green"))
+   (light-aqua       '("#689d6a" "#689d6a" "green"))
+   (grey             '("#7c6f64" "#7c6f64" "brightblack"))
+   (light-grey       '("#928374" "#928374" "brightblack"))
+   (orange           '("#af3a03" "#af3a03" "orange"))
+   (light-orange     '("#d65d0e" "#d65d0e" "orange"))
 
-
-   (cyan       '("#458588" "#458588" "brightcyan"))
-   (dark-cyan       '("#458588" "#458588" "brightcyan"))
-   (dark-red        '("#9d0006" "#9d0006" "red"))
-   (dark-yellow     '("#b57614" "#b57614" "yellow"))
+   (olive     green)
+   (violet    purple)
+   (magenta   light-purple)
+   (cyan      light-blue)
+   (teal      aqua)
+   (dark-cyan blue)
    (dark-blue blue)
-   (teal       aqua)
 
    ;; face categories
    (highlight      yellow)
    (vertical-bar   grey)
    (selection      accent)
    (builtin        orange)
-   (comments       (if doom-gruvbox-light-brighter-comments magenta base6))
-   (doc-comments   (if doom-gruvbox-light-brighter-comments (doom-lighten magenta 0.2) (doom-lighten fg-alt 0.25)))
+   (comments       (if doom-gruvbox-light-brighter-comments light-purple base6))
+   (doc-comments   (if doom-gruvbox-light-brighter-comments (doom-lighten light-purple 0.2) (doom-lighten fg-alt 0.25)))
    (constants      yellow)
    (functions      green)
    (keywords       red)
@@ -76,7 +82,7 @@ determine the exact padding."
    (type           green)
    (strings        olive)
    (variables      blue)
-   (numbers        violet)
+   (numbers        purple)
    (region         accent)
    (error          red)
    (warning        yellow)
@@ -98,15 +104,15 @@ determine the exact padding."
   ;; --- extra faces ------------------------
   (
    ;;;;;;;; Editor ;;;;;;;;
-   (cursor :background "white")
+   (cursor :background light-blue)
    (hl-line :background bg-alt)
-   ((line-number-current-line &override) :background grey :foreground "white" :bold t)
+   ((line-number-current-line &override) :background grey :foreground base0  :bold t)
    ((line-number &override) :foreground grey)
 
    ;; Vimish-fold
    ((vimish-fold-overlay &override) :inherit 'font-lock-comment-face :background accent :weight 'light)
-   ((vimish-fold-mouse-face &override) :foreground "white" :background yellow :weight 'light)
-   ((vimish-fold-fringe &override) :foreground magenta :background magenta)
+   ((vimish-fold-mouse-face &override) :foreground base0  :background yellow :weight 'light)
+   ((vimish-fold-fringe &override) :foreground light-purple :background light-purple)
 
    ;;;;;;;; Doom-modeline ;;;;;;;;
    (mode-line
@@ -138,7 +144,7 @@ determine the exact padding."
    (evil-ex-substitute-replacement :foreground yellow :inherit 'evil-ex-substitute-matches)
 
    ;; evil-snipe
-   (evil-snipe-first-match-face :foreground "white" :background yellow)
+   (evil-snipe-first-match-face :foreground base0  :background yellow)
    (evil-snipe-matches-face     :foreground yellow :bold t :underline t)
 
    ;;;;;;;; Mini-buffers ;;;;;;;;
@@ -166,7 +172,7 @@ determine the exact padding."
    (doom-neotree-file-face :foreground fg)
    (doom-neotree-hidden-file-face :foreground (doom-lighten fg-alt 0.25))
    (doom-neotree-media-file-face :foreground (doom-lighten fg-alt 0.25))
-   (neo-expand-btn-face :foreground magenta)
+   (neo-expand-btn-face :foreground light-purple)
 
    ;; dired
    (dired-directory :foreground blue)
@@ -209,7 +215,7 @@ determine the exact padding."
    (company-tooltip-mouse :background accent :foreground nil)
 
    ;;;;;;;; Misc ;;;;;;;;
-   (+workspace-tab-selected-face :background aqua :foreground "white")
+   (+workspace-tab-selected-face :background aqua :foreground base0 )
 
    ;; Undo tree
    (undo-tree-visualizer-active-branch-face :foreground green)
@@ -228,7 +234,7 @@ determine the exact padding."
    (flycheck-info    :underline `(:style wave :color ,green)  :background base3)
 
    ;; helm
-   (helm-swoop-target-line-face :foreground magenta :inverse-video t)
+   (helm-swoop-target-line-face :foreground light-purple :inverse-video t)
 
    ;; magit
    (magit-section-heading             :foreground yellow :weight 'bold)
