@@ -2,7 +2,7 @@
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
 
-      doom-theme 'doom-gruvbox
+      doom-theme 'doom-gruvbox-light
       doom-font (font-spec :family "Iosevka Extended" :size 16)
       doom-variable-pitch-font (font-spec :family "Iosevka Etoile" :size 18)
 
@@ -32,6 +32,8 @@
 
 (setq +pretty-code-enabled-modes '(org-mode))
 
+(use-package! rainbow-mode
+  :defer-incrementally t)
 
 (use-package! zone
   :defer-incrementally t
@@ -74,4 +76,5 @@
 (load! "+extras/dashboard")
 (load! "+extras/bindings")
 (load! "+extras/lsp")
+;; (after! doom-themes (load! "+extras/doom-gruvbox-light-theme"))
 (after! org (load! "+extras/org"))

@@ -2,10 +2,11 @@
 ;;; $DOOMDIR/packages.el
 ;; (package! hercules)
 (package! evil-textobj-line)
-(package! doom-themes :pin nil)
+(package! doom-themes
+  :pin nil)
 (package! org-roam
   :recipe (:host github :repo "jethrokuan/org-roam")
-  :pin "1b13c42")
+  :pin nil)
 (package! company-org-roam
   :recipe (:host github :repo "jethrokuan/company-org-roam")
   :pin nil)
@@ -15,3 +16,4 @@
   :recipe (:host github :repo "integral-dw/org-superstar-mode"))
 (package! org-pdftools
   :recipe (:host github :repo "fuxialexander/org-pdftools"))
+(package! rainbow-mode)
