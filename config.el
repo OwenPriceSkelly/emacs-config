@@ -21,6 +21,7 @@
       +workspaces-on-switch-project-behavior t
 
       +latex-viewers '(pdf-tools)
+      +pretty-code-enabled-modes '(org-mode)
 
       doom-leader-key "SPC"
       doom-leader-alt-key "C-SPC"
