@@ -2,9 +2,9 @@
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
 
-      doom-theme 'doom-gruvbox-light
+      doom-theme 'doom-gruvbox
       doom-font (font-spec :family "Iosevka Extended" :size 16)
-      doom-variable-pitch-font (font-spec :family "Iosevka Etoile" :size 18)
+      doom-variable-pitch-font (font-spec :family "Iosevka Etoile" :size 16)
 
       solaire-mode-auto-swap-bg t
       solaire-mode-remap-line-numbers t
@@ -74,7 +74,6 @@
 (add-hook 'kill-emacs-hook  #'save-frame-dimensions)
 
 (load! "+extras/dashboard")
-(load! "+extras/bindings")
 (load! "+extras/lsp")
-;; (after! doom-themes (load! "+extras/doom-gruvbox-light-theme"))
-(after! org (load! "+extras/org"))
+(load! "+extras/org")
+(load! "+extras/bindings")

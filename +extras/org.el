@@ -4,7 +4,6 @@
 (use-package! org
   :init
   (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
-  (doom-themes-org-config)
   (sp-local-pair '(org-mode) "$" "$") ; For inline latex stuff
   (add-hook! (org-mode)
              #'(+org-pretty-mode  variable-pitch-mode))
@@ -68,14 +67,6 @@
                                  ("[*]"   . +org-todo-onhold)
                                  ("PROG"  . +org-todo-active)
                                  ("WAIT"  . +org-todo-onhold))))
-(defun +toggle-exclude-journals ()
-  (setq org-roam-graph-exclude-matcher
-        (if (eq org-roam-graph-exclude-matcher "old/")
-            (list "old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-          "old/")))
-
-
-
 
 (use-package! org-roam
 
@@ -172,7 +163,3 @@
   (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
         mathpix-app-key           "0b3d8ae26f3762b4d5b8"
         mathpix-screenshot-method "screencapture -i %s"))
-
-
-
-
