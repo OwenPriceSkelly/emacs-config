@@ -73,7 +73,12 @@
                         (frame-parameter nil 'fullscreen))))
 (add-hook 'kill-emacs-hook  #'save-frame-dimensions)
 
-(load! "+extras/dashboard")
-(load! "+extras/lsp")
-(load! "+extras/org")
-(load! "+extras/bindings")
+;; 2.3 with all
+(load! "+extras/bindings") ;;2.2 (- .1)
+(load! "+extras/dashboard") ;; 2.2 (- .1)
+(load! "+extras/lsp") ;; 1.6 (- .7)
+(load! "+extras/org") ;; 1.5 (- .8)
+;; (load! "+extras/org") ;; 1.5 (- .8)
+;; .8 with neither org nor lsp (- 1.5)
+
+;; .7 with none

@@ -1,5 +1,6 @@
-;;; $DOOMDIR/modules/personal/config/+lsp.el  -*- lexical-binding: t; -*-
+;; ;;; $DOOMDIR/modules/personal/config/+lsp.el  -*- lexical-binding: t; -*-
 (use-package! lsp
+  :defer-incrementally lsp-mode
   :init
   (setq lsp-pyls-plugins-pylint-enabled t
         lsp-pyls-plugins-pylint-args ["--disable=C,line-too-long,logging-format-interpolation,useless-return"]
@@ -8,6 +9,7 @@
         lsp-pyls-plugins-pyflakes-enabled nil))
 
 (use-package! lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
   :init
   (setq lsp-ui-doc-enable t
         lsp-ui-sideline-show-hover t

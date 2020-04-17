@@ -17,29 +17,7 @@
           ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
           ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
           ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
-          ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ")
-          ("<"   "\\langle"    t "&lang;"    "<" "<"  "⟨")
-          (">"   "\\rangle"    t "&rang;"    ">" ">"  "⟩")
-          ("B"   "\\mathbb{B}" t "&#x1D539;" "B" "B"  "𝔹")
-          ("D"   "\\mathbb{D}" t "&#x1D53B;" "D" "D"  "𝔻")
-          ("E"   "\\mathbb{E}" t "&#x1D53C;" "E" "E"  "𝔼")
-          ("F"   "\\mathbb{F}" t "&#x1D53D;" "F" "F"  "𝔽")
-          ("G"   "\\mathbb{G}" t "&#x1D53E;" "G" "G"  "𝔾")
-          ("I"   "\\mathbb{I}" t "&#x1D540;" "I" "I"  "𝕀")
-          ("J"   "\\mathbb{J}" t "&#x1D541;" "J" "J"  "𝕁")
-          ("K"   "\\mathbb{K}" t "&#x1D542;" "K" "K"  "𝕂")
-          ("L"   "\\mathbb{L}" t "&#x1D543;" "L" "L"  "𝕃")
-          ("M"   "\\mathbb{M}" t "&#x1D544;" "M" "M"  "𝕄")
-          ("O"   "\\mathbb{O}" t "&#x1D546;" "O" "O"  "𝕆")
-          ("S"   "\\mathbb{S}" t "&#x1D54A;" "S" "S"  "𝕊")
-          ("T"   "\\mathbb{T}" t "&#x1D54B;" "T" "T"  "𝕋")
-          ("U"   "\\mathbb{U}" t "&#x1D54C;" "U" "U"  "𝕌")
-          ("V"   "\\mathbb{V}" t "&#x1D54D;" "V" "V"  "𝕍")
-          ("W"   "\\mathbb{W}" t "&#x1D54E;" "W" "W"  "𝕎")
-          ("X"   "\\mathbb{X}" t "&#x1D54F;" "X" "X"  "𝕏")
-          ("Y"   "\\mathbb{Y}" t "&#x1D550;" "Y" "Y"  "𝕐")
-          ("A"   "\\mathbb{A}" t "&#x1D538;" "A" "A"  "𝔸")))
-  :config
+          ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ")))
   (setq org-startup-folded              'content
         org-startup-with-latex-preview nil
         org-highlight-latex-and-related nil
@@ -55,14 +33,14 @@
                                       "[~](p)"     ; Subtask currently in-progress
                                       "[*](w)"    ; Subtask is being held up or paused
                                       "|"
-                                      "[X](d!)"    ; Subtask was completed ; ; ;
-                                      "[-](k@)")   ; Subtask was dropped
+                                      "[X](d)"    ; Subtask was completed ; ; ;
+                                      "[-](k)")   ; Subtask was dropped
                             (sequence "TODO(T)"    ; A task that needs doing & is ready to do
                                       "PROG(P)"    ; Mark a task as in-progress
                                       "WAIT(W)"   ; Something is holding up this task or it is paused
                                       "|"
-                                      "DONE(D!)"   ; Task successfully completed
-                                      "DROP(K@)")) ; Task was cancelled or is no longer applicable
+                                      "DONE(D)"   ; Task successfully completed
+                                      "DROP(K)")) ; Task was cancelled or is no longer applicable
         org-todo-keyword-faces '(("[~]"   . +org-todo-active)
                                  ("[*]"   . +org-todo-onhold)
                                  ("PROG"  . +org-todo-active)
