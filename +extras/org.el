@@ -1,4 +1,4 @@
-;;; personal/config/+org.el -*- lexical-binding: t; -*-
+;;; $DOOMDIR/+extra/org.el -*- lexical-binding: t; -*-
 ;;; Configure org and org-roam for notes
 
 (use-package! org
@@ -27,7 +27,7 @@
                                                :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
         org-agenda-files (list org-directory)
         org-ellipsis " ▾ "
-        org-bullets-bullet-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷")
+        org-superstar-headline-bullets-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷")
         org-startup-folded 'content
         org-todo-keywords '((sequence "[ ](t)"     ; A subtask
                                       "[~](p)"     ; Subtask currently in-progress
@@ -57,7 +57,7 @@
             org-roam-tomorrow
             org-roam-yesterday
             org-roam-date)
-  :config
+  :init
   (setq +my/default-roam-header (concat "#+TITLE: ${title}\n"
                                         "* Tags:\n"
                                         "- Tag:  \n"
@@ -123,17 +123,8 @@
         org-roam-graph-exclude-matcher  (list "old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
         org-roam-capture-templates      +my/org-roam-capture-templates
         org-roam-capture-ref-templates  +my/org-roam-ref-templates
-        org-capture-templates           org-roam-capture-templates)
-  (org-roam-mode +1))
+        org-capture-templates           org-roam-capture-templates))
 
-(use-package! org-roam-protocol
-  :after org-protocol)
-
-(use-package! company-org-roam
-  :when (featurep! :completion company)
-  :after org-roam
-  :config
-  (set-company-backend! 'org-mode '(company-org-roam company-yasnippet company-dabbrev)))
 
 (use-package! mathpix
   :commands (mathpix-screenshot)
