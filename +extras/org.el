@@ -115,8 +115,13 @@
         org-roam-buffer-width           0.3
         org-roam-completion-system      'ivy
         org-roam-completion-fuzzy-match t
-        org-roam-date-filename-format   "%Y-%m-%d-%A"   ; YYYY-mm-dd-Weekday
-        org-roam-date-title-format      "%A, %B %d, %Y" ; Weekday, Month dd, YYYY
+        org-roam-dailies-capture-templates '(("d" "daily" plain (function org-roam-capture--get-point)
+                                              ""
+                                              :immediate-finish t
+                                              :file-name "%<%Y-%m-%d-%A>"
+                                              :head "#+TITLE: %<%A, %B %d, %Y>"))
+        ;; org-roam-date-filename-format   "%Y-%m-%d-%A"   ; YYYY-mm-dd-Weekday
+        ;; org-roam-date-title-format      "%A, %B %d, %Y" ; Weekday, Month dd, YYYY
         org-roam-graph-max-title-length 40
         org-roam-buffer-position        'right
         org-roam-graph-viewer           (if IS-MAC "open" "firefox")

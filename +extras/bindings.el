@@ -105,11 +105,11 @@
               :desc "roam buffer"        "r"        #'org-roam
               :desc "find/new"           "f"        #'org-roam-find-file
               :desc "find/new"           "n"        #'org-roam-find-file
-              :desc "insert/new"         "i"        #'org-roam-insert
-              :desc "today's file"       "t"        #'org-roam-today
-              :desc "tomorrow's file"    "T"        #'org-roam-tomorrow
-              :desc "yesterday's file"   "y"        #'org-roam-yesterday
-              :desc "<date>'s file"      "d"        #'org-roam-date
+              :desc "insert/new"         "i"        #'org-roam-dailies-insert
+              :desc "today's file"       "t"        #'org-roam-dailies-today
+              :desc "tomorrow's file"    "T"        #'org-roam-dailies-tomorrow
+              :desc "yesterday's file"   "y"        #'org-roam-dailies-yesterday
+              :desc "<date>'s file"      "d"        #'org-roam-dailies-date
               :desc "mathpix.el"         "m"        #'mathpix-screenshot
               (:prefix ("g" . "graph")
                 :desc "graph all"       "g" #'org-roam-graph-show
