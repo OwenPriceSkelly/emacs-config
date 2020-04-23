@@ -105,7 +105,7 @@
               :desc "roam buffer"        "r"        #'org-roam
               :desc "find/new"           "f"        #'org-roam-find-file
               :desc "find/new"           "n"        #'org-roam-find-file
-              :desc "insert/new"         "i"        #'org-roam-dailies-insert
+              :desc "insert/new"         "i"        #'org-roam-insert
               :desc "today's file"       "t"        #'org-roam-dailies-today
               :desc "tomorrow's file"    "T"        #'org-roam-dailies-tomorrow
               :desc "yesterday's file"   "y"        #'org-roam-dailies-yesterday
