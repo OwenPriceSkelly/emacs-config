@@ -7,17 +7,19 @@
   (sp-local-pair '(org-mode) "$" "$") ; For inline latex stuff
   (add-hook! (org-mode)
              #'(+org-pretty-mode  variable-pitch-mode))
+  (add-hook! (org-mode))
 
   ;; TODO make other capital letters just bold caps
   (setq org-entities-user
         ;; org |latex |mathp|html         |ascii|latin1|utf-8
         '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
           ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
-          ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
+          ;; ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
           ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
           ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
           ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
           ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ")))
+
   (setq org-startup-folded              'content
         org-startup-with-latex-preview nil
         org-highlight-latex-and-related nil
@@ -27,7 +29,7 @@
                                                :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
         org-agenda-files (list org-directory)
         org-ellipsis " ▾ "
-        org-superstar-headline-bullets-list '("☰" "☱" "☲" "☳" "☴" "☵" "☶" "☷")
+        org-superstar-headline-bullets-list '("☰" "☱" "☵" "☳" "☴" "☲" "☶" "☷")
         org-startup-folded 'content
         org-todo-keywords '((sequence "[ ](t)"     ; A subtask
                                       "[~](p)"     ; Subtask currently in-progress

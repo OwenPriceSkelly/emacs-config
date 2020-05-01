@@ -1,52 +1,60 @@
 ;;; $DOOMDIR/modules/personal/config/+keybindings.el -*- lexical-binding: t; -*-
+(setq  doom-leader-key "SPC"
+       doom-leader-alt-key "C-SPC"
+       doom-localleader-key ","
+       doom-localleader-alt-key "C-,")
+
+(use-package! expand-region
+  :config
+  (setq expand-region-contract-fast-key "V"))
 
 (defun +toplevel-bindings ()
   (map!
    (:when (featurep! :completion company)
-     :i "C-i"                                       #'+company/complete)
+    :i "C-i"                                       #'+company/complete)
    ;; multiedit
    (:when (featurep! :editor multiple-cursors)
-      :nv "R"                                       #'evil-multiedit-match-all
-      :n "C-n"                                      #'evil-multiedit-match-symbol-and-next
-      :n "C-S-n"                                    #'evil-multiedit-match-symbol-and-prev
-      :v "C-n"                                      #'evil-multiedit-match-and-next
-      :v "C-S-n"                                    #'evil-multiedit-match-and-prev
-      :nv "C-M-n"                                   #'evil-multiedit-restore
-      (:after evil-multiedit
-        (:map evil-multiedit-state-map
-          "n"                                       #'evil-multiedit-next
-          "N"                                       #'evil-multiedit-prev
-          "C-n"                                     #'evil-multiedit-match-and-next
-          "C-S-n"                                   #'evil-multiedit-match-and-prev
-          "V"                                       #'iedit-show/hide-unmatched-lines))
-      ;; multiple cursors
-      (:prefix "gz"
-        :nv "m"                                     #'evil-mc-make-all-cursors
-        :nv "n"                                     #'evil-mc-make-and-goto-next-match
-        :nv "N"                                     #'evil-mc-make-and-goto-prev-match
-        :nv "d"                                     #'evil-mc-make-and-goto-next-cursor
-        :nv "D"                                     #'evil-mc-make-and-goto-last-cursor
-        :nv "j"                                     #'evil-mc-make-cursor-move-next-line
-        :nv "k"                                     #'evil-mc-make-cursor-move-prev-line
-        :nv "p"                                     #'evil-mc-make-and-goto-prev-cursor
-        :nv "P"                                     #'evil-mc-make-and-goto-first-cursor
-        :nv "q"                                     #'evil-mc-undo-all-cursors
-        :nv "t"                                     #'+multiple-cursors/evil-mc-toggle-cursors
-        :nv "u"                                     #'evil-mc-undo-last-added-cursor
-        :nv "z"                                     #'+multiple-cursors/evil-mc-make-cursor-here
-        :v  "I"                                     #'evil-mc-make-cursor-in-visual-selection-beg
-        :v  "A"                                     #'evil-mc-make-cursor-in-visual-selection-end))
-    ;; wgrep
+    :nv "R"                                       #'evil-multiedit-match-all
+    :n "C-n"                                      #'evil-multiedit-match-symbol-and-next
+    :n "C-S-n"                                    #'evil-multiedit-match-symbol-and-prev
+    :v "C-n"                                      #'evil-multiedit-match-and-next
+    :v "C-S-n"                                    #'evil-multiedit-match-and-prev
+    :nv "C-M-n"                                   #'evil-multiedit-restore
+    (:after evil-multiedit
+     (:map evil-multiedit-state-map
+      "n"                                       #'evil-multiedit-next
+      "N"                                       #'evil-multiedit-prev
+      "C-n"                                     #'evil-multiedit-match-and-next
+      "C-S-n"                                   #'evil-multiedit-match-and-prev
+      "V"                                       #'iedit-show/hide-unmatched-lines))
+    ;; multiple cursors
+    (:prefix "gz"
+     :nv "m"                                     #'evil-mc-make-all-cursors
+     :nv "n"                                     #'evil-mc-make-and-goto-next-match
+     :nv "N"                                     #'evil-mc-make-and-goto-prev-match
+     :nv "d"                                     #'evil-mc-make-and-goto-next-cursor
+     :nv "D"                                     #'evil-mc-make-and-goto-last-cursor
+     :nv "j"                                     #'evil-mc-make-cursor-move-next-line
+     :nv "k"                                     #'evil-mc-make-cursor-move-prev-line
+     :nv "p"                                     #'evil-mc-make-and-goto-prev-cursor
+     :nv "P"                                     #'evil-mc-make-and-goto-first-cursor
+     :nv "q"                                     #'evil-mc-undo-all-cursors
+     :nv "t"                                     #'+multiple-cursors/evil-mc-toggle-cursors
+     :nv "u"                                     #'evil-mc-undo-last-added-cursor
+     :nv "z"                                     #'+multiple-cursors/evil-mc-make-cursor-here
+     :v  "I"                                     #'evil-mc-make-cursor-in-visual-selection-beg
+     :v  "A"                                     #'evil-mc-make-cursor-in-visual-selection-end))
+   ;; wgrep
    (:when (featurep! :completion ivy)
-      (:map ivy-minibuffer-map
-        (:prefix "C-c"
-          :desc "Edit and replace"              "e" #'+ivy/woccur)))
+    (:map ivy-minibuffer-map
+     (:prefix "C-c"
+      :desc "Edit and replace"              "e" #'+ivy/woccur)))
    (:when (featurep! :tools lsp +peek)
-      :map lsp-ui-peek-mode-map
-      "C-j"                                         #'lsp-ui-peek--select-next
-      "C-h"                                         #'lsp-ui-peek--select-prev-file
-      "C-l"                                         #'lsp-ui-peek--select-next-file
-      "C-k"                                         #'lsp-ui-peek--select-prev)))
+    :map lsp-ui-peek-mode-map
+    "C-j"                                         #'lsp-ui-peek--select-next
+    "C-h"                                         #'lsp-ui-peek--select-prev-file
+    "C-l"                                         #'lsp-ui-peek--select-next-file
+    "C-k"                                         #'lsp-ui-peek--select-prev)))
 
 (defun +localleader-key-bindings ()
   (map! :localleader
@@ -119,3 +127,4 @@
 (+toplevel-bindings)
 (+localleader-key-bindings)
 (+leader-key-bindings)
+
