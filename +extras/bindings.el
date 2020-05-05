@@ -11,8 +11,8 @@
 (use-package! evil-snipe
   :init
   (setq evil-snipe-scope                     'whole-visible
-        evil-snipe-spillover-scope           'whole-buffer
-        evil-snipe-repeat-scope              'whole-visible
+        ;; evil-snipe-spillover-scope           'buffer
+        ;; evil-snipe-repeat-scope              'whole-buffer
         evil-snipe-repeat-keys               t
         evil-snipe-override-evil-repeat-keys t)
   :config
@@ -162,7 +162,7 @@
            :desc "<date>'s file"      "d"            #'org-roam-dailies-date
            :desc "mathpix.el"         "m"            #'mathpix-screenshot
            :desc "graph"              "g"            #'org-roam-graph-show-connected-component
-           :desc "graph all notes"    "g"            #'org-roam-graph-show)))))
+           :desc "graph all"          "G"            #'org-roam-graph-show)))))
 
 (general-auto-unbind-keys)
 (+toplevel-bindings)

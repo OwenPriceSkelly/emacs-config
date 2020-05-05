@@ -69,24 +69,27 @@
                                                    :head +my/work-roam-header
                                                    :unnarrowed t))))
 (use-package! org-roam
-  :custom (org-roam-buffer-prepare-hook '(org-roam-buffer--insert-title
-                                          org-roam-buffer--insert-backlinks)) ;;org-roam-buffer--insert-citelinks
+  :custom
+  (org-roam-directory                      org-directory)
+  (org-roam-verbose                        t)
+  (org-roam-buffer-prepare-hook            '(org-roam-buffer--insert-title
+                                             org-roam-buffer--insert-backlinks)) ;;org-roam-buffer--insert-citelinks
+  (org-roam-buffer-position                'right)
+  (org-roam-buffer-width                   0.27)
+  (org-roam-buffer-no-delete-other-windows t)
+  (org-roam-completion-system              'ivy)
+  (org-roam-graph-viewer                   (if IS-MAC "open" (executable-find "firefox"))) ;; the osx `open' executable just finds system default for .svg
+  (org-roam-graph-max-title-length         40)
+  (org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal"))
   :init
-  (setq org-roam-verbose                t
-        org-roam-db-location            (concat org-roam-directory "org-roam.db")
-        org-roam-buffer-position        'right
-        org-roam-buffer-width           0.27
-        org-roam-buffer-no-delete-other-windows t
-        org-roam-completion-system      'ivy
-        org-roam-dailies-capture-templates '(("d" "daily" plain (function org-roam-capture--get-point) ""
-                                              :immediate-finish t
-                                              :file-name "%<%Y-%m-%d-%A>"
-                                              :head "#+TITLE: %<%A, %B %d, %Y>"))
-        org-roam-graph-max-title-length 40
-        org-roam-graph-viewer           (if IS-MAC "open" "firefox") ;; the osx `open' executable just finds system default for .svg, also firefox
-        org-roam-graph-exclude-matcher  '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-        org-roam-capture-templates      +my/org-roam-capture-templates
-        org-roam-capture-ref-templates  +my/org-roam-ref-templates))
+  (setq
+   ;; org-roam-db-location            (concat org-roam-directory "org-roam.db")
+   org-roam-capture-ref-templates  +my/org-roam-ref-templates
+   org-roam-capture-templates      +my/org-roam-capture-templates
+   org-roam-dailies-capture-templates '(("d" "daily" plain (function org-roam-capture--get-point) ""
+                                         :immediate-finish t
+                                         :file-name "%<%Y-%m-%d-%A>"
+                                         :head "#+TITLE: %<%A, %B %d, %Y>"))))
 
 (use-package! mathpix
   :commands (mathpix-screenshot)
