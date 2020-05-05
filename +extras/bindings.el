@@ -1,121 +1,178 @@
 ;;; $DOOMDIR/modules/personal/config/+keybindings.el -*- lexical-binding: t; -*-
+(setq  doom-leader-key "SPC"
+       doom-leader-alt-key "C-SPC"
+       doom-localleader-key ","
+       doom-localleader-alt-key "C-,")
+
+(use-package! expand-region
+  :config
+  (setq expand-region-contract-fast-key "V"))
+
+(use-package! evil-snipe
+  :init
+  (setq evil-snipe-scope                     'whole-visible
+        evil-snipe-spillover-scope           'whole-buffer
+        evil-snipe-repeat-scope              'whole-visible
+        evil-snipe-repeat-keys               t
+        evil-snipe-override-evil-repeat-keys t)
+  :config
+  ;; interpret open/close square brackets as any open/close delimiters
+  ;; respectively.
+  (push '(?\[ "[[{(]") evil-snipe-aliases)
+  (push '(?\] "[]})]") evil-snipe-aliases)
+  (evil-snipe-override-mode 1))
 
 (defun +toplevel-bindings ()
-  (map!
-   (:when (featurep! :completion company)
-     :i "C-i"                                       #'+company/complete)
-   ;; multiedit
-   (:when (featurep! :editor multiple-cursors)
-      :nv "R"                                       #'evil-multiedit-match-all
-      :n "C-n"                                      #'evil-multiedit-match-symbol-and-next
-      :n "C-S-n"                                    #'evil-multiedit-match-symbol-and-prev
-      :v "C-n"                                      #'evil-multiedit-match-and-next
-      :v "C-S-n"                                    #'evil-multiedit-match-and-prev
-      :nv "C-M-n"                                   #'evil-multiedit-restore
-      (:after evil-multiedit
-        (:map evil-multiedit-state-map
-          "n"                                       #'evil-multiedit-next
-          "N"                                       #'evil-multiedit-prev
-          "C-n"                                     #'evil-multiedit-match-and-next
-          "C-S-n"                                   #'evil-multiedit-match-and-prev
-          "V"                                       #'iedit-show/hide-unmatched-lines))
-      ;; multiple cursors
-      (:prefix "gz"
-        :nv "m"                                     #'evil-mc-make-all-cursors
-        :nv "n"                                     #'evil-mc-make-and-goto-next-match
-        :nv "N"                                     #'evil-mc-make-and-goto-prev-match
-        :nv "d"                                     #'evil-mc-make-and-goto-next-cursor
-        :nv "D"                                     #'evil-mc-make-and-goto-last-cursor
-        :nv "j"                                     #'evil-mc-make-cursor-move-next-line
-        :nv "k"                                     #'evil-mc-make-cursor-move-prev-line
-        :nv "p"                                     #'evil-mc-make-and-goto-prev-cursor
-        :nv "P"                                     #'evil-mc-make-and-goto-first-cursor
-        :nv "q"                                     #'evil-mc-undo-all-cursors
-        :nv "t"                                     #'+multiple-cursors/evil-mc-toggle-cursors
-        :nv "u"                                     #'evil-mc-undo-last-added-cursor
-        :nv "z"                                     #'+multiple-cursors/evil-mc-make-cursor-here
-        :v  "I"                                     #'evil-mc-make-cursor-in-visual-selection-beg
-        :v  "A"                                     #'evil-mc-make-cursor-in-visual-selection-end))
-    ;; wgrep
-   (:when (featurep! :completion ivy)
-      (:map ivy-minibuffer-map
-        (:prefix "C-c"
-          :desc "Edit and replace"              "e" #'+ivy/woccur)))
-   (:when (featurep! :tools lsp +peek)
-      :map lsp-ui-peek-mode-map
-      "C-j"                                         #'lsp-ui-peek--select-next
-      "C-h"                                         #'lsp-ui-peek--select-prev-file
-      "C-l"                                         #'lsp-ui-peek--select-next-file
-      "C-k"                                         #'lsp-ui-peek--select-prev)))
+  (map! :n [tab] (general-predicate-dispatch nil
+                   (and (featurep! :editor fold)
+                        (save-excursion (end-of-line) (invisible-p (point))))
+                   #'+fold/toggle
+                   (fboundp 'evil-jump-item)         #'evil-jump-item)
+                                        ;;; ^^ borrowed from hlissner's config, tab to unfold
+        :v [tab] (general-predicate-dispatch nil
+                   (and (bound-and-true-p yas-minor-mode)
+                        (or (eq evil-visual-selection 'line)
+                            (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
+                   #'yas-insert-snippet
+                   (fboundp 'evil-jump-item)         #'evil-jump-item)
+        (:when (featurep! :completion company)
+         :i "C-i"                                    #'+company/complete)
+        ;; multiedit
+        (:when (featurep! :editor multiple-cursors)
+         :nv "R"                                     #'evil-multiedit-match-all
+         :n "C-n"                                    #'evil-multiedit-match-symbol-and-next
+         :n "C-S-n"                                  #'evil-multiedit-match-symbol-and-prev
+         :v "C-n"                                    #'evil-multiedit-match-and-next
+         :v "C-S-n"                                  #'evil-multiedit-match-and-prev
+         :nv "C-M-n"                                 #'evil-multiedit-restore
+         (:after evil-multiedit
+          (:map evil-multiedit-state-map
+           "n"                                       #'evil-multiedit-next
+           "N"                                       #'evil-multiedit-prev
+           "C-n"                                     #'evil-multiedit-match-and-next
+           "C-S-n"                                   #'evil-multiedit-match-and-prev
+           "V"                                       #'iedit-show/hide-unmatched-lines))
+         ;; multiple cursors
+         (:prefix ("gz" . "toplevel-evil-mc")
+          :nv "m"                                    #'evil-mc-make-all-cursors
+          :nv "n"                                    #'evil-mc-make-and-goto-next-match
+          :nv "N"                                    #'evil-mc-make-and-goto-prev-match
+          :nv "d"                                    #'evil-mc-make-and-goto-next-cursor
+          :nv "D"                                    #'evil-mc-make-and-goto-last-cursor
+          :nv "j"                                    #'evil-mc-make-cursor-move-next-line
+          :nv "k"                                    #'evil-mc-make-cursor-move-prev-line
+          :nv "p"                                    #'evil-mc-make-and-goto-prev-cursor
+          :nv "P"                                    #'evil-mc-make-and-goto-first-cursor
+          :nv "q"                                    #'evil-mc-undo-all-cursors
+          :nv "t"                                    #'+multiple-cursors/evil-mc-toggle-cursors
+          :nv "u"                                    #'evil-mc-undo-last-added-cursor
+          :nv "z"                                    #'+multiple-cursors/evil-mc-make-cursor-here
+          :v  "I"                                    #'evil-mc-make-cursor-in-visual-selection-beg
+          :v  "A"                                    #'evil-mc-make-cursor-in-visual-selection-end))
+        ;; wgrep
+        (:when (featurep! :completion ivy)
+         (:map ivy-minibuffer-map
+          (:prefix "C-c"
+           :desc "Edit and replace"              "e" #'+ivy/woccur)))
+        (:when (featurep! :tools lsp +peek)
+         :map lsp-ui-peek-mode-map
+         "C-j"                                       #'lsp-ui-peek--select-next
+         "C-h"                                       #'lsp-ui-peek--select-prev-file
+         "C-l"                                       #'lsp-ui-peek--select-next-file
+         "C-k"                                       #'lsp-ui-peek--select-prev)))
 
 (defun +localleader-key-bindings ()
   (map! :localleader
         (:when (featurep! :lang org)
-          (:map org-mode-map
-            :desc "Sort"     "S"                    #'org-sort
-            :desc "preview fragments" "L"           #'org-latex-preview
-            :desc "toggle pretty entities" "p"      #'+org-pretty-mode))
-        (:when (featurep! :lang python)
-          (:map python-mode-map
-            (:prefix ("p" . "pipenv")
-              :desc "activate"    "a"               #'pipenv-activate
-              :desc "deactivate"  "d"               #'pipenv-deactivate
-              :desc "install"     "i"               #'pipenv-install
-              :desc "lock"        "l"               #'pipenv-lock
-              :desc "open module" "o"               #'pipenv-open
-              :desc "run"         "r"               #'pipenv-run
-              :desc "shell"       "s"               #'pipenv-shell
-              :desc "uninstall"   "u"               #'pipenv-uninstall)
-            (:prefix ("r" . "repl")
-              :desc "default"              "r"      #'+python/open-repl
-              :desc "ipython"              "i"      #'+python/open-ipython-repl
-              :desc "jupyter"              "j"      #'+python/open-jupyter-repl)
-            "e" nil))))
+         (:map org-mode-map
+          :desc "Sort"     "S"                       #'org-sort
+          :desc "preview fragments" "L"              #'org-latex-preview
+          :desc "toggle pretty entities" "p"         #'+org-pretty-mode))
 
+        (:when (featurep! :lang python)
+         (:map python-mode-map
+          (:prefix ("e" . "pipenv")
+           :desc "activate"    "a"                   #'pipenv-activate
+           :desc "deactivate"  "d"                   #'pipenv-deactivate
+           :desc "install"     "i"                   #'pipenv-install
+           :desc "lock"        "l"                   #'pipenv-lock
+           :desc "open module" "o"                   #'pipenv-open
+           :desc "run"         "r"                   #'pipenv-run
+           :desc "shell"       "s"                   #'pipenv-shell
+           :desc "uninstall"   "u"                   #'pipenv-uninstall)
+          (:prefix ("r" . "repl")
+           :desc "default"              "r"          #'+python/open-repl
+           ;; :desc "jupyter"              "j"       #'+python/open-jupyter-repl
+           :desc "ipython"              "i"          #'+python/open-ipython-repl)))))
 
 (defun +leader-key-bindings ()
   (map! (:leader
           :desc "Search project"         "/"        #'+default/search-project
           :desc "Visual expand"          "v"        #'er/expand-region
 
-          (:prefix ("w" . "window")
-            :desc "Switch to last window" "w"       #'evil-window-mru)
+         (:when (featurep! :editor multiple-cursors)
+          (:prefix-map ( "z" . "multiple-cursors")
+           :nv "m"                                   #'evil-mc-make-all-cursors
+           :nv "n"                                   #'evil-mc-make-and-goto-next-match
+           :nv "N"                                   #'evil-mc-make-and-goto-prev-match
+           :nv "d"                                   #'evil-mc-make-and-goto-next-cursor
+           :nv "D"                                   #'evil-mc-make-and-goto-last-cursor
+           :nv "j"                                   #'evil-mc-make-cursor-move-next-line
+           :nv "k"                                   #'evil-mc-make-cursor-move-prev-line
+           :nv "p"                                   #'evil-mc-make-and-goto-prev-cursor
+           :nv "P"                                   #'evil-mc-make-and-goto-first-cursor
+           :nv "q"                                   #'evil-mc-undo-all-cursors
+           :nv "t"                                   #'+multiple-cursors/evil-mc-toggle-cursors
+           :nv "u"                                   #'evil-mc-undo-last-added-cursor
+           :nv "z"                                   #'+multiple-cursors/evil-mc-make-cursor-here
+           :v  "I"                                   #'evil-mc-make-cursor-in-visual-selection-beg
+           :v  "A"                                   #'evil-mc-make-cursor-in-visual-selection-end))
 
-          (:prefix ("b" . "buffer")
-            :desc "Fallback buffer"        "h"      #'+doom-dashboard/open
-            :desc "Messages buffer"        "m"      #'view-echo-area-messages
-            :desc "ibuffer (other window)" "I"      #'ibuffer-other-window)
+         (:prefix ("w" . "window")
+          :desc "Switch to last window" "w"          #'evil-window-mru)
 
-          (:when (featurep! :emacs undo +tree)
-            :desc "Undo Tree"              "U"        #'undo-tree-visualize)
-         
-          (:when (featurep! :ui treemacs)
-            :desc "Project sidebar"        "0"      #'+treemacs/toggle)
+         (:prefix ("b" . "buffer")
+          :desc "Fallback buffer"        "h"         #'+doom-dashboard/open
+          :desc "Messages buffer"        "m"         #'view-echo-area-messages
+          :desc "ibuffer (other window)" "I"         #'ibuffer-other-window)
 
-          (:when (featurep! :ui workspaces)
-            (:prefix "TAB"
-              :desc "Main workspace"       "`"      #'+workspace/switch-to-0
-              :desc "Previous workspace"   "TAB"    #'+workspace/other))
+         (:when (featurep! :emacs undo +tree)
+          :desc "Undo Tree"              "U"         #'undo-tree-visualize)
 
-          (:when (featurep! :completion ivy)
-            :desc "Ivy M-x"                "SPC"    #'counsel-M-x)
+         (:when (featurep! :ui treemacs)
+          :desc "Project sidebar"        "0"         #'+treemacs/toggle)
 
-          (:when (featurep! :lang org +roam)
-            (:prefix ("n" . "notes")
-              :desc "roam buffer"        "r"        #'org-roam
-              :desc "find/new"           "f"        #'org-roam-find-file
-              :desc "find/new"           "n"        #'org-roam-find-file
-              :desc "insert/new"         "i"        #'org-roam-insert
-              :desc "today's file"       "t"        #'org-roam-dailies-today
-              :desc "tomorrow's file"    "T"        #'org-roam-dailies-tomorrow
-              :desc "yesterday's file"   "y"        #'org-roam-dailies-yesterday
-              :desc "<date>'s file"      "d"        #'org-roam-dailies-date
-              :desc "mathpix.el"         "m"        #'mathpix-screenshot
-              (:prefix ("g" . "graph")
-                :desc "graph all"       "g" #'org-roam-graph-show
-                :desc "graph connected" "c" #'org-roam-graph-show-connected-component))))))
+         (:when (featurep! :ui workspaces)
+          (:prefix "TAB"
+           :desc "Main workspace"       "`"          #'+workspace/switch-to-0
+           :desc "Previous workspace"   "TAB"        #'+workspace/other))
+
+         (:when (featurep! :completion ivy)
+          :desc "Ivy M-x"                "SPC"       #'counsel-M-x)
+
+         (:when (featurep! :lang org +roam)
+          (:prefix ("n" . "notes")
+           :desc "roam buffer"        "r"            #'org-roam
+           :desc "find/new"           "f"            #'org-roam-find-file
+           :desc "find/new"           "n"            #'org-roam-find-file
+           :desc "insert/new"         "i"            #'org-roam-insert
+           :desc "today's file"       "t"            #'org-roam-dailies-today
+           :desc "tomorrow's file"    "T"            #'org-roam-dailies-tomorrow
+           :desc "yesterday's file"   "y"            #'org-roam-dailies-yesterday
+           :desc "<date>'s file"      "d"            #'org-roam-dailies-date
+           :desc "mathpix.el"         "m"            #'mathpix-screenshot
+           :desc "graph"              "g"            #'org-roam-graph-show-connected-component
+           :desc "graph all notes"    "g"            #'org-roam-graph-show)))))
 
 (general-auto-unbind-keys)
 (+toplevel-bindings)
 (+localleader-key-bindings)
 (+leader-key-bindings)
+
+
+;; (hercules-def
+;;  :transient t
+;; :show-funs )
+;; :show-funs                                       #'+multiple-cursors/evil-mc-make-cursor-here
+;; :hide-funs                                       #'evil-mc-resume-cursors
+;; :keymap 'doom-leader-multiple-cursors-map)

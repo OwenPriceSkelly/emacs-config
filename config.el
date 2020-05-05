@@ -1,48 +1,16 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-
-      doom-theme 'doom-gruvbox
-      doom-font (font-spec :family "Iosevka Extended" :size 16)
-      doom-variable-pitch-font (font-spec :family "Iosevka Etoile" :size 16)
-
-      solaire-mode-auto-swap-bg t
-      solaire-mode-remap-line-numbers t
-
-      which-key-side-window-location 'bottom
-      which-key-sort-order 'which-key-key-order-alpha
-
-      display-line-numbers-type 'relative
       ranger-override-dired t
-
       iedit-occurrence-context-lines 1
       fill-column 88
-      which-key-max-description-length nil
-      +workspaces-on-switch-project-behavior t
-
-      +latex-viewers '(pdf-tools)
-      +pretty-code-enabled-modes '(org-mode)
-
-      doom-leader-key "SPC"
-      doom-leader-alt-key "C-SPC"
-      doom-localleader-key ","
-      doom-localleader-alt-key "C-,"
-      evil-split-window-below t
-      evil-vsplit-window-right t)
-
-(setq +pretty-code-enabled-modes '(org-mode))
-
-(use-package! rainbow-mode
-  :defer-incrementally t)
+      company-idle-delay nil
+      +workspaces-on-switch-project-behavior t)
 
 (use-package! zone
   :defer-incrementally t
   :config
   (zone-when-idle 300))
-
-(use-package! expand-region
-  :config
-  (setq expand-region-contract-fast-key "V"))
 
 (use-package! evil-textobj-line
   :demand t)
@@ -55,30 +23,9 @@
             mathpix-screenshot-method "screencapture -i %s"))
 
 
-;; persist frame size/fullscreen across sessions
-(when-let (dims (doom-cache-get 'last-frame-size))
-  (cl-destructuring-bind ((left . top) width height fullscreen) dims
-    (setq initial-frame-alist
-          (append initial-frame-alist
-                  `((left . ,left)
-                    (top . ,top)
-                    (width . ,width)
-                    (height . ,height)
-                    (fullscreen . ,fullscreen))))))
-(defun save-frame-dimensions ()
-  (doom-cache-set 'last-frame-size
-                  (list (frame-position)
-                        (frame-width)
-                        (frame-height)
-                        (frame-parameter nil 'fullscreen))))
-(add-hook 'kill-emacs-hook  #'save-frame-dimensions)
-
-;; 2.3 with all
-(load! "+extras/bindings") ;;2.2 (- .1)
-(load! "+extras/dashboard") ;; 2.2 (- .1)
-(after! lsp (load! "+extras/lsp")) ;; 1.6 (- .7)
-(after! org (load! "+extras/org")) ;; 1.5 (- .8)
-;; (load! "+extras/org") ;; 1.5 (- .8)
-;; .8 with neither org nor lsp (- 1.5)
-
-;; .7 with none
+;; TODO configure doom-modeline in ui.el
+(load! "+extras/ui")
+(load! "+extras/bindings")
+(after! lsp (load! "+extras/lsp"))
+;; TODO configure org-mode line numbers hook (currently just dir-locals)
+(after! org (load! "+extras/org"))
