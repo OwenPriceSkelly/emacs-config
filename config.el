@@ -4,6 +4,7 @@
       ranger-override-dired t
       iedit-occurrence-context-lines 1
       fill-column 88
+      company-idle-delay nil
       +workspaces-on-switch-project-behavior t)
 
 (use-package! zone
@@ -24,7 +25,6 @@
 
 ;; TODO configure doom-modeline in ui.el
 (load! "+extras/ui")
-;; TODO evil-snipe config
 (load! "+extras/bindings")
 (after! lsp (load! "+extras/lsp"))
 ;; TODO configure org-mode line numbers hook (currently just dir-locals)

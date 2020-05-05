@@ -2,14 +2,19 @@
 
 ;; TODO doom-modeline config
 (setq doom-theme                      'doom-gruvbox
-
       doom-font                       (font-spec :family "Iosevka Extended" :size 16)
       doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
+      ;; doom-unicode-font               (font-spec :family)
 
-      display-line-numbers-type       'relative
+      doom-modeline-persp-name t
+      doom-modeline-major-mode-icon t
+
+      display-line-numbers-type       'nil
       which-key-side-window-location  'bottom
       which-key-sort-order            'which-key-key-order-alpha
       which-key-max-description-length nil
+
+      treemacs-width 30
 
       solaire-mode-auto-swap-bg       t
       solaire-mode-remap-line-numbers t
@@ -18,27 +23,38 @@
       +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
 
-(use-package! rainbow-mode
-  :commands (rainbow-mode))
 ;; persist frame size/fullscreen across sessions
-(when-let (dims (doom-cache-get 'last-frame-size))
-  (cl-destructuring-bind ((left . top) width height fullscreen) dims
-    (setq initial-frame-alist
-          (append initial-frame-alist
-                  `((left . ,left)
-                    (top . ,top)
-                    (width . ,width)
-                    (height . ,height)
-                    (fullscreen . ,fullscreen))))))
+;; (when-let (dims (doom-cache-get 'last-frame-size))
+;;   (cl-destructuring-bind ((left . top) width height fullscreen) dims
+;;     (setq initial-frame-alist
+;;           (append initial-frame-alist
+;;                   `((left . ,left)
+;;                     (top . ,top)
+;;                     (width . ,width)
+;;                     (height . ,height)
+;;                     (fullscreen . ,fullscreen))))))
 
-(defun save-frame-dimensions ()
-  (doom-cache-set 'last-frame-size
-                  (list (frame-position)
-                        (frame-width)
-                        (frame-height)
-                        (frame-parameter nil 'fullscreen))))
+;; (defun save-frame-dimensions ()
+;;   (doom-cache-set 'last-frame-size
+;;                   (list (frame-position)
+;;                         (frame-width)
+;;                         (frame-height)
+;;                         (frame-parameter nil 'fullscreen))))
 
-(add-hook 'kill-emacs-hook  #'save-frame-dimensions)
+;; (add-hook 'kill-emacs-hook  #'save-frame-dimensions)
+
+;;TODO plagiarize chemacs:
+;; "       ___           ___           ___           ___           ___"
+;; "      /  /\         /__/\         /  /\         /  /\         /  /\ "
+;; "     /  /:/_       |  |::\       /  /::\       /  /:/        /  /:/_ "
+;; "    /  /:/ /\      |  |:|:\     /  /:/\:\     /  /:/        /  /:/ /\ "
+;; "   /  /:/ /:/_   __|__|:|\:\   /  /:/ /::\   /  /:/  ___   /  /:/ /::\ "
+;; "  /__/:/ /:/ /\ /__/::::| \:\ /__/:/ /:/\:\ /__/:/  /  /\ /__/:/ /:/\:\ "
+;; "  \  \:\/:/ /:/ \  \:\     \/ \  \:\/:/__\/ \  \:\ /  /:/ \  \:\/:/ /:/ "
+;; "   \  \::/ /:/   \  \:\        \  \::/       \  \:\  /:/   \  \::/ /:/ "
+;; "    \  \:\/:/     \  \:\        \  \:\        \  \:\/:/     \__\/ /:/ "
+;; "     \  \::/       \  \:\        \  \:\        \  \::/        /__/:/ "
+;; "      \__\/         \__\/         \__\/         \__\/         \__\/ "
 
 (defun +my/doom-dashboard-widget-banner ()
   (let ((point (point)))
