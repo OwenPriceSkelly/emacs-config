@@ -107,8 +107,8 @@
 
 (defun +leader-key-bindings ()
   (map! (:leader
-          :desc "Search project"         "/"        #'+default/search-project
-          :desc "Visual expand"          "v"        #'er/expand-region
+         :desc "Search project"         "/"        #'+default/search-project
+         :desc "Visual expand"          "v"        #'er/expand-region
 
          (:when (featurep! :editor multiple-cursors)
           (:prefix-map ( "z" . "multiple-cursors")
@@ -153,17 +153,18 @@
          (:when (featurep! :lang org +roam)
           (:prefix ("n" . "notes")
            :desc "roam buffer"        "r"            #'org-roam
-           :desc "find/new"           "f"            #'org-roam-find-file
-           :desc "find/new"           "n"            #'org-roam-find-file
-           :desc "insert/new"         "i"            #'org-roam-insert
+           :desc "find"           "f"                #'org-roam-find-file
+           :desc "jump to index"      "n"            #'org-roam-find-file
+           :desc "insert"         "i"                #'org-roam-insert
            :desc "today's file"       "t"            #'org-roam-dailies-today
            :desc "tomorrow's file"    "T"            #'org-roam-dailies-tomorrow
            :desc "yesterday's file"   "y"            #'org-roam-dailies-yesterday
            :desc "<date>'s file"      "d"            #'org-roam-dailies-date
            :desc "mathpix.el"         "m"            #'mathpix-screenshot
-           :desc "graph"              "g"            #'org-roam-graph-show-connected-component
-           :desc "graph all"          "G"            #'org-roam-graph-show)))))
-
+           (:prefix ( "g" . "graph")
+            :desc "graph all"         "a"            #'org-roam-graph
+            :desc "graph neighbors"   "n"            (λ! (org-roam-graph 1))
+            :desc "graph connected"   "c"            (λ!! #'org-roam-graph '(4))))))))
 (general-auto-unbind-keys)
 (+toplevel-bindings)
 (+localleader-key-bindings)

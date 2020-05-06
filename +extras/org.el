@@ -5,9 +5,7 @@
   :init
   (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
   (sp-local-pair '(org-mode) "$" "$") ; For inline latex stuff
-  (add-hook! (org-mode)
-             #'(+org-pretty-mode  variable-pitch-mode))
-
+  (add-hook! (org-mode) #'(+org-pretty-mode  variable-pitch-mode))
   ;; TODO make other capital letters just bold caps
   (setq org-entities-user
         ;; org |latex |mathp|html         |ascii|latin1|utf-8
@@ -71,6 +69,7 @@
 (use-package! org-roam
   :custom
   (org-roam-directory                      org-directory)
+  (org-roam-index-file "./index.org")
   (org-roam-verbose                        t)
   (org-roam-buffer-prepare-hook            '(org-roam-buffer--insert-title
                                              org-roam-buffer--insert-backlinks)) ;;org-roam-buffer--insert-citelinks
