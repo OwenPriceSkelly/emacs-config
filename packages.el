@@ -8,3 +8,5 @@
   :pin nil)
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el"))
+(package! org-roam
+  :pin nil)

@@ -22,10 +22,7 @@
             mathpix-app-key "0b3d8ae26f3762b4d5b8"
             mathpix-screenshot-method "screencapture -i %s"))
 
-
-;; TODO configure doom-modeline in ui.el
 (load! "+extras/ui")
 (load! "+extras/bindings")
 (after! lsp (load! "+extras/lsp"))
-;; TODO configure org-mode line numbers hook (currently just dir-locals)
 (after! org (load! "+extras/org"))
