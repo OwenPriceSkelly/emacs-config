@@ -15,13 +15,6 @@
 (use-package! evil-textobj-line
   :demand t)
 
-(use-package! mathpix.el
-  :commands (mathpix-screenshot)
-  :config (setq
-            mathpix-app-id "owenpriceskelly_gmail_com_2bbd51"
-            mathpix-app-key "0b3d8ae26f3762b4d5b8"
-            mathpix-screenshot-method "screencapture -i %s"))
-
 (load! "+extras/ui")
 (load! "+extras/bindings")
 (after! lsp (load! "+extras/lsp"))

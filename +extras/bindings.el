@@ -53,7 +53,7 @@
            "C-S-n"                                   #'evil-multiedit-match-and-prev
            "V"                                       #'iedit-show/hide-unmatched-lines))
          ;; multiple cursors
-         (:prefix ("gz" . "toplevel-evil-mc")
+         (:prefix ("gz" . "evil-mc")
           :nv "m"                                    #'evil-mc-make-all-cursors
           :nv "n"                                    #'evil-mc-make-and-goto-next-match
           :nv "N"                                    #'evil-mc-make-and-goto-prev-match

@@ -26,7 +26,6 @@
         ;; org-agenda-files (list org-directory)
         org-ellipsis " ▾ "
         org-superstar-headline-bullets-list '("☰" "☱" "☵" "☳" "☴" "☲" "☶" "☷")
-        org-startup-folded 'content
         org-todo-keywords '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
                                       "[X](d)" "[-](k)")
                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
@@ -71,7 +70,8 @@
   (org-roam-directory                      org-directory)
   (org-roam-index-file "./index.org")
   (org-roam-verbose                        t)
-  (org-roam-buffer-prepare-hook            '(org-roam-buffer--insert-title
+  (org-roam-buffer-prepare-hook            '(hide-mode-line-mode
+                                             org-roam-buffer--insert-title
                                              org-roam-buffer--insert-backlinks)) ;;org-roam-buffer--insert-citelinks
   (org-roam-buffer-position                'right)
   (org-roam-buffer-width                   0.27)
@@ -88,8 +88,9 @@
    org-roam-dailies-capture-templates '(("d" "daily" plain (function org-roam-capture--get-point) ""
                                          :immediate-finish t
                                          :file-name "%<%Y-%m-%d-%A>"
-                                         :head "#+TITLE: %<%A, %B %d, %Y>"))))
-
+                                         :head "#+TITLE: %<%A, %B %d, %Y>")))
+  :config
+  (add-hook! 'org-roam-buffer-prepare-hook :append (org-global-cycle 2)))
 (use-package! mathpix
   :commands (mathpix-screenshot)
   :config
