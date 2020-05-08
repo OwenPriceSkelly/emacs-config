@@ -15,7 +15,36 @@
 (use-package! evil-textobj-line
   :demand t)
 
+(use-package! lispyville
+  :when (featurep! :editor evil)
+  :hook (lispy-mode . lispyville-mode)
+  :config
+  (lispy-set-key-theme '(lispy c-digits))
+  (lispyville-set-key-theme
+   '((operators normal)
+     c-w
+     (prettify insert)
+     (atom-movement normal visual)
+     slurp/barf-cp
+     additional
+     additional-insert)))
+
+ (use-package! evil-snipe
+  :init
+  (setq evil-snipe-scope                     'whole-visible
+        ;; evil-snipe-spillover-scope           'buffer
+        ;; evil-snipe-repeat-scope              'whole-buffer
+        evil-snipe-repeat-keys               t
+        evil-snipe-override-evil-repeat-keys t)
+  :config
+  ;; interpret open/close square brackets as any open/close delimiters
+  ;; respectively.
+  (push '(?\[ "[[{(]") evil-snipe-aliases)
+  (push '(?\] "[]})]") evil-snipe-aliases)
+  (evil-snipe-override-mode 1))
+
 (load! "+extras/ui")
 (load! "+extras/bindings")
 (after! lsp (load! "+extras/lsp"))
 (after! org (load! "+extras/org"))
+(toggle-frame-fullscreen)
