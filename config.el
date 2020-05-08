@@ -19,3 +19,4 @@
 (load! "+extras/bindings")
 (after! lsp (load! "+extras/lsp"))
 (after! org (load! "+extras/org"))
+(toggle-frame-fullscreen)

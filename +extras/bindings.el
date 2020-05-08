@@ -144,8 +144,8 @@
 
          (:when (featurep! :ui workspaces)
           (:prefix "TAB"
-           :desc "Main workspace"       "`"          #'+workspace/switch-to-0
-           :desc "Previous workspace"   "TAB"        #'+workspace/other))
+           :desc "Main workspace"       "`"          #'+workspace/other
+           :desc "Previous workspace"   "TAB"        #'+workspace/switch-to-0))
 
          (:when (featurep! :completion ivy)
           :desc "Ivy M-x"                "SPC"       #'counsel-M-x)
@@ -153,9 +153,9 @@
          (:when (featurep! :lang org +roam)
           (:prefix ("n" . "notes")
            :desc "roam buffer"        "r"            #'org-roam
-           :desc "find"           "f"                #'org-roam-find-file
-           :desc "jump to index"      "n"            #'org-roam-find-file
-           :desc "insert"         "i"                #'org-roam-insert
+           :desc "find"               "f"            #'org-roam-find-file
+           :desc "jump to index"      "n"            #'org-roam-jump-to-index
+           :desc "insert"             "i"            #'org-roam-insert
            :desc "today's file"       "t"            #'org-roam-dailies-today
            :desc "tomorrow's file"    "T"            #'org-roam-dailies-tomorrow
            :desc "yesterday's file"   "y"            #'org-roam-dailies-yesterday
