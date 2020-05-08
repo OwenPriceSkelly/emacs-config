@@ -11,4 +11,4 @@
 (package! org-roam
   :pin nil)
 (package! doom-themes
-  :pin nil)
+  :pin "34f181c")

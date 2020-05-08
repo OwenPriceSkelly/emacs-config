@@ -1,11 +1,11 @@
 ;;; ~/.doom.d/+extras/ui.el -*- lexical-binding: t; -*-
 
 ;; TODO doom-modeline config
-(setq doom-theme                      'doom-gruvbox
+(setq doom-theme                      'doom-gruvbox-light
+      doom-gruvbox-light-variant      'hard
       doom-font                       (font-spec :family "Iosevka Extended" :size 16)
       doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
       ;; doom-unicode-font               (font-spec :family)
-
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t
 

@@ -15,6 +15,20 @@
 (use-package! evil-textobj-line
   :demand t)
 
+(use-package! evil-snipe
+  :init
+  (setq evil-snipe-scope                     'whole-visible
+        ;; evil-snipe-spillover-scope           'buffer
+        ;; evil-snipe-repeat-scope              'whole-buffer
+        evil-snipe-repeat-keys               t
+        evil-snipe-override-evil-repeat-keys t)
+  :config
+  ;; interpret open/close square brackets as any open/close delimiters
+  ;; respectively.
+  (push '(?\[ "[[{(]") evil-snipe-aliases)
+  (push '(?\] "[]})]") evil-snipe-aliases)
+  (evil-snipe-override-mode 1))
+
 (load! "+extras/ui")
 (load! "+extras/bindings")
 (after! lsp (load! "+extras/lsp"))

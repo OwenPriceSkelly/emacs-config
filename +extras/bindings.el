@@ -8,20 +8,6 @@
   :config
   (setq expand-region-contract-fast-key "V"))
 
-(use-package! evil-snipe
-  :init
-  (setq evil-snipe-scope                     'whole-visible
-        ;; evil-snipe-spillover-scope           'buffer
-        ;; evil-snipe-repeat-scope              'whole-buffer
-        evil-snipe-repeat-keys               t
-        evil-snipe-override-evil-repeat-keys t)
-  :config
-  ;; interpret open/close square brackets as any open/close delimiters
-  ;; respectively.
-  (push '(?\[ "[[{(]") evil-snipe-aliases)
-  (push '(?\] "[]})]") evil-snipe-aliases)
-  (evil-snipe-override-mode 1))
-
 (defun +toplevel-bindings ()
   (map! :n [tab] (general-predicate-dispatch nil
                    (and (featurep! :editor fold)
@@ -144,8 +130,8 @@
 
          (:when (featurep! :ui workspaces)
           (:prefix "TAB"
-           :desc "Main workspace"       "`"          #'+workspace/other
-           :desc "Previous workspace"   "TAB"        #'+workspace/switch-to-0))
+           :desc "Main workspace"       "`"               #'+workspace/switch-to-0
+           :desc "Previous workspace"   "TAB"             #'+workspace/other))
 
          (:when (featurep! :completion ivy)
           :desc "Ivy M-x"                "SPC"       #'counsel-M-x)
@@ -154,7 +140,7 @@
           (:prefix ("n" . "notes")
            :desc "roam buffer"        "r"            #'org-roam
            :desc "find"               "f"            #'org-roam-find-file
-           :desc "jump to index"      "n"            #'org-roam-jump-to-index
+           :desc "jump to index"      "x"            #'org-roam-jump-to-index
            :desc "insert"             "i"            #'org-roam-insert
            :desc "today's file"       "t"            #'org-roam-dailies-today
            :desc "tomorrow's file"    "T"            #'org-roam-dailies-tomorrow
@@ -162,18 +148,13 @@
            :desc "<date>'s file"      "d"            #'org-roam-dailies-date
            :desc "mathpix.el"         "m"            #'mathpix-screenshot
            (:prefix ( "g" . "graph")
-            :desc "graph all"         "a"            #'org-roam-graph
+            :desc "graph"             "g"                 #'org-roam-graph
             :desc "graph neighbors"   "n"            (λ! (org-roam-graph 1))
             :desc "graph connected"   "c"            (λ!! #'org-roam-graph '(4))))))))
+
 (general-auto-unbind-keys)
 (+toplevel-bindings)
 (+localleader-key-bindings)
 (+leader-key-bindings)
 
 
-;; (hercules-def
-;;  :transient t
-;; :show-funs )
-;; :show-funs                                       #'+multiple-cursors/evil-mc-make-cursor-here
-;; :hide-funs                                       #'evil-mc-resume-cursors
-;; :keymap 'doom-leader-multiple-cursors-map)
