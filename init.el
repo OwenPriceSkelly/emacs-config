@@ -31,6 +31,7 @@
        workspaces             ; tab emulation, persistence & separate workspaces
 
        :editor
+       lispy
        (evil
         +commands
         +everywhere) ; come to the dark side, we have cookies
@@ -38,7 +39,7 @@
        fold                   ; (nigh) universal code folding
        (format +onsave)       ; automated prettiness
        multiple-cursors       ; editing in many places at once
-       parinfer               ; turn lisp into python, sort of
+       ;; parinfer               ; turn lisp into python, sort of
        rotate-text            ; cycle region at point between text candidates
        snippets               ; my elves. They type so I don't have to
        word-wrap              ; soft wrapping with language-aware indent ;
@@ -152,12 +153,12 @@
        ;;web                  ; the tubes
 
        :email
-       ;; (mu4e +gmail)
+       (mu4e +gmail)
        ;; notmuch
        ;;(wanderlust +gmail)
 
        :app
-       ;; calendar
+       ;;calendar
        ;;irc                  ; how neckbeards socialize
        ;;(rss +org)           ; emacs as an RSS reader
        ;; twitter             ; twitter client https://twitter.com/vnought

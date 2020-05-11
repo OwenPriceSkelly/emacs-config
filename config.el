@@ -2,6 +2,7 @@
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
       ranger-override-dired t
+      ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
       fill-column 88
       company-idle-delay nil
@@ -15,11 +16,30 @@
 (use-package! evil-textobj-line
   :demand t)
 
+(use-package! lispyville
+  :when (featurep! :editor evil)
+  :hook (lispy-mode . lispyville-mode)
+  :config
+  (lispy-set-key-theme '(lispy c-digits))
+  (lispyville-set-key-theme
+   '(operators
+     c-w
+     prettify
+     text-objects
+     (atom-movement normal visual)
+     (additional-movement normal visual motion)
+     commentary
+     slurp/barf-cp
+     ;; slurp/barf-lispy
+     additional
+     additional-insert
+     escape)))
+
 (use-package! evil-snipe
   :init
   (setq evil-snipe-scope                     'whole-visible
-        ;; evil-snipe-spillover-scope           'buffer
-        ;; evil-snipe-repeat-scope              'whole-buffer
+        evil-snipe-spillover-scope           'whole-buffer
+        evil-snipe-repeat-scope              'buffer
         evil-snipe-repeat-keys               t
         evil-snipe-override-evil-repeat-keys t)
   :config
