@@ -14,7 +14,7 @@
                         (save-excursion (end-of-line) (invisible-p (point))))
                    #'+fold/toggle
                    (fboundp 'evil-jump-item)         #'evil-jump-item)
-                                        ;;; ^^ borrowed from hlissner's config, tab to unfold
+;;; ^^ borrowed from hlissner's config, tab to unfold
         :v [tab] (general-predicate-dispatch nil
                    (and (bound-and-true-p yas-minor-mode)
                         (or (eq evil-visual-selection 'line)
@@ -65,7 +65,18 @@
          "C-j"                                            #'lsp-ui-peek--select-next
          "C-h"                                            #'lsp-ui-peek--select-prev-file
          "C-l"                                            #'lsp-ui-peek--select-next-file
-         "C-k"                                            #'lsp-ui-peek--select-prev)))
+         "C-k"                                            #'lsp-ui-peek--select-prev)
+        (:when (featurep! :editor lispy)
+         (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
+          "[" nil
+          "]" nil)
+         (:map lispyville-mode-map
+          :n "<M-[>" #'lispy-backward
+          :n "<M-]>" #'lispy-forward))))
+;; (map! "<M-up>"    #'drag-stuff-up
+;;         "<M-down>"  #'drag-stuff-down
+;;         "<M-left>"  #'drag-stuff-left
+;;         "<M-right>" #'drag-stuff-right)
 
 (defun +localleader-key-bindings ()
   (map! :localleader
