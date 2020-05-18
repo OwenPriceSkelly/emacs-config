@@ -35,39 +35,35 @@
                                  ("PROG"  . +org-todo-active)
                                  ("WAIT"  . +org-todo-onhold))))
 
-(defun +my/init-roam-headers ()
-  (setq +my/default-roam-header (concat "#+TITLE: ${title}\n" "* Tags:\n" "- Tag:  \n" "- Tag:  \n" "- Tag:  \n" "* Description: \n" "* Related: \n")
-        +my/math-roam-header (concat "#+TITLE: ${title}\n"
-                                    "* Tags:\n" "- Tag: [[file:2020-04-02-math.org][::math]]\n" "- Tag:  \n" "- Tag:  \n" "* Description: ")
-        +my/work-roam-header (concat "#+TITLE: ${title}\n"
-                                    "* Tags:\n" "- Sprint: \n" "- Category: \n" "- Project: \n" "* Description: ")
-        +my/roam-ref-header (concat "#+TITLE: ${title}\n"
-                                    "#+ROAM_KEY: ${ref}\n"
-                                    "* Tags:\n" "- Tag:  \n" "- Tag:  \n" "- Tag:  \n" "* Description: ")
-        +my/org-roam-ref-templates (list (list "r" "ref" 'entry (list 'function #'org-roam-capture--get-point)
-                                              "%?"
-                                              :file-name "${slug}"
-                                              :head +my/roam-ref-header
-                                              :unnarrowed t))
-        +my/org-roam-capture-templates (list (list "d" "default" 'entry (list 'function #'org-roam-capture--get-point)
-                                                  "%?"
-                                                  :file-name "%<%Y-%m-%d>-${slug}"
-                                                  :head +my/default-roam-header
-                                                  :unnarrowed t)
-                                            (if IS-MAC
-                                                (list "m" "math" 'entry (list 'function #'org-roam-capture--get-point)
-                                                      "%?"
-                                                      :file-name "%<%Y-%m-%d>-${slug}"
-                                                      :head +my/math-roam-header
-                                                      :unnarrowed t)
-                                              (list "w" "work" 'entry (list 'function #'org-roam-capture--get-point)
-                                                    "%?"
-                                                    :file-name "%<%Y-%m-%d>-${slug}"
-                                                    :head +my/work-roam-header
-                                                    :unnarrowed t)))))
+(defun +init-roam-templates ()
+  (setq +my/org-roam-ref-templates (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
+                                               "%?"
+                                               :file-name "${slug}"
+                                               :head (concat "#+TITLE: ${title}\n" "#+ROAM_TAGS:\n" "#+ROAM_KEY: ${ref}\n" "* Tags:\n" "- Tag:  \n" "- Tag:  \n" "- Tag:  \n" "* Description: ")
+                                               :unnarrowed t))
+        +my/org-roam-capture-templates (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
+                                                   "%?"
+                                                   :file-name "%<%Y-%m-%d>-${slug}"
+                                                   :head (concat "#+TITLE: ${title}\n" "#+ROAM_TAGS:\n" "* Tags:\n" "- Tag:  \n" "- Tag:  \n" "- Tag:  \n" "* Description: \n" "* Related: \n")
+                                                   :unnarrowed t)
+                                             (list "m" "math" 'plain (list 'function #'org-roam-capture--get-point)
+                                                   "%?"
+                                                   :file-name "%<%Y-%m-%d>-${slug}"
+                                                   :head (concat "#+TITLE: ${title}\n" "#+ROAM_TAGS: math, \n" "* Tags:\n" "- Tag: [[file:2020-04-02-math.org][::math]]\n" "- Tag:  \n" "- Tag:  \n" "* Description: ")
+                                                   :unnarrowed t)
+                                             (list "w" "work" 'plain (list 'function #'org-roam-capture--get-point)
+                                                   "%?"
+                                                   :file-name "%<%Y-%m-%d>-${slug}"
+                                                   :head (concat "#+TITLE: ${title}\n" "#+ROAM_TAGS:\n" "* Tags:\n" "- Sprint: \n" "- Category: \n" "- Project: \n" "* Description: ")
+                                                   :unnarrowed t))
+        +my/org-roam-dailies-capture-templates      '(("d" "daily" plain (function org-roam-capture--get-point)
+                                                       ""
+                                                       :immediate-finish t
+                                                       :file-name "%<%Y-%m-%d-%A>"
+                                                       :head "#+TITLE: %<%A, %B %d, %Y>"))))
 (use-package! org-roam
   :init
-  (+my/init-roam-headers)
+  (+init-roam-templates)
   :custom
   (org-roam-buffer-prepare-hook            '(hide-mode-line-mode
                                              org-roam-buffer--insert-title
@@ -83,13 +79,11 @@
         org-roam-graph-viewer                   (if IS-MAC "open"
                                                   (executable-find "firefox")) ;; the osx `open' executable just finds system default for .svg
         org-roam-graph-max-title-length         40
-        org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal") ;; org-roam-db-location            (concat org-roam-directory "org-roam.db")
-        org-roam-capture-ref-templates          +my/org-roam-ref-templates
+        org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+        ;; org-roam-db-location            (concat org-roam-directory "org-roam.db")
         org-roam-capture-templates              +my/org-roam-capture-templates
-        org-roam-dailies-capture-templates      '(("d" "daily" entry (function org-roam-capture--get-point) ""
-                                                   :immediate-finish t
-                                                   :file-name "%<%Y-%m-%d-%A>"
-                                                   :head "#+TITLE: %<%A, %B %d, %Y>")))
+        org-roam-capture-ref-templates          +my/org-roam-ref-templates
+        org-roam-dailies-capture-templates      +my/org-roam-dailies-capture-templates)
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
   (add-hook! 'org-roam-buffer-prepare-hook :append (λ!! (org-global-cycle '(4)))))
 
