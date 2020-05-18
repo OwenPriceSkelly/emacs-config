@@ -9,6 +9,7 @@
   :pin "52bc9a6")
 ;; deliberately unpinned
 (package! org-roam
-  :pin nil)
+  :recipe (:host github :repo "org-roam/org-roam")
+  :pin "78b518e")
 (package! doom-themes
   :pin "34f181c")

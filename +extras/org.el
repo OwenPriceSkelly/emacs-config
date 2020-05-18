@@ -80,12 +80,13 @@
         org-roam-buffer-width                   0.27
         org-roam-buffer-no-delete-other-windows t
         org-roam-completion-system              'ivy
-        org-roam-graph-viewer                   (if IS-MAC "open" (executable-find "firefox")) ;; the osx `open' executable just finds system default for .svg
+        org-roam-graph-viewer                   (if IS-MAC "open"
+                                                  (executable-find "firefox")) ;; the osx `open' executable just finds system default for .svg
         org-roam-graph-max-title-length         40
         org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal") ;; org-roam-db-location            (concat org-roam-directory "org-roam.db")
         org-roam-capture-ref-templates          +my/org-roam-ref-templates
         org-roam-capture-templates              +my/org-roam-capture-templates
-        org-roam-dailies-capture-templates      '(("d" "daily" plain (function org-roam-capture--get-point) ""
+        org-roam-dailies-capture-templates      '(("d" "daily" entry (function org-roam-capture--get-point) ""
                                                    :immediate-finish t
                                                    :file-name "%<%Y-%m-%d-%A>"
                                                    :head "#+TITLE: %<%A, %B %d, %Y>")))
