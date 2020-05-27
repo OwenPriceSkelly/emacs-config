@@ -17,6 +17,7 @@
        hl-todo                ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;; indent-guides       ; highlighted indent columns
+       minimap
        modeline               ; snazzy, Atom-inspired modeline, plus API
        nav-flash              ; blink the current line after jumping
        ophints                ; highlight the region an operation acts on
