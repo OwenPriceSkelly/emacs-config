@@ -71,8 +71,8 @@
           "[" nil
           "]" nil)
          (:map lispyville-mode-map
-          :n "<M-[>" #'lispy-backward
-          :n "<M-]>" #'lispy-forward))))
+          :n "M-[" #'lispy-backward
+          :n "M-]" #'lispy-forward))))
 ;; (map! "<M-up>"    #'drag-stuff-up
 ;;         "<M-down>"  #'drag-stuff-down
 ;;         "<M-left>"  #'drag-stuff-left
@@ -83,7 +83,7 @@
         (:when (featurep! :lang org)
          (:map org-mode-map
           :desc "Sort"     "S"                            #'org-sort
-          :desc "preview fragments" "L"                   #'org-latex-preview
+          :desc "preview LaTeX fragments" "L"                   #'org-latex-preview
           :desc "toggle pretty entities" "p"              #'+org-pretty-mode))
 
         (:when (featurep! :lang python)
@@ -160,7 +160,7 @@
            :desc "<date>'s file"      "d"            #'org-roam-dailies-date
            :desc "mathpix.el"         "m"            #'mathpix-screenshot
            (:prefix ( "g" . "graph")
-            :desc "graph"             "g"                 #'org-roam-graph
+            :desc "graph all notes"   "g"            #'org-roam-graph
             :desc "graph neighbors"   "n"            (λ! (org-roam-graph 1))
             :desc "graph connected"   "c"            (λ!! #'org-roam-graph '(4))))))))
 

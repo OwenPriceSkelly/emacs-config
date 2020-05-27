@@ -1,6 +1,7 @@
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :completion
-       (company +childframe)  ; the ultimate code completion backend
+       (company
+        +childframe)  ; the ultimate code completion backend
        (ivy
         +fuzzy
         +prescient
@@ -37,7 +38,8 @@
         +everywhere) ; come to the dark side, we have cookies
        file-templates         ; auto-snippets for empty files
        fold                   ; (nigh) universal code folding
-       (format +onsave)       ; automated prettiness
+       (format
+        +onsave)       ; automated prettiness
        multiple-cursors       ; editing in many places at once
        ;; parinfer               ; turn lisp into python, sort of
        rotate-text            ; cycle region at point between text candidates
@@ -122,16 +124,16 @@
        ;;nim                  ; python + lisp at the speed of c
        ;;nix                  ; I hereby declare "nix geht mehr!"
        ;;ocaml                ; an objective camel
-       (org                   ; organize your plain life in plain text
-        +roam)
-       ;; +journal
-       ;; +dragndrop          ; drag & drop files/images into org buffers
-       ;; +gnuplot
-       ;; +hugo               ; use Emacs for hugo blogging
-       ;; +jupyter            ; ipython/jupyter support for babel
-       ;; +pandoc             ; export-with-pandoc support
-       ;; +pomodoro           ; be fruitful with the tomato technique
-       ;; +present            ; using org-mode for presentations
+       (org                             ; organize your plain life in plain text
+        +roam
+        +dragndrop    ; drag & drop files/images into org buffers
+        +hugo         ; use Emacs for hugo blogging
+        +pandoc       ; export-with-pandoc support
+        +present)            ; using org-mode for presentations
+       ;;+journal
+       ;;+gnuplot
+       ;;+jupyter            ; ipython/jupyter support for babel
+       ;;+pomodoro           ; be fruitful with the tomato technique
        ;;perl                 ; write code no one else can comprehend
        ;;php                  ; perl's insecure younger brother
        ;;plantuml             ; diagrams for confusing people more

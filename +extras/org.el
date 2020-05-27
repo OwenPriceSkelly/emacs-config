@@ -90,6 +90,9 @@
   ;; have org-roam-buffer use same display defaults as other org-files
   (add-hook! 'org-roam-buffer-prepare-hook :append (λ!! (org-global-cycle '(4)))))
 
+(use-package! org-roam-server
+  :commands (org-roam-server-mode))
+
 (use-package! mathpix
   :commands (mathpix-screenshot)
   :config

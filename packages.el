@@ -7,9 +7,11 @@
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el")
   :pin "52bc9a6")
-;; deliberately unpinned
+;; existing packages pinned separately
 (package! org-roam
   :recipe (:host github :repo "org-roam/org-roam")
-  :pin "78b518e")
+  :pin "cce2db8b5a2c1f1258bcb35f4a3241067e4f950e")
+(package! org-roam-server
+  :pin nil)
 (package! doom-themes
   :pin nil)
