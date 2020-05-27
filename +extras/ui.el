@@ -14,6 +14,8 @@
       which-key-sort-order            'which-key-key-order-alpha
       which-key-max-description-length nil
 
+
+
       treemacs-width 30
 
       solaire-mode-auto-swap-bg       t
@@ -36,6 +38,7 @@
  ;; "      \__\/         \__\/         \__\/         \__\/         \__\/     "
  ;;
 (defun +my/doom-dashboard-widget-banner ()
+  "Modified `doom-dashboard-widget-banner' with ascii art taken from chemacs github readme"
   (let ((point (point)))
     (mapc (lambda (line)
             (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
@@ -70,8 +73,36 @@
                     (max 0 (+ 1 (/ (- +doom-dashboard--width (car (image-size image nil)))
                                    2)))) 32))))
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
-(setq +doom-dashboard-functions
-      '(+my/doom-dashboard-widget-banner
-        doom-dashboard-widget-shortmenu
-        doom-dashboard-widget-loaded
-        doom-dashboard-widget-footer))
+
+(setq! +doom-dashboard-menu-sections '(("Reload last session"
+                                        :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
+                                        :when (cond ((require 'persp-mode nil t)
+                                                     (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir)))
+                                                    ((require 'desktop nil t)
+                                                     (file-exists-p (desktop-full-file-name))))
+                                        :face (:inherit (doom-dashboard-menu-title bold))
+                                        :action doom/quickload-session)
+                                       ("Open today's note"
+                                        :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
+                                        :action org-roam-dailies-today)
+                                       ("Recently opened files"
+                                        :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
+                                        :action recentf-open-files)
+                                       ("Open project"
+                                        :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
+                                        :action projectile-switch-project)
+                                       ;; ("Open org-agenda"
+                                       ;;  :icon (all-the-icons-octicon "calendar" :face 'doom-dashboard-menu-title)
+                                       ;;  :when (fboundp 'org-agenda)
+                                       ;;  :action org-agenda)
+                                       ("Jump to bookmark"
+                                        :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
+                                        :action bookmark-jump)
+                                       ("Open private configuration"
+                                        :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title)
+                                        :when (file-directory-p doom-private-dir)
+                                        :action doom/open-private-config))
+
+       +doom-dashboard-functions '(+my/doom-dashboard-widget-banner
+                                   doom-dashboard-widget-shortmenu
+                                   doom-dashboard-widget-loaded))
