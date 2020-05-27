@@ -12,4 +12,4 @@
   :recipe (:host github :repo "org-roam/org-roam")
   :pin "78b518e")
 (package! doom-themes
-  :pin "34f181c")
+  :pin nil)

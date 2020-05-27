@@ -1,7 +1,7 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      ranger-override-dired t
+      ;; ranger-override-dired t
       ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
       fill-column 88
@@ -11,7 +11,7 @@
 (use-package! zone
   :defer-incrementally t
   :config
-  (zone-when-idle 300))
+  (zone-when-idle 600))
 
 (use-package! evil-textobj-line
   :demand t)
@@ -43,11 +43,11 @@
         evil-snipe-repeat-keys               t
         evil-snipe-override-evil-repeat-keys t)
   :config
-  ;; interpret open/close square brackets as any open/close delimiters
-  ;; respectively.
+  ;; when f/t/s searching, interpret open/close square brackets to be any
+  ;; open/close delimiters, respectively
   (push '(?\[ "[[{(]") evil-snipe-aliases)
   (push '(?\] "[]})]") evil-snipe-aliases)
-  (evil-snipe-override-mode 1))
+  (evil-snipe-override-mode +1))
 
 (load! "+extras/ui")
 (load! "+extras/bindings")
