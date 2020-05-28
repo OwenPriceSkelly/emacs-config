@@ -1,44 +1,57 @@
 ;;; ~/.doom.d/+extras/ui.el -*- lexical-binding: t; -*-
 
 ;; TODO doom-modeline config
-(setq doom-theme                      'doom-gruvbox-light
-      doom-gruvbox-light-variant      'hard
-      doom-font                       (font-spec :family "Iosevka Extended" :size 16)
-      doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
-      ;; doom-unicode-font               (font-spec :family)
-      doom-modeline-persp-name t
-      doom-modeline-major-mode-icon t
+(setq +my/themes-list-dark     '(doom-gruvbox
+                                 doom-Iosvkem
+                                 doom-nord
+                                 doom-wilmersdorf
+                                 doom-city-lights
+                                 doom-oceanic-next
+                                 doom-moonlight)
+      +my/themes-list-light     '(doom-gruvbox-light
+                                  doom-solarized-light)
+      doom-theme                (if (< 9 (caddr (decode-time (current-time))) 15)
+                                    (car +my/themes-list-light)
+                                  (car +my/themes-list-dark))
+              ;; 'doom-gruvbox-light ;; light theme from 9-5
+              ;; 'doom-gruvbox
+ solaire-mode-auto-swap-bg       t
+ solaire-mode-remap-line-numbers t
 
-      display-line-numbers-type       'nil
-      which-key-side-window-location  'bottom
-      which-key-sort-order            'which-key-key-order-alpha
-      which-key-max-description-length nil
+ doom-font                       (font-spec :family "Iosevka Extended" :size 16)
+ doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
+ ;; doom-unicode-font               (font-spec :family)
+ doom-modeline-persp-name t
+ doom-modeline-major-mode-icon t
+
+ display-line-numbers-type       'nil
+ which-key-side-window-location  'bottom
+ which-key-sort-order            'which-key-key-order-alpha
+ which-key-max-description-length nil
+
+ treemacs-width 30
+
+ evil-split-window-below         t
+ evil-vsplit-window-right        t
+ +latex-viewers                  (if IS-MAC '(pdf-tools))
+ +pretty-code-enabled-modes      '(org-mode))
 
 
 
-      treemacs-width 30
-
-      solaire-mode-auto-swap-bg       t
-      solaire-mode-remap-line-numbers t
-      evil-split-window-below         t
-      evil-vsplit-window-right        t
-      +latex-viewers                  (if IS-MAC '(pdf-tools))
-      +pretty-code-enabled-modes      '(org-mode))
-
- ;; "       ___           ___           ___           ___           ___      "
- ;; "      /  /\         /__/\         /  /\         /  /\         /  /\     "
- ;; "     /  /:/_       |  |::\       /  /::\       /  /:/        /  /:/_    "
- ;; "    /  /:/ /\      |  |:|:\     /  /:/\:\     /  /:/        /  /:/ /\   "
- ;; "   /  /:/ /:/_   __|__|:|\:\   /  /:/ /::\   /  /:/  ___   /  /:/ /::\  "
- ;; "  /__/:/ /:/ /\ /__/::::| \:\ /__/:/ /:/\:\ /__/:/  /  /\ /__/:/ /:/\:\ "
- ;; "  \  \:\/:/ /:/ \  \:\     \/ \  \:\/:/__\/ \  \:\ /  /:/ \  \:\/:/ /:/ "
- ;; "   \  \::/ /:/   \  \:\        \  \::/       \  \:\  /:/   \  \::/ /:/  "
- ;; "    \  \:\/:/     \  \:\        \  \:\        \  \:\/:/     \__\/ /:/   "
- ;; "     \  \::/       \  \:\        \  \:\        \  \::/        /__/:/    "
- ;; "      \__\/         \__\/         \__\/         \__\/         \__\/     "
- ;;
+;; "       ___           ___           ___           ___           ___      "
+;; "      /  /\         /__/\         /  /\         /  /\         /  /\     "
+;; "     /  /:/_       |  |::\       /  /::\       /  /:/        /  /:/_    "
+;; "    /  /:/ /\      |  |:|:\     /  /:/\:\     /  /:/        /  /:/ /\   "
+;; "   /  /:/ /:/_   __|__|:|\:\   /  /:/ /::\   /  /:/  ___   /  /:/ /::\  "
+;; "  /__/:/ /:/ /\ /__/::::| \:\ /__/:/ /:/\:\ /__/:/  /  /\ /__/:/ /:/\:\ "
+;; "  \  \:\/:/ /:/ \  \:\     \/ \  \:\/:/__\/ \  \:\ /  /:/ \  \:\/:/ /:/ "
+;; "   \  \::/ /:/   \  \:\        \  \::/       \  \:\  /:/   \  \::/ /:/  "
+;; "    \  \:\/:/     \  \:\        \  \:\        \  \:\/:/     \__\/ /:/   "
+;; "     \  \::/       \  \:\        \  \:\        \  \::/        /__/:/    "
+;; "      \__\/         \__\/         \__\/         \__\/         \__\/     "
+;;
 (defun +my/doom-dashboard-widget-banner ()
-  "Modified `doom-dashboard-widget-banner' with ascii art taken from chemacs github readme"
+  "Modified `doom-dashboard-widget-banner' with ascii art lifted from https://github.com/plexus/chemacs"
   (let ((point (point)))
     (mapc (lambda (line)
             (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
