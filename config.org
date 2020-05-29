@@ -1,3 +1,5 @@
+#+TITLE: Literate Config
+#+BEGIN_SRC emacs-lisp
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
       ;; ranger-override-dired t
@@ -62,3 +64,4 @@
 (toggle-frame-fullscreen)
 
 (add-hook! python-mode (auto-composition-mode -1))
+#+END_SRC

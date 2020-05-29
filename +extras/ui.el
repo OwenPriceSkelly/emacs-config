@@ -26,11 +26,10 @@
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t
 
- doom-font                       (font-spec :family "Iosevka Extended" :size 16)
- doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
- ;; doom-unicode-font               (font-spec :family)
- doom-modeline-persp-name t
- doom-modeline-major-mode-icon t
+      display-line-numbers-type       'nil
+      which-key-side-window-location  'bottom
+      which-key-sort-order            'which-key-key-order-alpha
+      which-key-max-description-length nil
 
       treemacs-width 30
 
