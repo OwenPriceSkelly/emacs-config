@@ -108,7 +108,7 @@
          :desc "Visual expand"          "v"               #'er/expand-region
 
          (:when (featurep! :editor multiple-cursors)
-          (:prefix-map ( "z" . "multiple-cursors")
+          (:prefix ( "z" . "multiple-cursors")
            :nv "m"                                        #'evil-mc-make-all-cursors
            :nv "n"                                        #'evil-mc-make-and-goto-next-match
            :nv "N"                                        #'evil-mc-make-and-goto-prev-match
@@ -133,8 +133,11 @@
           :desc "Messages buffer"        "m"              #'view-echo-area-messages
           :desc "ibuffer (other window)" "I"              #'ibuffer-other-window)
 
+         (:prefix ("f" . "file")
+          :desc "find file (other window)" "F"            #'find-file-other-window)
+
          (:when (featurep! :emacs undo +tree)
-          :desc "Undo Tree"              "U"              #'undo-tree-visualize)
+          :desc "Undo tree"              "U"              #'undo-tree-visualize)
 
          (:when (featurep! :ui treemacs)
           :desc "Project sidebar"        "0"              #'+treemacs/toggle)
@@ -160,6 +163,7 @@
            :desc "<date>'s file"      "d"            #'org-roam-dailies-date
            :desc "mathpix.el"         "m"            #'mathpix-screenshot
            (:prefix ( "g" . "graph")
+            :desc "toggle server"     "s"            #'org-roam-server-mode
             :desc "graph all notes"   "g"            #'org-roam-graph
             :desc "graph neighbors"   "n"            (λ! (org-roam-graph 1))
             :desc "graph connected"   "c"            (λ!! #'org-roam-graph '(4))))))))
