@@ -1,40 +1,43 @@
 ;;; ~/.doom.d/+extras/ui.el -*- lexical-binding: t; -*-
 
 ;; TODO doom-modeline config
-(setq +my/themes-list-dark     '(doom-gruvbox
-                                 doom-Iosvkem
+(setq +my/themes-list-dark     '(doom-oceanic-next
+                                 doom-gruvbox
                                  doom-nord
+                                 doom-Iosvkem
                                  doom-wilmersdorf
                                  doom-city-lights
-                                 doom-oceanic-next
                                  doom-moonlight)
       +my/themes-list-light     '(doom-gruvbox-light
+                                  doom-nord-light
+                                  doom-acario-light
                                   doom-solarized-light)
-      doom-theme                (if (< 9 (caddr (decode-time (current-time))) 15)
-                                    (car +my/themes-list-light)
-                                  (car +my/themes-list-dark))
-              ;; 'doom-gruvbox-light ;; light theme from 9-5
-              ;; 'doom-gruvbox
- solaire-mode-auto-swap-bg       t
- solaire-mode-remap-line-numbers t
+      doom-theme                (let ((hour (caddr (decode-time (current-time)))))
+                                  (if (< 9 hour 15)
+                                      (nth (mod hour (length +my/themes-list-light)) +my/themes-list-light)
+                                    (nth (mod hour (length +my/themes-list-dark)) +my/themes-list-dark)))
+      ;; 'doom-gruvbox-light ;; light theme from 9-5
+      ;; 'doom-gruvbox
+      solaire-mode-auto-swap-bg       t
+      solaire-mode-remap-line-numbers t
 
- doom-font                       (font-spec :family "Iosevka Extended" :size 16)
- doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
- ;; doom-unicode-font               (font-spec :family)
- doom-modeline-persp-name t
- doom-modeline-major-mode-icon t
+      doom-font                       (font-spec :family "Iosevka Extended" :size 16)
+      doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
+      ;; doom-unicode-font               (font-spec :family)
+      doom-modeline-persp-name t
+      doom-modeline-major-mode-icon t
 
- display-line-numbers-type       'nil
- which-key-side-window-location  'bottom
- which-key-sort-order            'which-key-key-order-alpha
- which-key-max-description-length nil
+      display-line-numbers-type       'nil
+      which-key-side-window-location  'bottom
+      which-key-sort-order            'which-key-key-order-alpha
+      which-key-max-description-length nil
 
- treemacs-width 30
+      treemacs-width 30
 
- evil-split-window-below         t
- evil-vsplit-window-right        t
- +latex-viewers                  (if IS-MAC '(pdf-tools))
- +pretty-code-enabled-modes      '(org-mode))
+      evil-split-window-below         t
+      evil-vsplit-window-right        t
+      +latex-viewers                  (if IS-MAC '(pdf-tools))
+      +pretty-code-enabled-modes      '(org-mode))
 
 
 
