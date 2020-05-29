@@ -4,7 +4,6 @@
 (setq +my/themes-list-dark     '(doom-oceanic-next
                                  doom-gruvbox
                                  doom-nord
-                                 doom-Iosvkem
                                  doom-wilmersdorf
                                  doom-city-lights
                                  doom-moonlight)

@@ -17,7 +17,6 @@
   :demand t)
 
 (use-package! lispyville
-  :when (featurep! :editor evil)
   :hook (lispy-mode . lispyville-mode)
   :config
   (lispy-set-key-theme '(lispy c-digits))

@@ -1,4 +1,4 @@
-;; ;;; $DOOMDIR/modules/personal/config/+lsp.el  -*- lexical-binding: t; -*-
+;; ;;; $DOOMDIR/+extras/lsp.el  -*- lexical-binding: t; -*-
 (use-package! lsp
   :defer-incrementally lsp-mode
   :init
