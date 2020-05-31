@@ -19,10 +19,13 @@
 
 (use-package! org
   :after org
+  :hook (org-mode . toc-org-mode)
+  :hook (org-mode . +org-pretty-mode)
+  :hook (org-mode . variable-pitch-mode)
   :init
   (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (add-hook! (org-mode) #'(+org-pretty-mode  variable-pitch-mode)) ;;enable variable pitch font and ligatures etc
+  ;; (add-hook! (org-mode) #'(+org-pretty-mode  variable-pitch-mode)) ;;enable variable pitch font and ligatures etc
   :config
   (setq org-entities-user
         ;; org |latex |mathp|html         |ascii|latin1|utf-8
@@ -113,7 +116,6 @@
       ;; doom-unicode-font               (font-spec :family)
 
 (defun +my/doom-dashboard-widget-banner ()
-  "Modified `doom-dashboard-widget-banner' with ascii art lifted from https://github.com/plexus/chemacs"
   (let ((point (point)))
     (mapc (lambda (line)
             (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
