@@ -113,7 +113,6 @@
       doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
       +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
-      ;; doom-unicode-font               (font-spec :family)
 
 (defun +my/doom-dashboard-widget-banner ()
   (let ((point (point)))
@@ -184,14 +183,23 @@
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
 
-(setq +my/themes-list-dark     '(doom-oceanic-next doom-gruvbox doom-nord doom-wilmersdorf doom-city-lights doom-moonlight)
-      +my/themes-list-light     '(doom-gruvbox-light doom-nord-light doom-acario-light doom-solarized-light)
-      doom-theme                (let ((hour (caddr (decode-time (current-time)))))
-                                  (if (< 9 hour 15)
-                                      (nth (mod hour (length +my/themes-list-light)) +my/themes-list-light)
-                                    (nth (mod hour (length +my/themes-list-dark)) +my/themes-list-dark))))
-      ;; 'doom-gruvbox-light ;; light theme from 9-5
-      ;; 'doom-gruvbox
+(setq +my/themes-list-dark      '(doom-oceanic-next
+                                  doom-gruvbox
+                                  doom-nord
+                                  doom-wilmersdorf
+                                  doom-city-lights
+                                  doom-moonlight)
+      +my/themes-list-light     '(doom-gruvbox-light
+                                  doom-nord-light
+                                  doom-acario-light
+                                  doom-solarized-light)
+      +my/override-theme     'doom-oceanic-next
+      doom-theme                (or +my/override-theme
+                                    (let ((hour (caddr (decode-time nil)))
+                                          (sec (car (decode-time nil))))
+                                      (let ((theme-choices (if (<= 9 hour 15) +my/themes-list-light
+                                                             +my/themes-list-dark)))
+                                        (nth (mod sec (length theme-choices)) theme-choices)))))
 
 (setq solaire-mode-auto-swap-bg       t
       solaire-mode-remap-line-numbers t
@@ -231,9 +239,6 @@
   (push '(?\[ "[[{(]") evil-snipe-aliases)
   (push '(?\] "[]})]") evil-snipe-aliases)
   (evil-snipe-override-mode +1))
-
-;; (load! "+extras/bindings")
-;; (after! lsp (load! "+extras/lsp"))
 
 (map! :n [tab] (general-predicate-dispatch nil
                    (and (featurep! :editor fold)
@@ -304,24 +309,6 @@
          :desc "Search project"         "/"               #'+default/search-project
          :desc "Visual expand"          "v"               #'er/expand-region
 
-         (:when (featurep! :editor multiple-cursors)
-          (:prefix ( "z" . "multiple-cursors")
-           :nv "m"                                        #'evil-mc-make-all-cursors
-           :nv "n"                                        #'evil-mc-make-and-goto-next-match
-           :nv "N"                                        #'evil-mc-make-and-goto-prev-match
-           :nv "d"                                        #'evil-mc-make-and-goto-next-cursor
-           :nv "D"                                        #'evil-mc-make-and-goto-last-cursor
-           :nv "j"                                        #'evil-mc-make-cursor-move-next-line
-           :nv "k"                                        #'evil-mc-make-cursor-move-prev-line
-           :nv "p"                                        #'evil-mc-make-and-goto-prev-cursor
-           :nv "P"                                        #'evil-mc-make-and-goto-first-cursor
-           :nv "q"                                        #'evil-mc-undo-all-cursors
-           :nv "t"                                        #'+multiple-cursors/evil-mc-toggle-cursors
-           :nv "u"                                        #'evil-mc-undo-last-added-cursor
-           :nv "z"                                        #'+multiple-cursors/evil-mc-make-cursor-here
-           :v  "I"                                        #'evil-mc-make-cursor-in-visual-selection-beg
-           :v  "A"                                        #'evil-mc-make-cursor-in-visual-selection-end))
-
          (:prefix ("w" . "window")
           :desc "Switch to last window" "w"               #'evil-window-mru)
 
@@ -342,7 +329,9 @@
          (:when (featurep! :ui workspaces)
           (:prefix "TAB"
            :desc "Main workspace"       "`"               #'+workspace/switch-to-0
-           :desc "Previous workspace"   "TAB"             #'+workspace/other))
+           :desc "Previous workspace"   "TAB"             #'+workspace/other
+           :desc "Forward frame"        "f"               #'+evil/next-frame
+           :desc "Backward frame"       "F"               #'+evil/previous-frame))
 
          (:when (featurep! :completion ivy)
           :desc "Ivy M-x"                "SPC"            #'counsel-M-x)
