@@ -1,7 +1,8 @@
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :completion
        (company
-        +childframe)  ; the ultimate code completion backend
+        +childframe)          ; the ultimate code completion backend
+
        (ivy
         +fuzzy
         +prescient
@@ -28,7 +29,7 @@
        treemacs               ; a project drawer, like neotree but cooler
        ;; unicode
        vc-gutter              ; vcs diff in the fringe
-       ;; vi-tilde-fringe        ; fringe tildes to mark beyond EOB
+       ;; vi-tilde-fringe     ; fringe tildes to mark beyond EOB
        ;; window-select       ; visually switch windows
        workspaces             ; tab emulation, persistence & separate workspaces
 
@@ -36,13 +37,13 @@
        lispy
        (evil
         +commands
-        +everywhere) ; come to the dark side, we have cookies
+        +everywhere)          ; come to the dark side, we have cookies
        file-templates         ; auto-snippets for empty files
        fold                   ; (nigh) universal code folding
        (format
-        +onsave)       ; automated prettiness
+        +onsave)              ; automated prettiness
        multiple-cursors       ; editing in many places at once
-       ;; parinfer               ; turn lisp into python, sort of
+       ;; parinfer            ; turn lisp into python, sort of
        rotate-text            ; cycle region at point between text candidates
        snippets               ; my elves. They type so I don't have to
        word-wrap              ; soft wrapping with language-aware indent ;
@@ -60,7 +61,7 @@
        eshell                 ; a consistent, cross-platform shell (WIP)
        ;; shell               ; a terminal REPL for Emacs
        (:if IS-MAC vterm
-        term)                ; another terminals in Emacs
+        term)                 ; another terminals in Emacs
 
        :checkers
        (syntax  +childframe)  ; tasing you for every semicolon you forget
@@ -78,14 +79,15 @@
        ;;gist                 ; interacting with github gists
        lookup                 ; helps you navigate your code and documentation
        ;; +docsets)           ; ...or in Dash docsets locally
-       (lsp +peek)
-       macos     ; MacOS-specific commands
+       (lsp
+        +eglot)
+       macos                  ; MacOS-specific commands
        magit                  ; a git porcelain for Emacs
        ;;make                 ; run make tasks from Emacs
        pass                   ; password manager for nerds
        (:if IS-MAC pdf)       ; pdf enhancements
        ;;prodigy              ; FIXME managing external services & code builders
-       rgb                 ; creating color strings
+       rgb                    ; creating color strings
        terraform              ; infrastructure as code
        ;;tmux                 ; an API for interacting with tmux
        upload                 ; map local to remote projects via ssh/ftp
@@ -125,16 +127,16 @@
        ;;nim                  ; python + lisp at the speed of c
        ;;nix                  ; I hereby declare "nix geht mehr!"
        ;;ocaml                ; an objective camel
-       (org                             ; organize your plain life in plain text
+       (org                   ; organize your plain life in plain text
         +roam
-        +dragndrop    ; drag & drop files/images into org buffers
-        +hugo         ; use Emacs for hugo blogging
-        +pandoc       ; export-with-pandoc support
-        +present)            ; using org-mode for presentations
-       ;;+journal
-       ;;+gnuplot
-       ;;+jupyter            ; ipython/jupyter support for babel
-       ;;+pomodoro           ; be fruitful with the tomato technique
+        +dragndrop            ; drag & drop files/images into org buffers
+        +hugo                 ; use Emacs for hugo blogging
+        +pandoc               ; export-with-pandoc support
+        +present              ; using org-mode for presentations
+        ;;+journal
+        +gnuplot)
+       ;;+jupyter             ; ipython/jupyter support for babel
+       ;;+pomodoro            ; be fruitful with the tomato technique
        ;;perl                 ; write code no one else can comprehend
        ;;php                  ; perl's insecure younger brother
        ;;plantuml             ; diagrams for confusing people more
@@ -167,7 +169,7 @@
        ;; twitter             ; twitter client https://twitter.com/vnought
 
        :config
-       ;;literate
+       literate
        (default
          +bindings
          +smartparens))

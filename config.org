@@ -1,3 +1,27 @@
+#+TITLE: Literate Config
+* Contents :TOC:
+- [[#editor][Editor]]
+  - [[#generalmisc][General/Misc.]]
+  - [[#note-takingorg][Note-Taking/Org]]
+  - [[#lsp][LSP]]
+- [[#ui][UI]]
+  - [[#font][Font]]
+  - [[#dashboard][Dashboard]]
+  - [[#theme][Theme]]
+  - [[#appearancedisplay][Appearance/Display]]
+- [[#keybindings][Keybindings]]
+  - [[#keybinding-related-variables][keybinding-related variables]]
+  - [[#top-level][top-level]]
+  - [[#leader][leader]]
+  - [[#local-leader][local-leader]]
+- [[#languages][Languages]]
+  - [[#python][python]]
+  - [[#lisp][lisp]]
+
+* Editor
+** General/Misc.
+Miscellaneous variables/ packages that don't warrant their own section.
+#+BEGIN_SRC emacs-lisp :lexical yes
 (setq user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
       ;; ranger-override-dired t
@@ -16,7 +40,10 @@
   :demand t)
 
 (server-start)
-
+#+END_SRC
+** Note-Taking/Org
+*** org-mode
+#+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org
   :after org
   :hook (org-mode . toc-org-mode)
@@ -54,7 +81,9 @@
                                  ("[*]"   . +org-todo-onhold)
                                  ("PROG"  . +org-todo-active)
                                  ("WAIT"  . +org-todo-onhold))))
-
+#+END_SRC
+*** org-roam
+#+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam
   :after org
   :config
@@ -92,7 +121,9 @@
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
   ;; have org-roam-buffer use same display defaults as other org-files
   (add-hook! 'org-roam-buffer-prepare-hook :append (λ!! (org-global-cycle '(4)))))
-
+#+END_SRC
+*** extras
+#+BEGIN_SRC emacs-lisp
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
 
@@ -102,19 +133,30 @@
   (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
         mathpix-app-key           "0b3d8ae26f3762b4d5b8"
         mathpix-screenshot-method "screencapture -i %s"))
-
+#+END_SRC
+*** TODO exporting
+** LSP
+Currently preferring eglot over lsp-mode
+#+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! eglot
   :commands eglot eglot-ensure
   :config
   (setq eglot-send-changes-idle-time 0.4)
   (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
-
+#+END_SRC
+* UI
+** Font
+#+BEGIN_SRC emacs-lisp :lexical yes
 (setq doom-font                       (font-spec :family "Iosevka Extended" :size 16)
       doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
       +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
       ;; doom-unicode-font               (font-spec :family)
-
+#+END_SRC
+** Dashboard
+*** ASCII-art: +my/doom-dashboard-widget-banner
+  Modified `doom-dashboard-widget-banner' with ascii art lifted from https://github.com/plexus/chemacs
+#+BEGIN_SRC emacs-lisp
 (defun +my/doom-dashboard-widget-banner ()
   (let ((point (point)))
     (mapc (lambda (line)
@@ -150,7 +192,13 @@
                     (max 0 (+ 1 (/ (- +doom-dashboard--width (car (image-size image nil)))
                                    2)))) 32))))
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
+#+END_SRC
 
+#+RESULTS:
+: +my/doom-dashboard-widget-banner
+
+*** Re-configure dashboard widgets:
+#+BEGIN_SRC emacs-lisp
 (setq! +doom-dashboard-menu-sections '(("Reload last session"
                                         :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
                                         :when (cond ((require 'persp-mode nil t)
@@ -183,7 +231,10 @@
        +doom-dashboard-functions '(+my/doom-dashboard-widget-banner
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
-
+#+END_SRC
+** Theme
+*** Set theme by time of day
+#+BEGIN_SRC emacs-lisp
 (setq +my/themes-list-dark     '(doom-oceanic-next doom-gruvbox doom-nord doom-wilmersdorf doom-city-lights doom-moonlight)
       +my/themes-list-light     '(doom-gruvbox-light doom-nord-light doom-acario-light doom-solarized-light)
       doom-theme                (let ((hour (caddr (decode-time (current-time)))))
@@ -192,7 +243,9 @@
                                     (nth (mod hour (length +my/themes-list-dark)) +my/themes-list-dark))))
       ;; 'doom-gruvbox-light ;; light theme from 9-5
       ;; 'doom-gruvbox
-
+#+END_SRC
+** Appearance/Display
+#+BEGIN_SRC emacs-lisp
 (setq solaire-mode-auto-swap-bg       t
       solaire-mode-remap-line-numbers t
 
@@ -208,7 +261,10 @@
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t)
 (toggle-frame-fullscreen)
-
+#+END_SRC
+* Keybindings
+** keybinding-related variables
+#+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
        doom-localleader-key ","
@@ -234,7 +290,10 @@
 
 ;; (load! "+extras/bindings")
 ;; (after! lsp (load! "+extras/lsp"))
+#+END_SRC
 
+** top-level
+#+BEGIN_SRC emacs-lisp :lexical yes
 (map! :n [tab] (general-predicate-dispatch nil
                    (and (featurep! :editor fold)
                         (save-excursion (end-of-line) (invisible-p (point))))
@@ -299,7 +358,9 @@
          (:map lispyville-mode-map
           :n "M-[" #'lispy-backward
           :n "M-]" #'lispy-forward)))
-
+#+END_SRC
+** leader
+#+BEGIN_SRC emacs-lisp :lexical yes
 (map! (:leader
          :desc "Search project"         "/"               #'+default/search-project
          :desc "Visual expand"          "v"               #'er/expand-region
@@ -364,7 +425,9 @@
             :desc "graph all notes"   "g"            #'org-roam-graph
             :desc "graph neighbors"   "n"            (λ! (org-roam-graph 1))
             :desc "graph connected"   "c"            (λ!! #'org-roam-graph '(4)))))))
-
+#+END_SRC
+** local-leader
+#+BEGIN_SRC emacs-lisp :lexical yes
 (map! :localleader
         (:when (featurep! :lang org)
          (:map org-mode-map
@@ -387,9 +450,14 @@
            :desc "default"              "r"               #'+python/open-repl
            ;; :desc "jupyter"              "j"            #'+python/open-jupyter-repl
            :desc "ipython"              "i"               #'+python/open-ipython-repl))))
-
+#+END_SRC
+* Languages
+** python
+#+BEGIN_SRC emacs-lisp :lexical yes
 (add-hook! python-mode (auto-composition-mode -1))
-
+#+END_SRC
+** lisp
+#+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! lispyville
   :hook (lispy-mode . lispyville-mode)
   :config
@@ -407,3 +475,4 @@
      additional
      additional-insert
      escape)))
+#+END_SRC
