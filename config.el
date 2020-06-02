@@ -21,7 +21,8 @@
   :after org
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
-  :hook (org-mode . variable-pitch-mode)
+  :hook (org-mode . writeroom-mode)
+  ;; :hook (org-mode . hl-line-mode)
   :init
   (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
@@ -44,8 +45,7 @@
                                    :html-foreground "Black" :html-background "Transparent"
                                    :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
         org-ellipsis " ▾ "
-        org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴" ;; "☵" "☲"
-                                              )
+        org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
         org-todo-keywords '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
                                       "[X](d)" "[-](k)")
                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
@@ -58,36 +58,42 @@
 (use-package! org-roam
   :after org
   :config
-  (setq org-roam-capture-ref-templates (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
-                                                   "%?"
-                                                   :file-name "${slug}"
-                                                   :head (concat "#+TITLE: ${title}\n" "#+ROAM_KEY: ${ref}\n" "#+ROAM_TAGS:\n" "* Description: \n" "* Related: \n")
-                                                   :unnarrowed t))
-        org-roam-capture-templates (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
-                                               "%?"
-                                               :file-name "%<%Y-%m-%d>-${slug}"
-                                               :head (concat "#+TITLE: ${title}\n" "#+ROAM_TAGS:\n" "* Description: \n" "* Related: \n" )
-                                               :unnarrowed t))
-        org-roam-dailies-capture-templates      '(("d" "daily" plain (function org-roam-capture--get-point)
-                                                   ""
-                                                   :immediate-finish t
-                                                   :file-name "%<%Y-%m-%d-%A>"
-                                                   :head "#+TITLE: %<%A, %B %d, %Y>")) org-roam-directory                      org-directory
-                                                   org-roam-index-file                     "./index.org"
-                                                   org-roam-tag-sort                       t
-                                                   org-roam-verbose                        t
-                                                   org-roam-buffer-position                'right
-                                                   org-roam-buffer-width                   0.27
-                                                   org-roam-graph-max-title-length         40
-                                                   org-roam-graph-shorten-titles          'truncate
-                                                   org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-                                                   org-roam-graph-viewer                   (executable-find (if IS-MAC "open" "firefox"))
-                                                   org-roam-graph-executable               "dot"
-                                                   org-roam-graph-node-extra-config        '(("shape"      . "underline")
-                                                                                             ("style"      . "rounded,filled")
-                                                                                             ("fillcolor"  . "#EEEEEE")
-                                                                                             ("color"      . "#C9C9C9")
-                                                                                             ("fontcolor"  . "#111111")))
+  (setq org-roam-capture-ref-templates
+        (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
+                    "%?"
+                    :file-name "${slug}"
+                    :head (concat "#+TITLE: ${title}\n" "#+ROAM_KEY: ${ref}\n" "#+ROAM_TAGS:\n"
+                                  "* Description: \n" "* Related: \n")
+                    :unnarrowed t))
+        org-roam-capture-templates
+        (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
+                    "%?"
+                    :file-name "%<%Y-%m-%d>-${slug}"
+                    :head (concat "#+TITLE: ${title}\n" "#+ROAM_TAGS:\n"
+                                  "* Description: \n" "* Related: \n" )
+                    :unnarrowed t))
+        org-roam-dailies-capture-templates
+        '(("d" "daily" plain (function org-roam-capture--get-point)
+           ""
+           :immediate-finish t
+           :file-name "%<%Y-%m-%d-%A>"
+           :head "#+TITLE: %<%A, %B %d, %Y>"))
+        org-roam-directory                      org-directory
+        org-roam-index-file                     "./index.org"
+        org-roam-tag-sort                       t
+        org-roam-verbose                        t
+        org-roam-buffer-position                'right
+        org-roam-buffer-width                   0.27
+        org-roam-graph-max-title-length         40
+        org-roam-graph-shorten-titles          'truncate
+        org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+        org-roam-graph-viewer                   (executable-find (if IS-MAC "open" "firefox"))
+        org-roam-graph-executable               "dot"
+        org-roam-graph-node-extra-config        '(("shape"      . "underline")
+                                                  ("style"      . "rounded,filled")
+                                                  ("fillcolor"  . "#EEEEEE")
+                                                  ("color"      . "#C9C9C9")
+                                                  ("fontcolor"  . "#111111")))
 
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
   ;; have org-roam-buffer use same display defaults as other org-files
@@ -111,6 +117,7 @@
 
 (setq doom-font                       (font-spec :family "Iosevka Extended" :size 16)
       doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
+      +zen-text-scale                 0
       +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
 
@@ -150,34 +157,31 @@
                                    2)))) 32))))
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
 
-(setq! +doom-dashboard-menu-sections '(("Reload last session"
-                                        :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
-                                        :when (cond ((require 'persp-mode nil t)
-                                                     (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir)))
-                                                    ((require 'desktop nil t)
-                                                     (file-exists-p (desktop-full-file-name))))
-                                        :face (:inherit (doom-dashboard-menu-title bold))
-                                        :action doom/quickload-session)
-                                       ("Open today's note"
-                                        :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
-                                        :action org-roam-dailies-today)
-                                       ("Recently opened files"
-                                        :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
-                                        :action recentf-open-files)
-                                       ("Open project"
-                                        :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
-                                        :action projectile-switch-project)
-                                       ;; ("Open org-agenda"
-                                       ;;  :icon (all-the-icons-octicon "calendar" :face 'doom-dashboard-menu-title)
-                                       ;;  :when (fboundp 'org-agenda)
-                                       ;;  :action org-agenda)
-                                       ("Jump to bookmark"
-                                        :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
-                                        :action bookmark-jump)
-                                       ("Open private configuration"
-                                        :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title)
-                                        :when (file-directory-p doom-private-dir)
-                                        :action doom/open-private-config))
+(setq! +doom-dashboard-menu-sections
+       '(("Reload last session"
+          :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
+          :when (cond ((require 'persp-mode nil t)
+                       (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir)))
+                      ((require 'desktop nil t)
+                       (file-exists-p (desktop-full-file-name))))
+          :face (:inherit (doom-dashboard-menu-title bold))
+          :action doom/quickload-session)
+         ("Open today's note"
+          :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
+          :action org-roam-dailies-today)
+         ("Recently opened files"
+          :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
+          :action recentf-open-files)
+         ("Open project"
+          :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
+          :action projectile-switch-project)
+         ("Jump to bookmark"
+          :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
+          :action bookmark-jump)
+         ("Open private configuration"
+          :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title)
+          :when (file-directory-p doom-private-dir)
+          :action doom/open-private-config))
 
        +doom-dashboard-functions '(+my/doom-dashboard-widget-banner
                                    doom-dashboard-widget-shortmenu
@@ -193,7 +197,9 @@
                                   doom-nord-light
                                   doom-acario-light
                                   doom-solarized-light)
-      +my/override-theme     'doom-oceanic-next
+      doom-gruvbox-dark-variant 'hard
+      doom-gruvbox-light-variant 'soft
+      +my/override-theme     'doom-gruvbox-light
       doom-theme                (or +my/override-theme
                                     (let ((hour (caddr (decode-time nil)))
                                           (sec (car (decode-time nil))))
@@ -215,7 +221,8 @@
 
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t)
-(toggle-frame-fullscreen)
+(remove-hook! text-mode hl-line-mode)
+(unless IS-MAC (toggle-frame-fullscreen))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
