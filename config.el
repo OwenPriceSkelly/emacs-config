@@ -55,10 +55,8 @@
                                  ("PROG"  . +org-todo-active)
                                  ("WAIT"  . +org-todo-onhold))))
 
-(use-package! org-roam
-  :after org
-  :config
-  (setq org-roam-capture-ref-templates
+(defun +my/org-roam-templates-config ()
+    (setq org-roam-capture-ref-templates
         (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
                     "%?"
                     :file-name "${slug}"
@@ -77,26 +75,32 @@
            ""
            :immediate-finish t
            :file-name "%<%Y-%m-%d-%A>"
-           :head "#+TITLE: %<%A, %B %d, %Y>"))
-        org-roam-directory                      org-directory
-        org-roam-index-file                     "./index.org"
-        org-roam-tag-sort                       t
-        org-roam-verbose                        t
-        org-roam-buffer-position                'right
-        org-roam-buffer-width                   0.27
-        org-roam-graph-max-title-length         40
-        org-roam-graph-shorten-titles          'truncate
-        org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-        org-roam-graph-viewer                   (executable-find (if IS-MAC "open" "firefox"))
-        org-roam-graph-executable               "dot"
-        org-roam-graph-node-extra-config        '(("shape"      . "underline")
-                                                  ("style"      . "rounded,filled")
-                                                  ("fillcolor"  . "#EEEEEE")
-                                                  ("color"      . "#C9C9C9")
-                                                  ("fontcolor"  . "#111111")))
+           :head "#+TITLE: %<%A, %B %d, %Y>"))))
 
+(defun +my/org-roam-vars-config ()
+    (setq! org-roam-directory                      org-directory
+           org-roam-index-file                     "./index.org"
+           org-roam-tag-sort                       t
+           org-roam-verbose                        t
+           org-roam-buffer-position                'right
+           org-roam-buffer-width                   0.27
+           org-roam-graph-max-title-length         40
+           org-roam-graph-shorten-titles          'truncate
+           org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+           org-roam-graph-viewer                   (executable-find (if IS-MAC "open" "firefox"))
+           org-roam-graph-executable               "dot"
+           org-roam-graph-node-extra-config        '(("shape"      . "underline")
+                                                     ("style"      . "rounded,filled")
+                                                     ("fillcolor"  . "#EEEEEE")
+                                                     ("color"      . "#C9C9C9")
+                                                     ("fontcolor"  . "#111111"))))
+
+(use-package! org-roam
+  :after org
+  :config
+  (+my/org-roam-templates-config)
+  (+my/org-roam-vars-config)
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
-  ;; have org-roam-buffer use same display defaults as other org-files
   (add-hook! 'org-roam-buffer-prepare-hook :append (λ!! (org-global-cycle '(4)))))
 
 (use-package! org-roam-server
@@ -115,8 +119,12 @@
   (setq eglot-send-changes-idle-time 0.4)
   (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
-(setq doom-font                       (font-spec :family "Iosevka Extended" :size 16)
-      doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
+(setq doom-font                       (font-spec
+                                       :family "Iosevka Extended"
+                                       :size 16)
+      doom-variable-pitch-font        (font-spec
+                                       :family "Iosevka Etoile"
+                                       :size 16)
       +zen-text-scale                 0
       +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))

@@ -1,7 +1,7 @@
 #+TITLE: Literate Config
-* Contents :TOC:
+* Contents :TOC_2:
 - [[#editor][Editor]]
-  - [[#generalmisc][General/Misc.]]
+  - [[#misc][Misc.]]
   - [[#note-takingorg][Note-Taking/Org]]
   - [[#lsp][LSP]]
 - [[#ui][UI]]
@@ -19,7 +19,7 @@
   - [[#lisp][lisp]]
 
 * Editor
-** General/Misc.
+** Misc.
 Miscellaneous variables/ packages that don't warrant their own section.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq user-full-name "Owen Price-Skelly"
@@ -83,11 +83,10 @@ Miscellaneous variables/ packages that don't warrant their own section.
                                  ("WAIT"  . +org-todo-onhold))))
 #+END_SRC
 *** org-roam
-#+BEGIN_SRC emacs-lisp :lexical yes
-(use-package! org-roam
-  :after org
-  :config
-  (setq org-roam-capture-ref-templates
+**** templates
+#+BEGIN_SRC emacs-lisp
+(defun +my/org-roam-templates-config ()
+    (setq org-roam-capture-ref-templates
         (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
                     "%?"
                     :file-name "${slug}"
@@ -106,26 +105,39 @@ Miscellaneous variables/ packages that don't warrant their own section.
            ""
            :immediate-finish t
            :file-name "%<%Y-%m-%d-%A>"
-           :head "#+TITLE: %<%A, %B %d, %Y>"))
-        org-roam-directory                      org-directory
-        org-roam-index-file                     "./index.org"
-        org-roam-tag-sort                       t
-        org-roam-verbose                        t
-        org-roam-buffer-position                'right
-        org-roam-buffer-width                   0.27
-        org-roam-graph-max-title-length         40
-        org-roam-graph-shorten-titles          'truncate
-        org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-        org-roam-graph-viewer                   (executable-find (if IS-MAC "open" "firefox"))
-        org-roam-graph-executable               "dot"
-        org-roam-graph-node-extra-config        '(("shape"      . "underline")
-                                                  ("style"      . "rounded,filled")
-                                                  ("fillcolor"  . "#EEEEEE")
-                                                  ("color"      . "#C9C9C9")
-                                                  ("fontcolor"  . "#111111")))
+           :head "#+TITLE: %<%A, %B %d, %Y>"))))
+#+END_SRC
 
+
+**** org-roam-* variables
+#+BEGIN_SRC emacs-lisp
+(defun +my/org-roam-vars-config ()
+    (setq! org-roam-directory                      org-directory
+           org-roam-index-file                     "./index.org"
+           org-roam-tag-sort                       t
+           org-roam-verbose                        t
+           org-roam-buffer-position                'right
+           org-roam-buffer-width                   0.27
+           org-roam-graph-max-title-length         40
+           org-roam-graph-shorten-titles          'truncate
+           org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+           org-roam-graph-viewer                   (executable-find (if IS-MAC "open" "firefox"))
+           org-roam-graph-executable               "dot"
+           org-roam-graph-node-extra-config        '(("shape"      . "underline")
+                                                     ("style"      . "rounded,filled")
+                                                     ("fillcolor"  . "#EEEEEE")
+                                                     ("color"      . "#C9C9C9")
+                                                     ("fontcolor"  . "#111111"))))
+#+END_SRC
+
+**** use-package declaration
+#+BEGIN_SRC emacs-lisp :lexical yes
+(use-package! org-roam
+  :after org
+  :config
+  (+my/org-roam-templates-config)
+  (+my/org-roam-vars-config)
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
-  ;; have org-roam-buffer use same display defaults as other org-files
   (add-hook! 'org-roam-buffer-prepare-hook :append (λ!! (org-global-cycle '(4)))))
 #+END_SRC
 *** extra packages
@@ -140,9 +152,8 @@ Miscellaneous variables/ packages that don't warrant their own section.
         mathpix-app-key           "0b3d8ae26f3762b4d5b8"
         mathpix-screenshot-method "screencapture -i %s"))
 #+END_SRC
-*** TODO exporting
 ** LSP
-Currently preferring eglot over lsp-mode
+Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ python and I dont really use lsp for anything else
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! eglot
   :commands eglot eglot-ensure
@@ -152,9 +163,19 @@ Currently preferring eglot over lsp-mode
 #+END_SRC
 * UI
 ** Font
+I like the iosevka font family for programming, and I like the 'quasi-spaced'
+options like Etoile/Sparkle for variable pitch stuff -- real variable pitch
+fonts are a little jarring imo when switching between buffers or embedding
+something monospaced (like this config) so duo-spaced style font doesn't have
+that problem but is still more readable.
+
 #+BEGIN_SRC emacs-lisp :lexical yes
-(setq doom-font                       (font-spec :family "Iosevka Extended" :size 16)
-      doom-variable-pitch-font        (font-spec :family "Iosevka Etoile" :size 16)
+(setq doom-font                       (font-spec
+                                       :family "Iosevka Extended"
+                                       :size 16)
+      doom-variable-pitch-font        (font-spec
+                                       :family "Iosevka Etoile"
+                                       :size 16)
       +zen-text-scale                 0
       +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
