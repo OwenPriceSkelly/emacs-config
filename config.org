@@ -7,6 +7,7 @@
     - [[#org-roam-config][org-roam config]]
     - [[#other-packages][other packages]]
   - [[#lsp][LSP]]
+  - [[#magit][Magit]]
 - [[#ui][UI]]
   - [[#font][Font]]
   - [[#dashboard][Dashboard]]
@@ -127,7 +128,6 @@ TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save c
            :file-name "%<%Y-%m-%d-%A>"
            :head "#+TITLE: %<%A, %B %d, %Y>"))))
 #+END_SRC
-
 ***** variables
 #+BEGIN_SRC emacs-lisp
 (defun +my/org-roam-vars-config ()
@@ -204,6 +204,17 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
   :config
   (setq eglot-send-changes-idle-time 0.0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+#+END_SRC
+** Magit
+#+BEGIN_SRC emacs-lisp
+(use-package! magit-delta
+  :after magit
+  :when (executable-find "delta")
+  :config
+  (setq magit-delta-hide-plus-minus-markers nil
+        magit-delta-default-dark-theme "Nord"
+        magit-delta-default-light-theme "Github")
+  (magit-delta-mode))
 #+END_SRC
 
 * UI

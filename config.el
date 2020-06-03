@@ -153,6 +153,15 @@
   (setq eglot-send-changes-idle-time 0.0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
+(use-package! magit-delta
+  :after magit
+  :when (executable-find "delta")
+  :config
+  (setq magit-delta-hide-plus-minus-markers nil
+        magit-delta-default-dark-theme "Nord"
+        magit-delta-default-light-theme "Github")
+  (magit-delta-mode))
+
 (setq doom-font                       (font-spec
                                        :family "Iosevka Extended"
                                        :size 16)

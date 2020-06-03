@@ -7,6 +7,7 @@
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el")
   :pin "52bc9a6")
+(package! magit-delta :pin "d988abd99882c6b89f21f2746f721a4d7ece6ad4")
 ;; existing packages pinned separately
 (package! org-roam
   :recipe (:host github :repo "org-roam/org-roam")
