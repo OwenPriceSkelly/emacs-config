@@ -14,4 +14,4 @@
 (package! org-roam-server
   :pin nil)
 (package! doom-themes
-  :pin nil)
+  :recipe (:local-repo  "~/.doom.d/emacs-doom-themes/"))

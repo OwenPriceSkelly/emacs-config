@@ -146,9 +146,13 @@
 
 (use-package! eglot
   :commands eglot eglot-ensure
+  :init
+  (defun project-root (project)
+    (car (project-roots project)))
   :config
-  (setq eglot-send-changes-idle-time 0.4)
-  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+  (setq eglot-send-changes-idle-time 0.0)
+  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
+  )
 
 (setq doom-font                       (font-spec
                                        :family "Iosevka Extended"
@@ -236,9 +240,9 @@
                                   doom-nord-light
                                   doom-acario-light
                                   doom-solarized-light)
-      doom-gruvbox-dark-variant 'hard
+      doom-gruvbox-dark-variant 'soft
       doom-gruvbox-light-variant 'soft
-      +my/override-theme     'doom-gruvbox-light
+      +my/override-theme     'doom-gruvbox;;-light
       doom-theme                (or +my/override-theme
                                     (let ((hour (caddr (decode-time nil)))
                                           (sec (car (decode-time nil))))
@@ -261,7 +265,8 @@
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t)
 (remove-hook! text-mode hl-line-mode)
-(unless IS-MAC (toggle-frame-fullscreen))
+(toggle-frame-fullscreen)
+(if IS-MAC (toggle-frame-fullscreen))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
@@ -298,51 +303,39 @@
                             (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
                    #'yas-insert-snippet
                    (fboundp 'evil-jump-item)         #'evil-jump-item)
+        (:when (featurep! :ui workspaces)
+         :nvig [C-tab] #'+workspace/switch-right)
+
         (:when (featurep! :completion company)
-         :i "C-i"                                         #'+company/complete)
+         :i "C-i" #'+company/complete)
         ;; multiedit
         (:when (featurep! :editor multiple-cursors)
-         :nv "R"                                          #'evil-multiedit-match-all
-         :n "C-n"                                         #'evil-multiedit-match-symbol-and-next
-         :n "C-S-n"                                       #'evil-multiedit-match-symbol-and-prev
-         :v "C-n"                                         #'evil-multiedit-match-and-next
-         :v "C-S-n"                                       #'evil-multiedit-match-and-prev
-         :nv "C-M-n"                                      #'evil-multiedit-restore
+         :nv "R"     #'evil-multiedit-match-all
+         :n "C-n"    #'evil-multiedit-match-symbol-and-next
+         :n "C-S-n"  #'evil-multiedit-match-symbol-and-prev
+         :v "C-n"    #'evil-multiedit-match-and-next
+         :v "C-S-n"  #'evil-multiedit-match-and-prev
+         :nv "C-M-n" #'evil-multiedit-restore
          (:after evil-multiedit
           (:map evil-multiedit-state-map
-           "n"                                            #'evil-multiedit-next
-           "N"                                            #'evil-multiedit-prev
-           "C-n"                                          #'evil-multiedit-match-and-next
-           "C-S-n"                                        #'evil-multiedit-match-and-prev
-           "V"                                            #'iedit-show/hide-unmatched-lines))
+           "n"       #'evil-multiedit-next
+           "N"       #'evil-multiedit-prev
+           "C-n"     #'evil-multiedit-match-and-next
+           "C-S-n"   #'evil-multiedit-match-and-prev
+           "V"       #'iedit-show/hide-unmatched-lines))
          ;; multiple cursors
          (:prefix ("gz" . "evil-mc")
-          :nv "m"                                         #'evil-mc-make-all-cursors
-          :nv "n"                                         #'evil-mc-make-and-goto-next-match
-          :nv "N"                                         #'evil-mc-make-and-goto-prev-match
-          :nv "d"                                         #'evil-mc-make-and-goto-next-cursor
-          :nv "D"                                         #'evil-mc-make-and-goto-last-cursor
-          :nv "j"                                         #'evil-mc-make-cursor-move-next-line
-          :nv "k"                                         #'evil-mc-make-cursor-move-prev-line
-          :nv "p"                                         #'evil-mc-make-and-goto-prev-cursor
-          :nv "P"                                         #'evil-mc-make-and-goto-first-cursor
-          :nv "q"                                         #'evil-mc-undo-all-cursors
-          :nv "t"                                         #'+multiple-cursors/evil-mc-toggle-cursors
-          :nv "u"                                         #'evil-mc-undo-last-added-cursor
-          :nv "z"                                         #'+multiple-cursors/evil-mc-make-cursor-here
-          :v  "I"                                         #'evil-mc-make-cursor-in-visual-selection-beg
-          :v  "A"                                         #'evil-mc-make-cursor-in-visual-selection-end))
+          :nv "n" #'evil-mc-make-and-goto-next-match
+          :nv "N" #'evil-mc-make-and-goto-prev-match
+          :nv "d" #'evil-mc-make-and-goto-next-cursor
+          :nv "D" #'evil-mc-make-and-goto-last-cursor
+          :nv "p" #'evil-mc-make-and-goto-prev-cursor
+          :nv "P" #'evil-mc-make-and-goto-first-cursor))
         ;; wgrep
         (:when (featurep! :completion ivy)
          (:map ivy-minibuffer-map
           (:prefix "C-c"
-           :desc "Edit and replace"              "e"      #'+ivy/woccur)))
-        (:when (featurep! :tools lsp +peek)
-         :map lsp-ui-peek-mode-map
-         "C-j"                                            #'lsp-ui-peek--select-next
-         "C-h"                                            #'lsp-ui-peek--select-prev-file
-         "C-l"                                            #'lsp-ui-peek--select-next-file
-         "C-k"                                            #'lsp-ui-peek--select-prev)
+           :desc "Edit and replace"  "e" #'+ivy/woccur)))
         (:when (featurep! :editor lispy)
          (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
           "[" nil
@@ -352,32 +345,32 @@
           :n "M-]" #'lispy-forward)))
 
 (map! :leader
-      :desc "Search project"         "/"               #'+default/search-project
-      :desc "Visual expand"          "v"               #'er/expand-region
+      :desc "Search project"         "/"    #'+default/search-project
+      :desc "Visual expand"          "v"    #'er/expand-region
 
       (:prefix ("w" . "window")
-       :desc "Switch to last window" "w"               #'evil-window-mru)
+       :desc "Switch to last window" "w"    #'evil-window-mru)
 
       (:prefix ("b" . "buffer")
-       :desc "Fallback buffer"        "h"              #'+doom-dashboard/open
-       :desc "Messages buffer"        "m"              #'view-echo-area-messages
-       :desc "ibuffer (other window)" "I"              #'ibuffer-other-window)
+       :desc "Fallback buffer"        "h"   #'+doom-dashboard/open
+       :desc "Messages buffer"        "m"   #'view-echo-area-messages
+       :desc "ibuffer (other window)" "I"   #'ibuffer-other-window)
 
       (:prefix ("f" . "file")
-       :desc "find file (other window)" "F"            #'find-file-other-window)
+       :desc "find file new window"   "F"   #'find-file-other-window)
 
       (:when (featurep! :emacs undo +tree)
-       :desc "Undo tree"              "U"              #'undo-tree-visualize)
+       :desc "Undo tree"              "U"   #'undo-tree-visualize)
 
       (:when (featurep! :ui treemacs)
-       :desc "Project sidebar"        "0"              #'+treemacs/toggle)
+       :desc "Project sidebar"        "0"   #'+treemacs/toggle)
 
       (:when (featurep! :ui workspaces)
        (:prefix "TAB"
-        :desc "Main workspace"       "`"               #'+workspace/switch-to-0
-        :desc "Previous workspace"   "TAB"             #'+workspace/other
-        :desc "Forward frame"        "f"               #'+evil/next-frame
-        :desc "Backward frame"       "F"               #'+evil/previous-frame))
+        :desc "Main workspace"       "`"    #'+workspace/switch-to-0
+        :desc "Previous workspace"   "TAB"  #'+workspace/other
+        :desc "Forward frame"        "f"    #'+evil/next-frame
+        :desc "Backward frame"       "F"    #'+evil/previous-frame))
 
       (:when (featurep! :completion ivy)
-       :desc "Ivy M-x"                "SPC"            #'counsel-M-x))
+       :desc "Ivy M-x"                "SPC" #'counsel-M-x))
