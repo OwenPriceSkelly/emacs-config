@@ -17,43 +17,54 @@
 
 (server-start)
 
+(defun +my/org-mode-vars-config ()
+  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
+  (setq! org-entities-user
+         ;; org |latex |mathp|html         |ascii|latin1|utf-8
+         '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
+           ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
+           ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
+           ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
+           ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
+           ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
+           ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
+         org-preview-latex-default-process 'dvisvgm
+         org-directory                     (if IS-MAC "~/.org/"
+                                             "~/.org.d/")
+         org-startup-folded                'content
+         org-startup-with-latex-preview    nil
+         org-highlight-latex-and-related   nil
+         org-format-latex-options          '(:foreground default
+                                             :background default
+                                             :scale 1.0
+                                             :html-scale 1.0
+                                             :html-foreground "Black"
+                                             :html-background "Transparent"
+                                             :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
+         org-ellipsis                      " ▾ "
+         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
+                                                       "[X](d)" "[-](k)")
+                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
+                                                       "DONE(D)" "DROP(K)"))
+         org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
+                                             ("[*]"   . +org-todo-onhold)
+                                             ("PROG"  . +org-todo-active)
+                                             ("WAIT"  . +org-todo-onhold))))
+
+(map! :map org-mode-map
+      :localleader
+      :desc "Sort"                     "S" #'org-sort
+      :desc "preview LaTeX fragments"  "L" #'org-latex-preview
+      :desc "toggle pretty entities"   "p" #'+org-pretty-mode)
+
 (use-package! org
   :after org
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
   :hook (org-mode . writeroom-mode)
-  ;; :hook (org-mode . hl-line-mode)
-  :init
-  (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
-  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  ;; (add-hook! (org-mode) #'(+org-pretty-mode  variable-pitch-mode)) ;;enable variable pitch font and ligatures etc
   :config
-  (setq org-entities-user
-        ;; org |latex |mathp|html         |ascii|latin1|utf-8
-        '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
-          ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
-          ;; ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
-          ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
-          ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
-          ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
-          ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ")))
-  (setq org-startup-folded              'content
-        org-startup-with-latex-preview nil
-        org-highlight-latex-and-related nil
-        org-preview-latex-default-process 'dvisvgm
-        org-format-latex-options '(:foreground default :background default :scale 1.0
-                                   :html-foreground "Black" :html-background "Transparent"
-                                   :html-scale 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-        org-ellipsis " ▾ "
-        org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
-        org-todo-keywords '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
-                                      "[X](d)" "[-](k)")
-                            (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
-                                      "DONE(D)" "DROP(K)"))
-        org-todo-keyword-faces '(("[~]"   . +org-todo-active)
-                                 ("[*]"   . +org-todo-onhold)
-                                 ("PROG"  . +org-todo-active)
-                                 ("WAIT"  . +org-todo-onhold))))
+  (+my/org-mode-vars-config))
 
 (defun +my/org-roam-templates-config ()
     (setq org-roam-capture-ref-templates
@@ -78,22 +89,41 @@
            :head "#+TITLE: %<%A, %B %d, %Y>"))))
 
 (defun +my/org-roam-vars-config ()
-    (setq! org-roam-directory                      org-directory
-           org-roam-index-file                     "./index.org"
-           org-roam-tag-sort                       t
-           org-roam-verbose                        t
-           org-roam-buffer-position                'right
-           org-roam-buffer-width                   0.27
-           org-roam-graph-max-title-length         40
-           org-roam-graph-shorten-titles          'truncate
-           org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-           org-roam-graph-viewer                   (executable-find (if IS-MAC "open" "firefox"))
-           org-roam-graph-executable               "dot"
-           org-roam-graph-node-extra-config        '(("shape"      . "underline")
-                                                     ("style"      . "rounded,filled")
-                                                     ("fillcolor"  . "#EEEEEE")
-                                                     ("color"      . "#C9C9C9")
-                                                     ("fontcolor"  . "#111111"))))
+    (setq! org-roam-directory               org-directory
+           org-roam-index-file              "./index.org"
+           org-roam-tag-sort                t
+           org-roam-verbose                 t
+           org-roam-buffer-position         'right
+           org-roam-buffer-width            0.26
+           org-roam-graph-max-title-length  40
+           org-roam-graph-shorten-titles    'truncate
+           org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+           org-roam-graph-viewer            (executable-find
+                                             (if IS-MAC "open" "firefox"))
+           org-roam-graph-executable        "dot"
+           org-roam-graph-node-extra-config '(("shape" . "underline")
+                                              ("style" . "rounded,filled")
+                                              ("fillcolor" . "#EEEEEE")
+                                              ("color" . "#C9C9C9")
+                                              ("fontcolor" . "#111111"))))
+
+(map! :leader
+      (:prefix ("n" . "notes")
+       :desc "roam buffer"        "r"  #'org-roam
+       :desc "find"               "f"  #'org-roam-find-file
+       :desc "find"               "n"  #'org-roam-find-file
+       :desc "jump to index"      "x"  #'org-roam-jump-to-index
+       :desc "insert"             "i"  #'org-roam-insert
+       :desc "today's file"       "t"  #'org-roam-dailies-today
+       :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
+       :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
+       :desc "<date>'s file"      "d"  #'org-roam-dailies-date
+       :desc "mathpix.el"         "m"  #'mathpix-screenshot
+       (:prefix ( "g" . "graph")
+        :desc "toggle server"     "s"  #'org-roam-server-mode
+        :desc "graph all notes"   "g"  #'org-roam-graph
+        :desc "graph neighbors"   "n"  (λ! (org-roam-graph 1))
+        :desc "graph connected"   "c"  (λ!! #'org-roam-graph '(4)))))
 
 (use-package! org-roam
   :after org
@@ -101,7 +131,8 @@
   (+my/org-roam-templates-config)
   (+my/org-roam-vars-config)
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
-  (add-hook! 'org-roam-buffer-prepare-hook :append (λ!! (org-global-cycle '(4)))))
+  (add-hook! 'org-roam-buffer-prepare-hook
+             :append (λ!! (org-global-cycle '(4)))))
 
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
@@ -320,94 +351,33 @@
           :n "M-[" #'lispy-backward
           :n "M-]" #'lispy-forward)))
 
-(map! (:leader
-         :desc "Search project"         "/"               #'+default/search-project
-         :desc "Visual expand"          "v"               #'er/expand-region
+(map! :leader
+      :desc "Search project"         "/"               #'+default/search-project
+      :desc "Visual expand"          "v"               #'er/expand-region
 
-         (:prefix ("w" . "window")
-          :desc "Switch to last window" "w"               #'evil-window-mru)
+      (:prefix ("w" . "window")
+       :desc "Switch to last window" "w"               #'evil-window-mru)
 
-         (:prefix ("b" . "buffer")
-          :desc "Fallback buffer"        "h"              #'+doom-dashboard/open
-          :desc "Messages buffer"        "m"              #'view-echo-area-messages
-          :desc "ibuffer (other window)" "I"              #'ibuffer-other-window)
+      (:prefix ("b" . "buffer")
+       :desc "Fallback buffer"        "h"              #'+doom-dashboard/open
+       :desc "Messages buffer"        "m"              #'view-echo-area-messages
+       :desc "ibuffer (other window)" "I"              #'ibuffer-other-window)
 
-         (:prefix ("f" . "file")
-          :desc "find file (other window)" "F"            #'find-file-other-window)
+      (:prefix ("f" . "file")
+       :desc "find file (other window)" "F"            #'find-file-other-window)
 
-         (:when (featurep! :emacs undo +tree)
-          :desc "Undo tree"              "U"              #'undo-tree-visualize)
+      (:when (featurep! :emacs undo +tree)
+       :desc "Undo tree"              "U"              #'undo-tree-visualize)
 
-         (:when (featurep! :ui treemacs)
-          :desc "Project sidebar"        "0"              #'+treemacs/toggle)
+      (:when (featurep! :ui treemacs)
+       :desc "Project sidebar"        "0"              #'+treemacs/toggle)
 
-         (:when (featurep! :ui workspaces)
-          (:prefix "TAB"
-           :desc "Main workspace"       "`"               #'+workspace/switch-to-0
-           :desc "Previous workspace"   "TAB"             #'+workspace/other
-           :desc "Forward frame"        "f"               #'+evil/next-frame
-           :desc "Backward frame"       "F"               #'+evil/previous-frame))
+      (:when (featurep! :ui workspaces)
+       (:prefix "TAB"
+        :desc "Main workspace"       "`"               #'+workspace/switch-to-0
+        :desc "Previous workspace"   "TAB"             #'+workspace/other
+        :desc "Forward frame"        "f"               #'+evil/next-frame
+        :desc "Backward frame"       "F"               #'+evil/previous-frame))
 
-         (:when (featurep! :completion ivy)
-          :desc "Ivy M-x"                "SPC"            #'counsel-M-x)
-
-         (:when (featurep! :lang org +roam)
-          (:prefix ("n" . "notes")
-           :desc "roam buffer"        "r"            #'org-roam
-           :desc "find"               "f"            #'org-roam-find-file
-           :desc "find"               "n"            #'org-roam-find-file
-           :desc "jump to index"      "x"            #'org-roam-jump-to-index
-           :desc "insert"             "i"            #'org-roam-insert
-           :desc "today's file"       "t"            #'org-roam-dailies-today
-           :desc "tomorrow's file"    "T"            #'org-roam-dailies-tomorrow
-           :desc "yesterday's file"   "y"            #'org-roam-dailies-yesterday
-           :desc "<date>'s file"      "d"            #'org-roam-dailies-date
-           :desc "mathpix.el"         "m"            #'mathpix-screenshot
-           (:prefix ( "g" . "graph")
-            :desc "toggle server"     "s"            #'org-roam-server-mode
-            :desc "graph all notes"   "g"            #'org-roam-graph
-            :desc "graph neighbors"   "n"            (λ! (org-roam-graph 1))
-            :desc "graph connected"   "c"            (λ!! #'org-roam-graph '(4)))))))
-
-(map! :localleader
-        (:when (featurep! :lang org)
-         (:map org-mode-map
-          :desc "Sort"     "S"                            #'org-sort
-          :desc "preview LaTeX fragments" "L"                   #'org-latex-preview
-          :desc "toggle pretty entities" "p"              #'+org-pretty-mode))
-
-        (:when (featurep! :lang python)
-         (:map python-mode-map
-          (:prefix ("e" . "pipenv")
-           :desc "activate"    "a"                        #'pipenv-activate
-           :desc "deactivate"  "d"                        #'pipenv-deactivate
-           :desc "install"     "i"                        #'pipenv-install
-           :desc "lock"        "l"                        #'pipenv-lock
-           :desc "open module" "o"                        #'pipenv-open
-           :desc "run"         "r"                        #'pipenv-run
-           :desc "shell"       "s"                        #'pipenv-shell
-           :desc "uninstall"   "u"                        #'pipenv-uninstall)
-          (:prefix ("r" . "repl")
-           :desc "default"              "r"               #'+python/open-repl
-           ;; :desc "jupyter"              "j"            #'+python/open-jupyter-repl
-           :desc "ipython"              "i"               #'+python/open-ipython-repl))))
-
-(add-hook! python-mode (auto-composition-mode -1))
-
-(use-package! lispyville
-  :hook (lispy-mode . lispyville-mode)
-  :config
-  (lispy-set-key-theme '(lispy c-digits))
-  (lispyville-set-key-theme
-   '(operators
-     c-w
-     prettify
-     text-objects
-     (atom-movement normal visual)
-     (additional-movement normal visual motion)
-     commentary
-     slurp/barf-cp
-     ;; slurp/barf-lispy
-     additional
-     additional-insert
-     escape)))
+      (:when (featurep! :completion ivy)
+       :desc "Ivy M-x"                "SPC"            #'counsel-M-x))
