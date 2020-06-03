@@ -1,19 +1,20 @@
 #+TITLE: Literate Config
-* Contents :TOC_2:
+* Contents :TOC_3:
 - [[#editor][Editor]]
   - [[#misc][Misc.]]
   - [[#note-takingorg][Note-Taking/Org]]
-  - [[#lsp][LSP]]
-- [[#ui][UI]]
-  - [[#font][Font]]
-  - [[#dashboard][Dashboard]]
-  - [[#theme][Theme]]
-  - [[#misc-appearancedisplay][Misc. appearance/display]]
+    - [[#org-mode][org-mode]]
 - [[#keybindings][Keybindings]]
   - [[#keybinding-related-variables][keybinding-related variables]]
   - [[#top-level][top-level]]
-  - [[#leader][leader]]
-  - [[#local-leader][local-leader]]
+- [[#ui][UI]]
+  - [[#font][Font]]
+  - [[#dashboard][Dashboard]]
+    - [[#ascii-art-mydoom-dashboard-widget-banner][ASCII-art: +my/doom-dashboard-widget-banner]]
+    - [[#dashboard-shortcuts][Dashboard shortcuts]]
+  - [[#theme][Theme]]
+    - [[#set-theme-by-time][Set theme by time]]
+  - [[#misc-appearancedisplay][Misc. appearance/display]]
 - [[#languages][Languages]]
   - [[#python][python]]
   - [[#lisp][lisp]]
@@ -49,11 +50,15 @@ Miscellaneous variables/ packages that don't warrant their own section.
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
   :hook (org-mode . writeroom-mode)
-  ;; :hook (org-mode . hl-line-mode)
   :init
   (setq org-directory                   (if IS-MAC "~/.org/" "~/.org.d/"))
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
   ;; (add-hook! (org-mode) #'(+org-pretty-mode  variable-pitch-mode)) ;;enable variable pitch font and ligatures etc
+  (map! :map org-mode-map
+        :localleader
+        :desc "Sort"                    "S"  #'org-sort
+        :desc "preview LaTeX fragments" "L"  #'org-latex-preview
+        :desc "toggle pretty entities"  "p"  #'+org-pretty-mode)
   :config
   (setq org-entities-user
         ;; org |latex |mathp|html         |ascii|latin1|utf-8
@@ -80,226 +85,8 @@ Miscellaneous variables/ packages that don't warrant their own section.
         org-todo-keyword-faces '(("[~]"   . +org-todo-active)
                                  ("[*]"   . +org-todo-onhold)
                                  ("PROG"  . +org-todo-active)
+
                                  ("WAIT"  . +org-todo-onhold))))
-#+END_SRC
-*** org-roam
-**** templates
-#+BEGIN_SRC emacs-lisp
-(defun +my/org-roam-templates-config ()
-    (setq org-roam-capture-ref-templates
-        (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
-                    "%?"
-                    :file-name "${slug}"
-                    :head (concat "#+TITLE: ${title}\n" "#+ROAM_KEY: ${ref}\n" "#+ROAM_TAGS:\n"
-                                  "* Description: \n" "* Related: \n")
-                    :unnarrowed t))
-        org-roam-capture-templates
-        (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
-                    "%?"
-                    :file-name "%<%Y-%m-%d>-${slug}"
-                    :head (concat "#+TITLE: ${title}\n" "#+ROAM_TAGS:\n"
-                                  "* Description: \n" "* Related: \n" )
-                    :unnarrowed t))
-        org-roam-dailies-capture-templates
-        '(("d" "daily" plain (function org-roam-capture--get-point)
-           ""
-           :immediate-finish t
-           :file-name "%<%Y-%m-%d-%A>"
-           :head "#+TITLE: %<%A, %B %d, %Y>"))))
-#+END_SRC
-
-
-**** org-roam-* variables
-#+BEGIN_SRC emacs-lisp
-(defun +my/org-roam-vars-config ()
-    (setq! org-roam-directory                      org-directory
-           org-roam-index-file                     "./index.org"
-           org-roam-tag-sort                       t
-           org-roam-verbose                        t
-           org-roam-buffer-position                'right
-           org-roam-buffer-width                   0.27
-           org-roam-graph-max-title-length         40
-           org-roam-graph-shorten-titles          'truncate
-           org-roam-graph-exclude-matcher          '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-           org-roam-graph-viewer                   (executable-find (if IS-MAC "open" "firefox"))
-           org-roam-graph-executable               "dot"
-           org-roam-graph-node-extra-config        '(("shape"      . "underline")
-                                                     ("style"      . "rounded,filled")
-                                                     ("fillcolor"  . "#EEEEEE")
-                                                     ("color"      . "#C9C9C9")
-                                                     ("fontcolor"  . "#111111"))))
-#+END_SRC
-
-**** use-package declaration
-#+BEGIN_SRC emacs-lisp :lexical yes
-(use-package! org-roam
-  :after org
-  :config
-  (+my/org-roam-templates-config)
-  (+my/org-roam-vars-config)
-  (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
-  (add-hook! 'org-roam-buffer-prepare-hook :append (λ!! (org-global-cycle '(4)))))
-#+END_SRC
-*** extra packages
-#+BEGIN_SRC emacs-lisp
-(use-package! org-roam-server
-  :commands (org-roam-server-mode))
-
-(use-package! mathpix
-  :commands (mathpix-screenshot)
-  :config
-  (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
-        mathpix-app-key           "0b3d8ae26f3762b4d5b8"
-        mathpix-screenshot-method "screencapture -i %s"))
-#+END_SRC
-** LSP
-Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ python and I dont really use lsp for anything else
-#+BEGIN_SRC emacs-lisp :lexical yes
-(use-package! eglot
-  :commands eglot eglot-ensure
-  :config
-  (setq eglot-send-changes-idle-time 0.4)
-  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
-#+END_SRC
-* UI
-** Font
-I like the iosevka font family for programming, and I like the 'quasi-spaced'
-options like Etoile/Sparkle for variable pitch stuff -- real variable pitch
-fonts are a little jarring imo when switching between buffers or embedding
-something monospaced (like this config) so duo-spaced style font doesn't have
-that problem but is still more readable.
-
-#+BEGIN_SRC emacs-lisp :lexical yes
-(setq doom-font                       (font-spec
-                                       :family "Iosevka Extended"
-                                       :size 16)
-      doom-variable-pitch-font        (font-spec
-                                       :family "Iosevka Etoile"
-                                       :size 16)
-      +zen-text-scale                 0
-      +latex-viewers                  (if IS-MAC '(pdf-tools))
-      +pretty-code-enabled-modes      '(org-mode))
-#+END_SRC
-** Dashboard
-*** ASCII-art: +my/doom-dashboard-widget-banner
-  Modified `doom-dashboard-widget-banner' with ascii art lifted from https://github.com/plexus/chemacs
-#+BEGIN_SRC emacs-lisp
-(defun +my/doom-dashboard-widget-banner ()
-  (let ((point (point)))
-    (mapc (lambda (line)
-            (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
-                                'face 'doom-dashboard-banner) " ")
-            (insert "\n"))
-          '(""
-            "       ___           ___           ___           ___           ___      "
-            "      /  /\\         /__/\\         /  /\\         /  /\\         /  /\\     "
-            "     /  /:/_       |  |::\\       /  /::\\       /  /:/        /  /:/_    "
-            "    /  /:/ /\\      |  |:|:\\     /  /:/\\:\\     /  /:/        /  /:/ /\\   "
-            "   /  /:/ /:/_   __|__|:|\\:\\   /  /:/ /::\\   /  /:/  ___   /  /:/ /::\\  "
-            "  /__/:/ /:/ /\\ /__/::::| \\:\\ /__/:/ /:/\\:\\ /__/:/  /  /\\ /__/:/ /:/\\:\\ "
-            "  \\  \\:\\/:/ /:/ \\  \\:\\     \\/ \\  \\:\\/:/__\\/ \\  \\:\\ /  /:/ \\  \\:\\/:/ /:/ "
-            "   \\  \\::/ /:/   \\  \\:\\        \\  \\::/       \\  \\:\\  /:/   \\  \\::/ /:/  "
-            "    \\  \\:\\/:/     \\  \\:\\        \\  \\:\\        \\  \\:\\/:/     \\__\\/ /:/   "
-            "     \\  \\::/       \\  \\:\\        \\  \\:\\        \\  \\::/        /__/:/    "
-            "      \\__\\/         \\__\\/         \\__\\/         \\__\\/         \\__\\/     "
-            ""
-            ""
-            ""
-            ""))
-    (when (and (display-graphic-p)
-               (stringp fancy-splash-image)
-               (file-readable-p fancy-splash-image))
-      (let ((image (create-image (fancy-splash-image-file))))
-        (add-text-properties
-         point (point) `(display ,image rear-nonsticky (display)))
-        (save-excursion
-          (goto-char point)
-          (insert (make-string
-                   (truncate
-                    (max 0 (+ 1 (/ (- +doom-dashboard--width (car (image-size image nil)))
-                                   2)))) 32))))
-      (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
-#+END_SRC
-
-#+RESULTS:
-: +my/doom-dashboard-widget-banner
-
-*** Re-configure dashboard widgets:
-#+BEGIN_SRC emacs-lisp
-(setq! +doom-dashboard-menu-sections
-       '(("Reload last session"
-          :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
-          :when (cond ((require 'persp-mode nil t)
-                       (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir)))
-                      ((require 'desktop nil t)
-                       (file-exists-p (desktop-full-file-name))))
-          :face (:inherit (doom-dashboard-menu-title bold))
-          :action doom/quickload-session)
-         ("Open today's note"
-          :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
-          :action org-roam-dailies-today)
-         ("Recently opened files"
-          :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
-          :action recentf-open-files)
-         ("Open project"
-          :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
-          :action projectile-switch-project)
-         ("Jump to bookmark"
-          :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
-          :action bookmark-jump)
-         ("Open private configuration"
-          :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title)
-          :when (file-directory-p doom-private-dir)
-          :action doom/open-private-config))
-
-       +doom-dashboard-functions '(+my/doom-dashboard-widget-banner
-                                   doom-dashboard-widget-shortmenu
-                                   doom-dashboard-widget-loaded))
-#+END_SRC
-** Theme
-*** Set theme by time
-Currently I'm still really liking oceanic next, but if/when that gets old
-changing ~+my/override-theme~ to nil will have this snippet will choose randomly
-from a selection of light themes or dark themes, depending on the time of day.
-#+BEGIN_SRC emacs-lisp :lexical yes
-(setq +my/themes-list-dark      '(doom-oceanic-next
-                                  doom-gruvbox
-                                  doom-nord
-                                  doom-wilmersdorf
-                                  doom-city-lights
-                                  doom-moonlight)
-      +my/themes-list-light     '(doom-gruvbox-light
-                                  doom-nord-light
-                                  doom-acario-light
-                                  doom-solarized-light)
-      doom-gruvbox-dark-variant 'hard
-      doom-gruvbox-light-variant 'soft
-      +my/override-theme     'doom-gruvbox-light
-      doom-theme                (or +my/override-theme
-                                    (let ((hour (caddr (decode-time nil)))
-                                          (sec (car (decode-time nil))))
-                                      (let ((theme-choices (if (<= 9 hour 15) +my/themes-list-light
-                                                             +my/themes-list-dark)))
-                                        (nth (mod sec (length theme-choices)) theme-choices)))))
-#+END_SRC
-** Misc. appearance/display
-#+BEGIN_SRC emacs-lisp
-(setq solaire-mode-auto-swap-bg       t
-      solaire-mode-remap-line-numbers t
-
-      which-key-side-window-location  'bottom
-      which-key-sort-order            'which-key-key-order-alpha
-      which-key-max-description-length nil
-
-      display-line-numbers-type       'nil
-
-      evil-split-window-below         t
-      evil-vsplit-window-right        t
-
-      doom-modeline-persp-name t
-      doom-modeline-major-mode-icon t)
-(remove-hook! text-mode hl-line-mode)
-(unless IS-MAC (toggle-frame-fullscreen))
 #+END_SRC
 * Keybindings
 ** keybinding-related variables
@@ -399,87 +186,168 @@ from a selection of light themes or dark themes, depending on the time of day.
           :n "M-[" #'lispy-backward
           :n "M-]" #'lispy-forward)))
 #+END_SRC
-** leader
+* UI
+** Font
+I like the iosevka font family for programming, and I like
+the 'quasi-spaced' options like Etoile/Sparkle for variable pitch stuff
+-- real variable pitch fonts are a little jarring imo when switching
+between buffers or embedding something monospaced (like this config) so
+duo-spaced style font doesn't have that problem but is still more readable.
+
 #+BEGIN_SRC emacs-lisp :lexical yes
-(map! (:leader
-         :desc "Search project"         "/"               #'+default/search-project
-         :desc "Visual expand"          "v"               #'er/expand-region
-
-         (:prefix ("w" . "window")
-          :desc "Switch to last window" "w"               #'evil-window-mru)
-
-         (:prefix ("b" . "buffer")
-          :desc "Fallback buffer"        "h"              #'+doom-dashboard/open
-          :desc "Messages buffer"        "m"              #'view-echo-area-messages
-          :desc "ibuffer (other window)" "I"              #'ibuffer-other-window)
-
-         (:prefix ("f" . "file")
-          :desc "find file (other window)" "F"            #'find-file-other-window)
-
-         (:when (featurep! :emacs undo +tree)
-          :desc "Undo tree"              "U"              #'undo-tree-visualize)
-
-         (:when (featurep! :ui treemacs)
-          :desc "Project sidebar"        "0"              #'+treemacs/toggle)
-
-         (:when (featurep! :ui workspaces)
-          (:prefix "TAB"
-           :desc "Main workspace"       "`"               #'+workspace/switch-to-0
-           :desc "Previous workspace"   "TAB"             #'+workspace/other
-           :desc "Forward frame"        "f"               #'+evil/next-frame
-           :desc "Backward frame"       "F"               #'+evil/previous-frame))
-
-         (:when (featurep! :completion ivy)
-          :desc "Ivy M-x"                "SPC"            #'counsel-M-x)
-
-         (:when (featurep! :lang org +roam)
-          (:prefix ("n" . "notes")
-           :desc "roam buffer"        "r"            #'org-roam
-           :desc "find"               "f"            #'org-roam-find-file
-           :desc "find"               "n"            #'org-roam-find-file
-           :desc "jump to index"      "x"            #'org-roam-jump-to-index
-           :desc "insert"             "i"            #'org-roam-insert
-           :desc "today's file"       "t"            #'org-roam-dailies-today
-           :desc "tomorrow's file"    "T"            #'org-roam-dailies-tomorrow
-           :desc "yesterday's file"   "y"            #'org-roam-dailies-yesterday
-           :desc "<date>'s file"      "d"            #'org-roam-dailies-date
-           :desc "mathpix.el"         "m"            #'mathpix-screenshot
-           (:prefix ( "g" . "graph")
-            :desc "toggle server"     "s"            #'org-roam-server-mode
-            :desc "graph all notes"   "g"            #'org-roam-graph
-            :desc "graph neighbors"   "n"            (λ! (org-roam-graph 1))
-            :desc "graph connected"   "c"            (λ!! #'org-roam-graph '(4)))))))
+(setq doom-font                       (font-spec
+                                       :family "Iosevka Extended"
+                                       :size 16)
+      doom-variable-pitch-font        (font-spec
+                                       :family "Iosevka Sparkle"
+                                       :size 16)
+      +zen-text-scale                 0
+      +latex-viewers                  (if IS-MAC '(pdf-tools))
+      +pretty-code-enabled-modes      '(org-mode))
 #+END_SRC
-** local-leader
-#+BEGIN_SRC emacs-lisp :lexical yes
-(map! :localleader
-        (:when (featurep! :lang org)
-         (:map org-mode-map
-          :desc "Sort"     "S"                            #'org-sort
-          :desc "preview LaTeX fragments" "L"                   #'org-latex-preview
-          :desc "toggle pretty entities" "p"              #'+org-pretty-mode))
+** Dashboard
+*** ASCII-art: +my/doom-dashboard-widget-banner
+  Modified `doom-dashboard-widget-banner' with ascii art lifted from https://github.com/plexus/chemacs
+#+BEGIN_SRC emacs-lisp
+(defun +my/doom-dashboard-widget-banner ()
+  (let ((point (point)))
+    (mapc (lambda (line)
+            (insert (propertize (+doom-dashboard--center +doom-dashboard--width line)
+                                'face 'doom-dashboard-banner) " ")
+            (insert "\n"))
+          '(""
+            "       ___           ___           ___           ___           ___      "
+            "      /  /\\         /__/\\         /  /\\         /  /\\         /  /\\     "
+            "     /  /:/_       |  |::\\       /  /::\\       /  /:/        /  /:/_    "
+            "    /  /:/ /\\      |  |:|:\\     /  /:/\\:\\     /  /:/        /  /:/ /\\   "
+            "   /  /:/ /:/_   __|__|:|\\:\\   /  /:/ /::\\   /  /:/  ___   /  /:/ /::\\  "
+            "  /__/:/ /:/ /\\ /__/::::| \\:\\ /__/:/ /:/\\:\\ /__/:/  /  /\\ /__/:/ /:/\\:\\ "
+            "  \\  \\:\\/:/ /:/ \\  \\:\\     \\/ \\  \\:\\/:/__\\/ \\  \\:\\ /  /:/ \\  \\:\\/:/ /:/ "
+            "   \\  \\::/ /:/   \\  \\:\\        \\  \\::/       \\  \\:\\  /:/   \\  \\::/ /:/  "
+            "    \\  \\:\\/:/     \\  \\:\\        \\  \\:\\        \\  \\:\\/:/     \\__\\/ /:/   "
+            "     \\  \\::/       \\  \\:\\        \\  \\:\\        \\  \\::/        /__/:/    "
+            "      \\__\\/         \\__\\/         \\__\\/         \\__\\/         \\__\\/     "
+            ""
+            ""
+            ""
+            ""))
+    (when (and (display-graphic-p)
+               (stringp fancy-splash-image)
+               (file-readable-p fancy-splash-image))
+      (let ((image (create-image (fancy-splash-image-file))))
+        (add-text-properties
+         point (point) `(display ,image rear-nonsticky (display)))
+        (save-excursion
+          (goto-char point)
+          (insert (make-string
+                   (truncate
+                    (max 0 (+ 1 (/ (- +doom-dashboard--width (car (image-size image nil)))
+                                   2)))) 32))))
+      (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
+#+END_SRC
 
-        (:when (featurep! :lang python)
-         (:map python-mode-map
-          (:prefix ("e" . "pipenv")
-           :desc "activate"    "a"                        #'pipenv-activate
-           :desc "deactivate"  "d"                        #'pipenv-deactivate
-           :desc "install"     "i"                        #'pipenv-install
-           :desc "lock"        "l"                        #'pipenv-lock
-           :desc "open module" "o"                        #'pipenv-open
-           :desc "run"         "r"                        #'pipenv-run
-           :desc "shell"       "s"                        #'pipenv-shell
-           :desc "uninstall"   "u"                        #'pipenv-uninstall)
-          (:prefix ("r" . "repl")
-           :desc "default"              "r"               #'+python/open-repl
-           ;; :desc "jupyter"              "j"            #'+python/open-jupyter-repl
-           :desc "ipython"              "i"               #'+python/open-ipython-repl))))
+#+RESULTS:
+: +my/doom-dashboard-widget-banner
+
+*** Dashboard shortcuts
+#+BEGIN_SRC emacs-lisp
+(setq! +doom-dashboard-menu-sections
+       '(("Reload last session"
+          :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
+          :when (cond ((require 'persp-mode nil t)
+                       (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir)))
+                      ((require 'desktop nil t)
+                       (file-exists-p (desktop-full-file-name))))
+          :face (:inherit (doom-dashboard-menu-title bold))
+          :action doom/quickload-session)
+         ("Open today's note"
+          :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
+          :action org-roam-dailies-today)
+         ("Recently opened files"
+          :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
+          :action recentf-open-files)
+         ("Open project"
+          :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
+          :action projectile-switch-project)
+         ("Jump to bookmark"
+          :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
+          :action bookmark-jump)
+         ("Open private configuration"
+          :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title)
+          :when (file-directory-p doom-private-dir)
+          :action doom/open-private-config))
+
+       +doom-dashboard-functions '(+my/doom-dashboard-widget-banner
+                                   doom-dashboard-widget-shortmenu
+                                   doom-dashboard-widget-loaded))
+#+END_SRC
+** Theme
+*** Set theme by time
+Currently I'm still really liking oceanic next, but if/when that gets old
+changing ~+my/override-theme~ to nil will have this snippet will choose randomly
+from a selection of light themes or dark themes, depending on the time of day.
+#+BEGIN_SRC emacs-lisp :lexical yes
+(setq +my/themes-list-dark      '(doom-oceanic-next
+                                  doom-gruvbox
+                                  doom-nord
+                                  doom-wilmersdorf
+                                  doom-city-lights
+                                  doom-moonlight)
+      +my/themes-list-light     '(doom-gruvbox-light
+                                  doom-nord-light
+                                  doom-acario-light
+                                  doom-solarized-light)
+      doom-gruvbox-dark-variant 'hard
+      doom-gruvbox-light-variant 'soft
+      +my/override-theme     'doom-gruvbox-light
+      doom-theme                (or +my/override-theme
+                                    (let ((hour (caddr (decode-time nil)))
+                                          (sec (car (decode-time nil))))
+                                      (let ((theme-choices (if (<= 9 hour 15) +my/themes-list-light
+                                                             +my/themes-list-dark)))
+                                        (nth (mod sec (length theme-choices)) theme-choices)))))
+#+END_SRC
+** Misc. appearance/display
+#+BEGIN_SRC emacs-lisp
+(setq solaire-mode-auto-swap-bg       t
+      solaire-mode-remap-line-numbers t
+
+      which-key-side-window-location  'bottom
+      which-key-sort-order            'which-key-key-order-alpha
+      which-key-max-description-length nil
+
+      display-line-numbers-type       'nil
+
+      evil-split-window-below         t
+      evil-vsplit-window-right        t
+
+      doom-modeline-persp-name t
+      doom-modeline-major-mode-icon t)
+(remove-hook! text-mode hl-line-mode)
+(unless IS-MAC (toggle-frame-fullscreen))
 #+END_SRC
 * Languages
 ** python
 #+BEGIN_SRC emacs-lisp :lexical yes
 (add-hook! python-mode (auto-composition-mode -1))
+(map! :map python-mode-map
+      :localleader
+      (:prefix ("e" . "pipenv")
+       :desc "activate"    "a"    #'pipenv-activate
+       :desc "deactivate"  "d"    #'pipenv-deactivate
+       :desc "install"     "i"    #'pipenv-install
+       :desc "lock"        "l"    #'pipenv-lock
+       :desc "open module" "o"    #'pipenv-open
+       :desc "run"         "r"    #'pipenv-run
+       :desc "shell"       "s"    #'pipenv-shell
+       :desc "uninstall"   "u"    #'pipenv-uninstall)
+      (:prefix ("r" . "repl")
+       :desc "default"     "r"    #'+python/open-repl
+       ;; :desc "jupyter"  "j"    #'+python/open-jupyter-repl
+       :desc "ipython"     "i"    #'+python/open-ipython-repl))
 #+END_SRC
+
+
 ** lisp
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! lispyville
@@ -495,7 +363,6 @@ from a selection of light themes or dark themes, depending on the time of day.
      (additional-movement normal visual motion)
      commentary
      slurp/barf-cp
-     ;; slurp/barf-lispy
      additional
      additional-insert
      escape)))
