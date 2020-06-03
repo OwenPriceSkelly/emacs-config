@@ -150,9 +150,8 @@
   (defun project-root (project)
     (car (project-roots project)))
   :config
-  (setq eglot-send-changes-idle-time 0.0)
-  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
-  )
+  (setq eglot-send-changes-idle-time 0.0))
+  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
 (setq doom-font                       (font-spec
                                        :family "Iosevka Extended"
@@ -200,6 +199,7 @@
                                    2)))) 32))))
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
 
+(add-hook! +doom-dashboard-mode (hl-line-mode -1))
 (setq! +doom-dashboard-menu-sections
        '(("Reload last session"
           :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
@@ -230,26 +230,6 @@
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
 
-(setq +my/themes-list-dark      '(doom-oceanic-next
-                                  doom-gruvbox
-                                  doom-nord
-                                  doom-wilmersdorf
-                                  doom-city-lights
-                                  doom-moonlight)
-      +my/themes-list-light     '(doom-gruvbox-light
-                                  doom-nord-light
-                                  doom-acario-light
-                                  doom-solarized-light)
-      doom-gruvbox-dark-variant 'soft
-      doom-gruvbox-light-variant 'soft
-      +my/override-theme     'doom-gruvbox;;-light
-      doom-theme                (or +my/override-theme
-                                    (let ((hour (caddr (decode-time nil)))
-                                          (sec (car (decode-time nil))))
-                                      (let ((theme-choices (if (<= 9 hour 15) +my/themes-list-light
-                                                             +my/themes-list-dark)))
-                                        (nth (mod sec (length theme-choices)) theme-choices)))))
-
 (setq solaire-mode-auto-swap-bg       t
       solaire-mode-remap-line-numbers t
 
@@ -267,6 +247,29 @@
 (remove-hook! text-mode hl-line-mode)
 (toggle-frame-fullscreen)
 (if IS-MAC (toggle-frame-fullscreen))
+
+(setq +my/themes-list-dark      '(doom-gruvbox
+                                  doom-oceanic-next
+                                  doom-nord
+                                  doom-wilmersdorf
+                                  doom-city-lights
+                                  doom-moonlight)
+      +my/themes-list-light     '(doom-gruvbox-light
+                                  doom-nord-light
+                                  doom-acario-light
+                                  doom-solarized-light)
+      doom-gruvbox-dark-variant 'soft
+      doom-gruvbox-light-variant 'soft
+      +my/override-theme     'doom-gruvbox;;-light
+      doom-theme                (or +my/override-theme
+                                    (let ((hour (caddr (decode-time nil)))
+                                          (sec (car (decode-time nil))))
+                                      (let ((theme-choices
+                                             (if (<= 9 hour 15)
+                                                 +my/themes-list-light
+                                               +my/themes-list-dark)))
+                                        (nth (mod sec (length theme-choices))
+                                             theme-choices)))))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"

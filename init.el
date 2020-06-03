@@ -132,8 +132,8 @@
         +roam
         +dragndrop            ; drag & drop files/images into org buffers
         +hugo                 ; use Emacs for hugo blogging
-        +pandoc               ; export-with-pandoc support
-        +present              ; using org-mode for presentations
+        ;; +pandoc               ; export-with-pandoc support
+        +present            ; using org-mode for presentations
         ;;+journal
         +gnuplot)
        ;;+jupyter             ; ipython/jupyter support for babel

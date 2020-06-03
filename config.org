@@ -12,10 +12,9 @@
   - [[#dashboard][Dashboard]]
     - [[#dashboard-ascii-art][Dashboard ASCII-art]]
     - [[#dashboard-shortcuts-icons][Dashboard shortcuts, icons]]
+  - [[#misc-appearancedisplay][Misc. appearance/display]]
   - [[#theme][Theme]]
     - [[#set-theme-by-time][Set theme by time]]
-    - [[#open-pull-request-for-doom-themes][open pull request for doom-themes]]
-  - [[#misc-appearancedisplay][Misc. appearance/display]]
 - [[#keybindings][Keybindings]]
   - [[#keybinding-related-variables][keybinding-related variables]]
   - [[#top-level][top-level]]
@@ -45,6 +44,7 @@ Miscellaneous variables/ packages that don't warrant their own section.
 (server-start)
 #+END_SRC
 ** Note-Taking
+TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save changes and ~C-g~ discard?
 *** org-mode config
 ***** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -202,9 +202,8 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
   (defun project-root (project)
     (car (project-roots project)))
   :config
-  (setq eglot-send-changes-idle-time 0.0)
-  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
-  )
+  (setq eglot-send-changes-idle-time 0.0))
+  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 #+END_SRC
 
 * UI
@@ -269,6 +268,7 @@ that problem but is still more readable.
 **** TODO screenshots
 *** Dashboard shortcuts, icons
 #+BEGIN_SRC emacs-lisp
+(add-hook! +doom-dashboard-mode (hl-line-mode -1))
 (setq! +doom-dashboard-menu-sections
        '(("Reload last session"
           :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
@@ -298,34 +298,8 @@ that problem but is still more readable.
        +doom-dashboard-functions '(+my/doom-dashboard-widget-banner
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
+
 #+END_SRC
-** Theme
-*** Set theme by time
-Currently I'm still really liking oceanic next, but if/when that gets old
-changing ~+my/override-theme~ to nil will have this snippet will choose randomly
-from a selection of light themes or dark themes, depending on the time of day.
-#+BEGIN_SRC emacs-lisp :lexical yes
-(setq +my/themes-list-dark      '(doom-oceanic-next
-                                  doom-gruvbox
-                                  doom-nord
-                                  doom-wilmersdorf
-                                  doom-city-lights
-                                  doom-moonlight)
-      +my/themes-list-light     '(doom-gruvbox-light
-                                  doom-nord-light
-                                  doom-acario-light
-                                  doom-solarized-light)
-      doom-gruvbox-dark-variant 'soft
-      doom-gruvbox-light-variant 'soft
-      +my/override-theme     'doom-gruvbox;;-light
-      doom-theme                (or +my/override-theme
-                                    (let ((hour (caddr (decode-time nil)))
-                                          (sec (car (decode-time nil))))
-                                      (let ((theme-choices (if (<= 9 hour 15) +my/themes-list-light
-                                                             +my/themes-list-dark)))
-                                        (nth (mod sec (length theme-choices)) theme-choices)))))
-#+END_SRC
-*** TODO open pull request for doom-themes
 ** Misc. appearance/display
 #+BEGIN_SRC emacs-lisp
 (setq solaire-mode-auto-swap-bg       t
@@ -346,6 +320,36 @@ from a selection of light themes or dark themes, depending on the time of day.
 (toggle-frame-fullscreen)
 (if IS-MAC (toggle-frame-fullscreen))
 #+END_SRC
+** Theme
+*** Set theme by time
+Currently I'm still really liking oceanic next, but if/when that gets old
+changing ~+my/override-theme~ to nil will have this snippet will choose randomly
+from a selection of light themes or dark themes, depending on the time of day.
+#+BEGIN_SRC emacs-lisp :lexical yes
+(setq +my/themes-list-dark      '(doom-gruvbox
+                                  doom-oceanic-next
+                                  doom-nord
+                                  doom-wilmersdorf
+                                  doom-city-lights
+                                  doom-moonlight)
+      +my/themes-list-light     '(doom-gruvbox-light
+                                  doom-nord-light
+                                  doom-acario-light
+                                  doom-solarized-light)
+      doom-gruvbox-dark-variant 'soft
+      doom-gruvbox-light-variant 'soft
+      +my/override-theme     'doom-gruvbox;;-light
+      doom-theme                (or +my/override-theme
+                                    (let ((hour (caddr (decode-time nil)))
+                                          (sec (car (decode-time nil))))
+                                      (let ((theme-choices
+                                             (if (<= 9 hour 15)
+                                                 +my/themes-list-light
+                                               +my/themes-list-dark)))
+                                        (nth (mod sec (length theme-choices))
+                                             theme-choices)))))
+#+END_SRC
+**** TODO open pull request for doom-themes
 * Keybindings
 ** keybinding-related variables
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -376,7 +380,7 @@ from a selection of light themes or dark themes, depending on the time of day.
   (push '(?\] "[]})]") evil-snipe-aliases)
   (evil-snipe-override-mode +1))
 #+END_SRC
-
+**** TODO after evil-snipe, bind ~;~ or ~C-;~ to ~evil-avy-goto-char-2~ with those two chars pre-filled
 ** top-level
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :n [tab] (general-predicate-dispatch nil
