@@ -17,22 +17,26 @@
   - [[#theme][Theme]]
     - [[#set-theme-by-time][Set theme by time]]
 - [[#keybindings][Keybindings]]
-  - [[#keybinding-related-variables][keybinding-related variables]]
+  - [[#keybinding-related-variablespackages][keybinding-related variables/packages]]
   - [[#top-level][top-level]]
   - [[#leader][leader]]
 
 * Editor
 ** Misc.
 Miscellaneous variables/ packages that don't warrant their own section.
+
 #+BEGIN_SRC emacs-lisp :lexical yes
-(setq user-full-name "Owen Price-Skelly"
+(setq! user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; ranger-override-dired t
       ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
       fill-column 88
       company-idle-delay nil
       +workspaces-on-switch-project-behavior t)
+(map nil
+     (function (lambda (dir-to-ignore)
+        (add-to-list 'doom-projectile-cache-blacklist dir-to-ignore)))
+     '("~/.emacs.d/.local/straight/repos/" "~/.emacs.d/.local" "~/.pyenv"))
 
 (use-package! zone
   :defer-incrementally t
@@ -44,17 +48,22 @@ Miscellaneous variables/ packages that don't warrant their own section.
 
 (server-start)
 #+END_SRC
+
+#+RESULTS:
+
 ** Note-Taking
-TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save changes and ~C-g~ discard?
 *** org-mode config
 ***** +my/org-mode-vars-config
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/org-mode-vars-config ()
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
   (setq! writeroom-width                  100
+         writeroom-maximize-window nil
+         writeroom-header-line 'mode-line
+         org-src-window-setup             'other-frame
          org-ellipsis                      " ▾ "
          org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
-         org-directory                     (if IS-MAC "~/.org/" "~/.org.d/")
+         org-directory                     (if IS-MAC "~/.org" "~/.org.d")
          org-preview-latex-default-process 'dvisvgm
          org-startup-folded                'content
          org-startup-with-latex-preview    nil
@@ -82,8 +91,13 @@ TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save c
          org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
                                              ("[*]"   . +org-todo-onhold)
                                              ("PROG"  . +org-todo-active)
-                                             ("WAIT"  . +org-todo-onhold))))
+                                             ("WAIT"  . +org-todo-onhold)))
+  (set-popup-rule! "^\\*Org Src" :ignore t))
 #+END_SRC
+
+#+RESULTS:
+: +my/org-mode-vars-config
+
 ***** keybindings
 #+BEGIN_SRC emacs-lisp
 (map! :map org-mode-map
@@ -135,6 +149,8 @@ Note: this use-package declaration
     (setq! org-roam-directory               org-directory
            org-roam-index-file              "./index.org"
            org-roam-tag-sort                t
+           org-roam-tag-sources             '(prop all-directories)
+           org-roam-tag-separator           ", "
            org-roam-verbose                 t
            org-roam-buffer-position         'right
            org-roam-buffer-width            0.26
@@ -180,7 +196,9 @@ Note: this use-package declaration
   (+my/org-roam-vars-config)
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
   (add-hook! 'org-roam-buffer-prepare-hook
-             :append (λ!! (org-global-cycle '(4)))))
+             :append
+             org-set-startup-visibility ;; (λ!! (org-global-cycle '(4)))
+             ))
 #+END_SRC
 *** other packages
 #+BEGIN_SRC emacs-lisp
@@ -199,11 +217,11 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! eglot
   :commands eglot eglot-ensure
-  :init
-  (defun project-root (project)
-    (car (project-roots project)))
+  ;; :init
+  ;; (defun project-root (project)
+  ;;   (car (project-roots project)))
   :config
-  (setq eglot-send-changes-idle-time 0.0))
+  (setq eglot-send-changes-idle-time 0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 #+END_SRC
 ** Magit
@@ -330,8 +348,7 @@ that problem but is still more readable.
       doom-modeline-major-mode-icon t)
 
 (remove-hook! text-mode hl-line-mode)
-(toggle-frame-fullscreen)
-(if IS-MAC (toggle-frame-fullscreen))
+(unless IS-MAC (toggle-frame-fullscreen))
 #+END_SRC
 
 ** Theme
@@ -365,13 +382,16 @@ from a selection of light themes or dark themes, depending on the time of day.
 #+END_SRC
 **** TODO open pull request for doom-themes
 * Keybindings
-** keybinding-related variables
+** keybinding-related variables/packages
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
        doom-localleader-key ","
        doom-localleader-alt-key "C-,")
 #+END_SRC
+
+#+RESULTS:
+: C-,
 
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! expand-region
@@ -388,30 +408,19 @@ from a selection of light themes or dark themes, depending on the time of day.
         evil-snipe-tab-increment             t
         evil-snipe-repeat-keys               t
         evil-snipe-override-evil-repeat-keys t)
+
+
   :config
   ;; when f/t/s searching, interpret open/close square brackets to be any
   ;; open/close delimiters, respectively
   (push '(?\[ "[[{(]") evil-snipe-aliases)
   (push '(?\] "[]})]") evil-snipe-aliases)
+  (map! :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
+        "C-;" (cmd! (if evil-snipe--last
+                   (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
+                 (call-interactively #'avy-goto-char-2))))
   (evil-snipe-override-mode +1))
 #+END_SRC
-**** +my/avy-evil-snipe-repeat
-After evil-snipe has loaded, bind ~C-;~ to an interactive function which will try
-to call ~avy-goto-char-2~ with the same char(s) entered from the most recent
-evil-snipe motion; if it can't, it calls ~avy-goto-char-2~ interactively as if that
-had been the intention all along.
-#+BEGIN_SRC emacs-lisp
-(defun +my/avy-evil-snipe-repeat ()
-  (interactive)
-  (if evil-snipe--last
-      (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
-    (call-interactively #'avy-goto-char-2)))
-
-(map! :after evil-snipe
-      :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
-      "C-;" #'+my/avy-evil-snipe)
-#+END_SRC
-
 ** top-level
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :n [tab] (general-predicate-dispatch nil
@@ -464,10 +473,9 @@ had been the intention all along.
           "[" nil
           "]" nil)
          (:map lispyville-mode-map
-          :n "M-[" #'lispy-backward
-          :n "M-]" #'lispy-forward)))
+           "M-[" #'lispy-backward
+           "M-]" #'lispy-forward)))
 #+END_SRC
-
 
 ** leader
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -477,6 +485,9 @@ had been the intention all along.
 
       (:prefix ("w" . "window")
        :desc "Switch to last window" "w"    #'evil-window-mru)
+
+      (:prefix ("t" . "toggle")
+       :desc "Frame maximized"       "M"    #'toggle-frame-maximized)
 
       (:prefix ("b" . "buffer")
        :desc "Fallback buffer"        "h"   #'+doom-dashboard/open

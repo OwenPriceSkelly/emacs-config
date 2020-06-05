@@ -1,11 +1,14 @@
-(setq user-full-name "Owen Price-Skelly"
+(setq! user-full-name "Owen Price-Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; ranger-override-dired t
       ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
       fill-column 88
       company-idle-delay nil
       +workspaces-on-switch-project-behavior t)
+(map nil
+     (function (lambda (dir-to-ignore)
+        (add-to-list 'doom-projectile-cache-blacklist dir-to-ignore)))
+     '("~/.emacs.d/.local/straight/repos/" "~/.emacs.d/.local" "~/.pyenv"))
 
 (use-package! zone
   :defer-incrementally t
@@ -20,9 +23,12 @@
 (defun +my/org-mode-vars-config ()
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
   (setq! writeroom-width                  100
+         writeroom-maximize-window nil
+         writeroom-header-line 'mode-line
+         org-src-window-setup             'other-frame
          org-ellipsis                      " ▾ "
          org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
-         org-directory                     (if IS-MAC "~/.org/" "~/.org.d/")
+         org-directory                     (if IS-MAC "~/.org" "~/.org.d")
          org-preview-latex-default-process 'dvisvgm
          org-startup-folded                'content
          org-startup-with-latex-preview    nil
@@ -50,7 +56,8 @@
          org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
                                              ("[*]"   . +org-todo-onhold)
                                              ("PROG"  . +org-todo-active)
-                                             ("WAIT"  . +org-todo-onhold))))
+                                             ("WAIT"  . +org-todo-onhold)))
+  (set-popup-rule! "^\\*Org Src" :ignore t))
 
 (map! :map org-mode-map
       :localleader
@@ -92,6 +99,8 @@
     (setq! org-roam-directory               org-directory
            org-roam-index-file              "./index.org"
            org-roam-tag-sort                t
+           org-roam-tag-sources             '(prop all-directories)
+           org-roam-tag-separator           ", "
            org-roam-verbose                 t
            org-roam-buffer-position         'right
            org-roam-buffer-width            0.26
@@ -132,7 +141,9 @@
   (+my/org-roam-vars-config)
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
   (add-hook! 'org-roam-buffer-prepare-hook
-             :append (λ!! (org-global-cycle '(4)))))
+             :append
+             org-set-startup-visibility ;; (λ!! (org-global-cycle '(4)))
+             ))
 
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
@@ -146,11 +157,11 @@
 
 (use-package! eglot
   :commands eglot eglot-ensure
-  :init
-  (defun project-root (project)
-    (car (project-roots project)))
+  ;; :init
+  ;; (defun project-root (project)
+  ;;   (car (project-roots project)))
   :config
-  (setq eglot-send-changes-idle-time 0.0))
+  (setq eglot-send-changes-idle-time 0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
 (use-package! magit-delta
@@ -255,8 +266,7 @@
       doom-modeline-major-mode-icon t)
 
 (remove-hook! text-mode hl-line-mode)
-(toggle-frame-fullscreen)
-(if IS-MAC (toggle-frame-fullscreen))
+(unless IS-MAC (toggle-frame-fullscreen))
 
 (setq! +my/themes-list-dark      '(doom-gruvbox
                                    doom-oceanic-next
@@ -298,22 +308,18 @@
         evil-snipe-tab-increment             t
         evil-snipe-repeat-keys               t
         evil-snipe-override-evil-repeat-keys t)
+
+
   :config
   ;; when f/t/s searching, interpret open/close square brackets to be any
   ;; open/close delimiters, respectively
   (push '(?\[ "[[{(]") evil-snipe-aliases)
   (push '(?\] "[]})]") evil-snipe-aliases)
+  (map! :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
+        "C-;" (cmd! (if evil-snipe--last
+                   (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
+                 (call-interactively #'avy-goto-char-2))))
   (evil-snipe-override-mode +1))
-
-(defun +my/avy-evil-snipe-repeat ()
-  (interactive)
-  (if evil-snipe--last
-      (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
-    (call-interactively #'avy-goto-char-2)))
-
-(map! :after evil-snipe
-      :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
-      "C-;" #'+my/avy-evil-snipe)
 
 (map! :n [tab] (general-predicate-dispatch nil
                    (and (featurep! :editor fold)
@@ -365,8 +371,8 @@
           "[" nil
           "]" nil)
          (:map lispyville-mode-map
-          :n "M-[" #'lispy-backward
-          :n "M-]" #'lispy-forward)))
+           "M-[" #'lispy-backward
+           "M-]" #'lispy-forward)))
 
 (map! :leader
       :desc "Search project"         "/"    #'+default/search-project
@@ -374,6 +380,9 @@
 
       (:prefix ("w" . "window")
        :desc "Switch to last window" "w"    #'evil-window-mru)
+
+      (:prefix ("t" . "toggle")
+       :desc "Frame maximized"       "M"    #'toggle-frame-maximized)
 
       (:prefix ("b" . "buffer")
        :desc "Fallback buffer"        "h"   #'+doom-dashboard/open
