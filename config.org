@@ -46,12 +46,20 @@ Miscellaneous variables/ packages that don't warrant their own section.
 ** Note-Taking
 TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save changes and ~C-g~ discard?
 *** org-mode config
-***** variables
+***** +my/org-mode-vars-config
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/org-mode-vars-config ()
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (setq! org-entities-user
-         ;; org |latex |mathp|html         |ascii|latin1|utf-8
+  (setq! writeroom-width                  100
+         org-ellipsis                      " ▾ "
+         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-directory                     (if IS-MAC "~/.org/" "~/.org.d/")
+         org-preview-latex-default-process 'dvisvgm
+         org-startup-folded                'content
+         org-startup-with-latex-preview    nil
+         org-highlight-latex-and-related   nil
+         org-entities-user
+         ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
          '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
            ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
            ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
@@ -59,12 +67,6 @@ TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save c
            ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
            ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
            ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
-         org-preview-latex-default-process 'dvisvgm
-         org-directory                     (if IS-MAC "~/.org/"
-                                             "~/.org.d/")
-         org-startup-folded                'content
-         org-startup-with-latex-preview    nil
-         org-highlight-latex-and-related   nil
          org-format-latex-options          '(:foreground default
                                              :background default
                                              :scale 1.0
@@ -72,8 +74,6 @@ TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save c
                                              :html-foreground "Black"
                                              :html-background "Transparent"
                                              :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-         org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
          org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
                                                        "[X](d)" "[-](k)")
                                              (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
@@ -93,6 +93,7 @@ TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save c
 #+END_SRC
 
 **** use-package declaration
+Note: this use-package declaration
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org
   :after org
@@ -149,7 +150,7 @@ TODO: define popup rules for editing src blocks, e.g. have ~esc~ or ~:wq~ save c
                                               ("color" . "#C9C9C9")
                                               ("fontcolor" . "#111111"))))
 #+END_SRC
-***** org-roam keybindings
+***** keybindings
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :leader
       (:prefix ("n" . "notes")
@@ -219,7 +220,7 @@ that problem but is still more readable.
                                        :family "Iosevka Extended"
                                        :size 16)
       doom-variable-pitch-font        (font-spec
-                                       :family "Iosevka Etoile"
+                                       :family "Iosevka Sparkle"
                                        :size 16)
       +zen-text-scale                 0
       +latex-viewers                  (if IS-MAC '(pdf-tools))
@@ -316,38 +317,40 @@ that problem but is still more readable.
 
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t)
+
 (remove-hook! text-mode hl-line-mode)
 (toggle-frame-fullscreen)
 (if IS-MAC (toggle-frame-fullscreen))
 #+END_SRC
+
 ** Theme
 *** Set theme by time
 Currently I'm still really liking oceanic next, but if/when that gets old
 changing ~+my/override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(setq +my/themes-list-dark      '(doom-gruvbox
-                                  doom-oceanic-next
-                                  doom-nord
-                                  doom-wilmersdorf
-                                  doom-city-lights
-                                  doom-moonlight)
-      +my/themes-list-light     '(doom-gruvbox-light
-                                  doom-nord-light
-                                  doom-acario-light
-                                  doom-solarized-light)
-      doom-gruvbox-dark-variant 'soft
-      doom-gruvbox-light-variant 'soft
-      +my/override-theme     'doom-gruvbox;;-light
-      doom-theme                (or +my/override-theme
-                                    (let ((hour (caddr (decode-time nil)))
-                                          (sec (car (decode-time nil))))
-                                      (let ((theme-choices
-                                             (if (<= 9 hour 15)
-                                                 +my/themes-list-light
-                                               +my/themes-list-dark)))
-                                        (nth (mod sec (length theme-choices))
-                                             theme-choices)))))
+(setq! +my/themes-list-dark      '(doom-gruvbox
+                                   doom-oceanic-next
+                                   doom-nord
+                                   doom-wilmersdorf
+                                   doom-city-lights
+                                   doom-moonlight)
+       +my/themes-list-light     '(doom-gruvbox-light
+                                   doom-nord-light
+                                   doom-acario-light
+                                   doom-solarized-light)
+       doom-gruvbox-dark-variant 'soft
+       doom-gruvbox-light-variant 'soft
+       +my/override-theme     'doom-gruvbox ;;-light
+       doom-theme                (or +my/override-theme
+                                     (let ((hour (caddr (decode-time nil)))
+                                           (sec (car (decode-time nil))))
+                                       (let ((theme-choices
+                                              (if (<= 9 hour 15)
+                                                  +my/themes-list-light
+                                                +my/themes-list-dark)))
+                                         (nth (mod sec (length theme-choices))
+                                              theme-choices)))))
 #+END_SRC
 **** TODO open pull request for doom-themes
 * Keybindings
@@ -371,6 +374,7 @@ from a selection of light themes or dark themes, depending on the time of day.
   (setq evil-snipe-scope                     'whole-visible
         evil-snipe-spillover-scope           'whole-buffer
         evil-snipe-repeat-scope              'buffer
+        evil-snipe-tab-increment             t
         evil-snipe-repeat-keys               t
         evil-snipe-override-evil-repeat-keys t)
   :config
@@ -380,7 +384,23 @@ from a selection of light themes or dark themes, depending on the time of day.
   (push '(?\] "[]})]") evil-snipe-aliases)
   (evil-snipe-override-mode +1))
 #+END_SRC
-**** TODO after evil-snipe, bind ~;~ or ~C-;~ to ~evil-avy-goto-char-2~ with those two chars pre-filled
+**** +my/avy-evil-snipe-repeat
+After evil-snipe has loaded, bind ~C-;~ to an interactive function which will try
+to call ~avy-goto-char-2~ with the same char(s) entered from the most recent
+evil-snipe motion; if it can't, it calls ~avy-goto-char-2~ interactively as if that
+had been the intention all along.
+#+BEGIN_SRC emacs-lisp
+(defun +my/avy-evil-snipe-repeat ()
+  (interactive)
+  (if evil-snipe--last
+      (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
+    (call-interactively #'avy-goto-char-2)))
+
+(map! :after evil-snipe
+      :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
+      "C-;" #'+my/avy-evil-snipe)
+#+END_SRC
+
 ** top-level
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :n [tab] (general-predicate-dispatch nil
@@ -437,7 +457,6 @@ from a selection of light themes or dark themes, depending on the time of day.
           :n "M-]" #'lispy-forward)))
 #+END_SRC
 
-#+RESULTS:
 
 ** leader
 #+BEGIN_SRC emacs-lisp :lexical yes

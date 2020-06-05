@@ -19,8 +19,16 @@
 
 (defun +my/org-mode-vars-config ()
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (setq! org-entities-user
-         ;; org |latex |mathp|html         |ascii|latin1|utf-8
+  (setq! writeroom-width                  100
+         org-ellipsis                      " ▾ "
+         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-directory                     (if IS-MAC "~/.org/" "~/.org.d/")
+         org-preview-latex-default-process 'dvisvgm
+         org-startup-folded                'content
+         org-startup-with-latex-preview    nil
+         org-highlight-latex-and-related   nil
+         org-entities-user
+         ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
          '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
            ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
            ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
@@ -28,12 +36,6 @@
            ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
            ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
            ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
-         org-preview-latex-default-process 'dvisvgm
-         org-directory                     (if IS-MAC "~/.org/"
-                                             "~/.org.d/")
-         org-startup-folded                'content
-         org-startup-with-latex-preview    nil
-         org-highlight-latex-and-related   nil
          org-format-latex-options          '(:foreground default
                                              :background default
                                              :scale 1.0
@@ -41,8 +43,6 @@
                                              :html-foreground "Black"
                                              :html-background "Transparent"
                                              :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-         org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
          org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
                                                        "[X](d)" "[-](k)")
                                              (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
@@ -157,7 +157,7 @@
                                        :family "Iosevka Extended"
                                        :size 16)
       doom-variable-pitch-font        (font-spec
-                                       :family "Iosevka Etoile"
+                                       :family "Iosevka Sparkle"
                                        :size 16)
       +zen-text-scale                 0
       +latex-viewers                  (if IS-MAC '(pdf-tools))
@@ -244,32 +244,33 @@
 
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t)
+
 (remove-hook! text-mode hl-line-mode)
 (toggle-frame-fullscreen)
 (if IS-MAC (toggle-frame-fullscreen))
 
-(setq +my/themes-list-dark      '(doom-gruvbox
-                                  doom-oceanic-next
-                                  doom-nord
-                                  doom-wilmersdorf
-                                  doom-city-lights
-                                  doom-moonlight)
-      +my/themes-list-light     '(doom-gruvbox-light
-                                  doom-nord-light
-                                  doom-acario-light
-                                  doom-solarized-light)
-      doom-gruvbox-dark-variant 'soft
-      doom-gruvbox-light-variant 'soft
-      +my/override-theme     'doom-gruvbox;;-light
-      doom-theme                (or +my/override-theme
-                                    (let ((hour (caddr (decode-time nil)))
-                                          (sec (car (decode-time nil))))
-                                      (let ((theme-choices
-                                             (if (<= 9 hour 15)
-                                                 +my/themes-list-light
-                                               +my/themes-list-dark)))
-                                        (nth (mod sec (length theme-choices))
-                                             theme-choices)))))
+(setq! +my/themes-list-dark      '(doom-gruvbox
+                                   doom-oceanic-next
+                                   doom-nord
+                                   doom-wilmersdorf
+                                   doom-city-lights
+                                   doom-moonlight)
+       +my/themes-list-light     '(doom-gruvbox-light
+                                   doom-nord-light
+                                   doom-acario-light
+                                   doom-solarized-light)
+       doom-gruvbox-dark-variant 'soft
+       doom-gruvbox-light-variant 'soft
+       +my/override-theme     'doom-gruvbox ;;-light
+       doom-theme                (or +my/override-theme
+                                     (let ((hour (caddr (decode-time nil)))
+                                           (sec (car (decode-time nil))))
+                                       (let ((theme-choices
+                                              (if (<= 9 hour 15)
+                                                  +my/themes-list-light
+                                                +my/themes-list-dark)))
+                                         (nth (mod sec (length theme-choices))
+                                              theme-choices)))))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
@@ -285,6 +286,7 @@
   (setq evil-snipe-scope                     'whole-visible
         evil-snipe-spillover-scope           'whole-buffer
         evil-snipe-repeat-scope              'buffer
+        evil-snipe-tab-increment             t
         evil-snipe-repeat-keys               t
         evil-snipe-override-evil-repeat-keys t)
   :config
@@ -293,6 +295,16 @@
   (push '(?\[ "[[{(]") evil-snipe-aliases)
   (push '(?\] "[]})]") evil-snipe-aliases)
   (evil-snipe-override-mode +1))
+
+(defun +my/avy-evil-snipe-repeat ()
+  (interactive)
+  (if evil-snipe--last
+      (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
+    (call-interactively #'avy-goto-char-2)))
+
+(map! :after evil-snipe
+      :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
+      "C-;" #'+my/avy-evil-snipe)
 
 (map! :n [tab] (general-predicate-dispatch nil
                    (and (featurep! :editor fold)
