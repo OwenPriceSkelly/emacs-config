@@ -6,15 +6,14 @@
       company-idle-delay nil
       +workspaces-on-switch-project-behavior t)
 
-(use-package! zone
-  :defer-incrementally t
-  :config
-  (zone-when-idle 600))
+;; (use-package! zone
+;; :defer-incrementally t
+;; :config
+;; (zone-when-idle 600))
 
 (use-package! evil-textobj-line
   :demand t)
-
-(server-start)
+;; (server-start)
 
 (defun +my/org-mode-vars-config ()
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
@@ -180,6 +179,29 @@
         magit-delta-default-light-theme "Github")
   (magit-delta-mode))
 
+(setq! +my/themes-list-dark      '(doom-gruvbox
+                                   doom-oceanic-next
+                                   doom-nord
+                                   doom-wilmersdorf
+                                   doom-city-lights
+                                   doom-moonlight)
+       +my/themes-list-light     '(doom-gruvbox-light
+                                   doom-nord-light
+                                   doom-acario-light
+                                   doom-solarized-light)
+       doom-gruvbox-dark-variant 'soft
+       doom-gruvbox-light-variant 'soft
+       +override-theme           'doom-gruvbox ;-light
+       doom-theme                (or +override-theme
+                                     (let ((hour (caddr (decode-time nil)))
+                                           (sec (car (decode-time nil))))
+                                       (let ((theme-choices
+                                              (if (<= 9 hour 15)
+                                                  +my/themes-list-light
+                                                +my/themes-list-dark)))
+                                         (nth (mod sec (length theme-choices))
+                                              theme-choices)))))
+
 (setq doom-font                       (font-spec
                                        :family "Iosevka Extended"
                                        :size 14)
@@ -190,31 +212,6 @@
       +zen-text-scale                 0
       +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
-
-(setq solaire-mode-auto-swap-bg       t
-      solaire-mode-remap-line-numbers t
-
-      writeroom-width                  100
-      writeroom-maximize-window nil
-      writeroom-mode-line t
-      writeroom-header-line nil
-
-      which-key-side-window-location  'bottom
-      which-key-sort-order            'which-key-key-order-alpha
-      which-key-max-description-length nil
-
-      display-line-numbers-type       'nil
-
-      evil-split-window-below         t
-      evil-vsplit-window-right        t
-
-      doom-modeline-persp-name t
-      doom-modeline-major-mode-icon t)
-
-(remove-hook! text-mode hl-line-mode)
-(if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
-;; (set-frame-parameter nil 'undecorated t)
-(toggle-frame-fullscreen)
 
 (defun +my/doom-dashboard-widget-banner ()
   (let ((point (point)))
@@ -283,28 +280,32 @@
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
 
-(setq! +my/themes-list-dark      '(doom-gruvbox
-                                   doom-oceanic-next
-                                   doom-nord
-                                   doom-wilmersdorf
-                                   doom-city-lights
-                                   doom-moonlight)
-       +my/themes-list-light     '(doom-gruvbox-light
-                                   doom-nord-light
-                                   doom-acario-light
-                                   doom-solarized-light)
-       doom-gruvbox-dark-variant 'soft
-       doom-gruvbox-light-variant 'soft
-       +my/override-theme     'doom-gruvbox-light
-       doom-theme                (or +my/override-theme
-                                     (let ((hour (caddr (decode-time nil)))
-                                           (sec (car (decode-time nil))))
-                                       (let ((theme-choices
-                                              (if (<= 9 hour 15)
-                                                  +my/themes-list-light
-                                                +my/themes-list-dark)))
-                                         (nth (mod sec (length theme-choices))
-                                              theme-choices)))))
+(setq solaire-mode-auto-swap-bg       t
+      solaire-mode-remap-line-numbers t
+
+      writeroom-width                  100
+      writeroom-maximize-window nil
+      writeroom-mode-line t
+      writeroom-header-line nil
+
+      which-key-side-window-location  'bottom
+      which-key-sort-order            'which-key-key-order-alpha
+      which-key-max-description-length nil
+
+      display-line-numbers-type       'nil
+
+      evil-split-window-below         t
+      evil-vsplit-window-right        t
+
+      doom-modeline-persp-name t
+      doom-modeline-major-mode-icon t)
+
+(remove-hook! text-mode hl-line-mode)
+
+(if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
+(toggle-frame-fullscreen)
+(setq frame-title-format '("%b – Emacs")
+      icon-title-format frame-title-format)
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
@@ -396,13 +397,6 @@
       (:prefix ("w" . "window")
        :desc "Switch to last window" "w"    #'evil-window-mru)
 
-      (:prefix ("t" . "toggle")
-       :desc "Frame maximized"       "M"    #'toggle-frame-maximized
-       :desc "Frame decorated"       "D"    (cmd! (set-frame-parameter
-                                                   nil
-                                                   'undecorated
-                                                   (not (frame-parameter nil 'undecorated)))))
-
       (:prefix ("b" . "buffer")
        :desc "Fallback buffer"        "h"   #'+doom-dashboard/open
        :desc "Messages buffer"        "m"   #'view-echo-area-messages
@@ -411,11 +405,22 @@
       (:prefix ("f" . "file")
        :desc "find file new window"   "F"   #'find-file-other-window)
 
+      (:prefix ("t" . "toggle")
+       :desc "toggle fullscreen" "F" #'toggle-frame-fullscreen
+       :desc "toggle decorated"  "d" (cmd! (set-frame-parameter
+                                            nil 'undecorated (not (frame-parameter nil 'undecorated))))
+
+       (:prefix ("m" . "maximized")
+        :desc "both" "m" (cmd! (set-frame-parameter nil 'fullscreen 'fullboth))
+        :desc "vertically" "v" (cmd! (set-frame-parameter nil 'fullscreen 'fullheight))
+        :desc "horizontally" "s" (cmd! (set-frame-parameter nil 'fullscreen 'fullwidth))))
+
       (:when (featurep! :emacs undo +tree)
        :desc "Undo tree"              "U"   #'undo-tree-visualize)
 
       (:when (featurep! :ui treemacs)
        :desc "Project sidebar"        "0"   #'+treemacs/toggle)
+
 
       (:when (featurep! :ui workspaces)
        (:prefix "TAB"
