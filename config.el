@@ -19,6 +19,7 @@
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
   ;; TODO writeroom set width to fill for current major mode
   (setq! org-src-window-setup             'other-frame
+         org-export-with-toc               nil
          org-ellipsis                      " ▾ "
          org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
          org-directory                     (if IS-MAC "~/.org" "~/.org.d")
@@ -170,14 +171,14 @@
   (setq eglot-send-changes-idle-time 0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
-(use-package! magit-delta
-  :after magit
-  :when (executable-find "delta")
-  :config
-  (setq magit-delta-hide-plus-minus-markers nil
-        magit-delta-default-dark-theme "Nord"
-        magit-delta-default-light-theme "Github")
-  (magit-delta-mode))
+;; (use-package! magit-delta
+;;   :after magit
+;;   :when (executable-find "delta")
+;;   :config
+;;   (setq magit-delta-hide-plus-minus-markers nil
+;;         magit-delta-default-dark-theme "Nord"
+;;         magit-delta-default-light-theme "Github")
+;;   (magit-delta-mode))
 
 (setq! +my/themes-list-dark      '(doom-gruvbox
                                    doom-oceanic-next

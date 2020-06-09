@@ -53,6 +53,7 @@ Miscellaneous variables/ packages that don't warrant their own section.
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
   ;; TODO writeroom set width to fill for current major mode
   (setq! org-src-window-setup             'other-frame
+         org-export-with-toc               nil
          org-ellipsis                      " ▾ "
          org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
          org-directory                     (if IS-MAC "~/.org" "~/.org.d")
@@ -228,14 +229,14 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
 #+END_SRC
 ** Magit
 #+BEGIN_SRC emacs-lisp
-(use-package! magit-delta
-  :after magit
-  :when (executable-find "delta")
-  :config
-  (setq magit-delta-hide-plus-minus-markers nil
-        magit-delta-default-dark-theme "Nord"
-        magit-delta-default-light-theme "Github")
-  (magit-delta-mode))
+;; (use-package! magit-delta
+;;   :after magit
+;;   :when (executable-find "delta")
+;;   :config
+;;   (setq magit-delta-hide-plus-minus-markers nil
+;;         magit-delta-default-dark-theme "Nord"
+;;         magit-delta-default-light-theme "Github")
+;;   (magit-delta-mode))
 #+END_SRC
 
 * UI
