@@ -5,10 +5,6 @@
       fill-column 88
       company-idle-delay nil
       +workspaces-on-switch-project-behavior t)
-(map nil
-     (function (lambda (dir-to-ignore)
-        (add-to-list 'doom-projectile-cache-blacklist dir-to-ignore)))
-     '("~/.emacs.d/.local/straight/repos/" "~/.emacs.d/.local" "~/.pyenv"))
 
 (use-package! zone
   :defer-incrementally t
@@ -22,10 +18,8 @@
 
 (defun +my/org-mode-vars-config ()
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (setq! writeroom-width                  100
-         writeroom-maximize-window nil
-         writeroom-header-line 'mode-line
-         org-src-window-setup             'other-frame
+  ;; TODO writeroom set width to fill for current major mode
+  (setq! org-src-window-setup             'other-frame
          org-ellipsis                      " ▾ "
          org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
          org-directory                     (if IS-MAC "~/.org" "~/.org.d")
@@ -78,28 +72,41 @@
         (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
                     "%?"
                     :file-name "${slug}"
-                    :head (concat "#+TITLE: ${title}\n" "#+ROAM_KEY: ${ref}\n" "#+ROAM_TAGS:\n"
-                                  "* Description: \n" "* Related: \n")
+                    :head (concat "#+TITLE: ${title}\n"
+                                  "#+ROAM_KEY: ${ref}\n"
+                                  "#+ROAM_TAGS:\n"
+                                  "* Description: \n"
+                                  "* Related: \n")
                     :unnarrowed t))
         org-roam-capture-templates
         (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
                     "%?"
                     :file-name "%<%Y-%m-%d>-${slug}"
-                    :head (concat "#+TITLE: ${title}\n" "#+ROAM_TAGS:\n"
-                                  "* Description: \n" "* Related: \n" )
+                    :head (concat "#+TITLE: ${title}\n"
+                                  "#+ROAM_TAGS:\n"
+                                  "* Description: \n"
+                                  "* Related: \n" )
                     :unnarrowed t))
         org-roam-dailies-capture-templates
-        '(("d" "daily" plain (function org-roam-capture--get-point)
-           ""
-           :immediate-finish t
-           :file-name "%<%Y-%m-%d-%A>"
-           :head "#+TITLE: %<%A, %B %d, %Y>"))))
+        (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
+                    ""
+                    :immediate-finish t
+                    :file-name "%<%Y-%m-%d-%A>"
+                    :head (concat "#+TITLE: %<%A, %B %d, %Y>\n"
+                                  "#+ROAM_TAGS: journal\n"
+                                  "* Tasks: \n" )))
+        ;; '(("d" "daily" plain (function org-roam-capture--get-point)
+        ;;    ""
+        ;;    :immediate-finish t
+        ;;    :file-name "%<%Y-%m-%d-%A>"
+        ;;    :head "#+TITLE: %<%A, %B %d, %Y>"))
+        ))
 
 (defun +my/org-roam-vars-config ()
     (setq! org-roam-directory               org-directory
            org-roam-index-file              "./index.org"
            org-roam-tag-sort                t
-           org-roam-tag-sources             '(prop all-directories)
+           org-roam-tag-sources             '(prop)
            org-roam-tag-separator           ", "
            org-roam-verbose                 t
            org-roam-buffer-position         'right
@@ -175,13 +182,39 @@
 
 (setq doom-font                       (font-spec
                                        :family "Iosevka Extended"
-                                       :size 16)
+                                       :size 14)
       doom-variable-pitch-font        (font-spec
                                        :family "Iosevka Sparkle"
-                                       :size 16)
+                                       :size 14)
+
       +zen-text-scale                 0
       +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
+
+(setq solaire-mode-auto-swap-bg       t
+      solaire-mode-remap-line-numbers t
+
+      writeroom-width                  100
+      writeroom-maximize-window nil
+      writeroom-mode-line t
+      writeroom-header-line nil
+
+      which-key-side-window-location  'bottom
+      which-key-sort-order            'which-key-key-order-alpha
+      which-key-max-description-length nil
+
+      display-line-numbers-type       'nil
+
+      evil-split-window-below         t
+      evil-vsplit-window-right        t
+
+      doom-modeline-persp-name t
+      doom-modeline-major-mode-icon t)
+
+(remove-hook! text-mode hl-line-mode)
+(if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
+;; (set-frame-parameter nil 'undecorated t)
+(toggle-frame-fullscreen)
 
 (defun +my/doom-dashboard-widget-banner ()
   (let ((point (point)))
@@ -250,24 +283,6 @@
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
 
-(setq solaire-mode-auto-swap-bg       t
-      solaire-mode-remap-line-numbers t
-
-      which-key-side-window-location  'bottom
-      which-key-sort-order            'which-key-key-order-alpha
-      which-key-max-description-length nil
-
-      display-line-numbers-type       'nil
-
-      evil-split-window-below         t
-      evil-vsplit-window-right        t
-
-      doom-modeline-persp-name t
-      doom-modeline-major-mode-icon t)
-
-(remove-hook! text-mode hl-line-mode)
-(unless IS-MAC (toggle-frame-fullscreen))
-
 (setq! +my/themes-list-dark      '(doom-gruvbox
                                    doom-oceanic-next
                                    doom-nord
@@ -280,7 +295,7 @@
                                    doom-solarized-light)
        doom-gruvbox-dark-variant 'soft
        doom-gruvbox-light-variant 'soft
-       +my/override-theme     'doom-gruvbox ;;-light
+       +my/override-theme     'doom-gruvbox-light
        doom-theme                (or +my/override-theme
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
@@ -382,7 +397,11 @@
        :desc "Switch to last window" "w"    #'evil-window-mru)
 
       (:prefix ("t" . "toggle")
-       :desc "Frame maximized"       "M"    #'toggle-frame-maximized)
+       :desc "Frame maximized"       "M"    #'toggle-frame-maximized
+       :desc "Frame decorated"       "D"    (cmd! (set-frame-parameter
+                                                   nil
+                                                   'undecorated
+                                                   (not (frame-parameter nil 'undecorated)))))
 
       (:prefix ("b" . "buffer")
        :desc "Fallback buffer"        "h"   #'+doom-dashboard/open
