@@ -36,7 +36,21 @@
            ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
            ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
          org-format-latex-options          '(:foreground default
-      (set-popup-rule! "^\\*Org Src" :ignore t))
+                                             :background default
+                                             :scale 1.0
+                                             :html-scale 1.0
+                                             :html-foreground "Black"
+                                             :html-background "Transparent"
+                                             :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
+         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
+                                                       "[X](d)" "[-](k)")
+                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
+                                                       "DONE(D)" "DROP(K)"))
+         org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
+                                             ("[*]"   . +org-todo-onhold)
+                                             ("PROG"  . +org-todo-active)
+                                             ("WAIT"  . +org-todo-onhold)))
+  (set-popup-rule! "^\\*Org Src" :ignore t))
 
 (map! :map org-mode-map
       :localleader
@@ -48,9 +62,9 @@
   :after org
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
+  :hook (org-mode . writeroom-mode)
   :config
-  (+my/org-mode-vars-config)
-  (add-hook! org-mode :local writeroom-mode))
+  (+my/org-mode-vars-config))
 
 (defun +my/org-roam-templates-config ()
     (setq org-roam-capture-ref-templates
@@ -164,7 +178,8 @@
                                    doom-nord-light)
        doom-gruvbox-dark-variant 'soft
        doom-gruvbox-light-variant 'soft
-       doom-theme                (or doom-oceanic-next;'doom-gruvbox-light
+       +override-theme           'doom-gruvbox ;-light
+       doom-theme                (or +override-theme
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
                                        (let ((theme-choices
