@@ -17,7 +17,6 @@
 
 (defun +my/org-mode-vars-config ()
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  ;; TODO writeroom set width to fill for current major mode
   (setq! org-src-window-setup             'other-frame
          org-export-with-toc               nil
          org-ellipsis                      " ▾ "
@@ -37,21 +36,7 @@
            ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
            ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
          org-format-latex-options          '(:foreground default
-                                             :background default
-                                             :scale 1.0
-                                             :html-scale 1.0
-                                             :html-foreground "Black"
-                                             :html-background "Transparent"
-                                             :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
-                                                       "[X](d)" "[-](k)")
-                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
-                                                       "DONE(D)" "DROP(K)"))
-         org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
-                                             ("[*]"   . +org-todo-onhold)
-                                             ("PROG"  . +org-todo-active)
-                                             ("WAIT"  . +org-todo-onhold)))
-  (set-popup-rule! "^\\*Org Src" :ignore t))
+      (set-popup-rule! "^\\*Org Src" :ignore t))
 
 (map! :map org-mode-map
       :localleader
@@ -63,9 +48,9 @@
   :after org
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
-  :hook (org-mode . writeroom-mode)
   :config
-  (+my/org-mode-vars-config))
+  (+my/org-mode-vars-config)
+  (add-hook! org-mode :local writeroom-mode))
 
 (defun +my/org-roam-templates-config ()
     (setq org-roam-capture-ref-templates
@@ -171,29 +156,15 @@
   (setq eglot-send-changes-idle-time 0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
-;; (use-package! magit-delta
-;;   :after magit
-;;   :when (executable-find "delta")
-;;   :config
-;;   (setq magit-delta-hide-plus-minus-markers nil
-;;         magit-delta-default-dark-theme "Nord"
-;;         magit-delta-default-light-theme "Github")
-;;   (magit-delta-mode))
-
 (setq! +my/themes-list-dark      '(doom-gruvbox
                                    doom-oceanic-next
                                    doom-nord
-                                   doom-wilmersdorf
-                                   doom-city-lights
-                                   doom-moonlight)
+                                   doom-city-lights)
        +my/themes-list-light     '(doom-gruvbox-light
-                                   doom-nord-light
-                                   doom-acario-light
-                                   doom-solarized-light)
+                                   doom-nord-light)
        doom-gruvbox-dark-variant 'soft
        doom-gruvbox-light-variant 'soft
-       +override-theme           'doom-gruvbox ;-light
-       doom-theme                (or +override-theme
+       doom-theme                (or doom-oceanic-next;'doom-gruvbox-light
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
                                        (let ((theme-choices
@@ -302,6 +273,7 @@
       doom-modeline-major-mode-icon t)
 
 (remove-hook! text-mode hl-line-mode)
+(+global-word-wrap-mode)
 
 (if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
 (toggle-frame-fullscreen)
