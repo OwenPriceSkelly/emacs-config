@@ -161,6 +161,11 @@
         mathpix-app-key           "0b3d8ae26f3762b4d5b8"
         mathpix-screenshot-method "screencapture -i %s"))
 
+(setq +markdown-compile-functions '(+markdown-compile-pandoc
+                                    +markdown-compile-marked
+                                    +markdown-compile-markdown
+                                    +markdown-compile-multimarkdown))
+
 (use-package! eglot
   :commands eglot eglot-ensure
   ;; :init
@@ -170,15 +175,15 @@
   (setq eglot-send-changes-idle-time 0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
-(setq! +my/themes-list-dark      '(doom-gruvbox
+(setq +my/themes-list-dark      '(doom-gruvbox
                                    doom-oceanic-next
                                    doom-nord
                                    doom-city-lights)
        +my/themes-list-light     '(doom-gruvbox-light
                                    doom-nord-light)
-       doom-gruvbox-dark-variant 'soft
+       doom-gruvbox-dark-variant 'hard
        doom-gruvbox-light-variant 'soft
-       +override-theme           'doom-gruvbox ;-light
+       +override-theme           'doom-gruvbox ;oceanic-next ;-light
        doom-theme                (or +override-theme
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
@@ -188,6 +193,13 @@
                                                 +my/themes-list-dark)))
                                          (nth (mod sec (length theme-choices))
                                               theme-choices)))))
+
+(setq! doom-gruvbox-dark-variant 'soft)
+
+(doom-themes-set-faces nil
+  '(org-block-begin-line :background nil)
+  '(org-block-end-line :background nil)
+  '(org-block :background nil))
 
 (setq doom-font                       (font-spec
                                        :family "Iosevka Extended"
@@ -287,8 +299,8 @@
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t)
 
-(remove-hook! text-mode hl-line-mode)
 (+global-word-wrap-mode)
+(remove-hook! text-mode hl-line-mode)
 
 (if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
 (toggle-frame-fullscreen)
@@ -323,6 +335,7 @@
         "C-;" (cmd! (if evil-snipe--last
                    (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
                  (call-interactively #'avy-goto-char-2))))
+  (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 
 (map! :n [tab] (general-predicate-dispatch nil

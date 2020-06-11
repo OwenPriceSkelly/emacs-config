@@ -124,7 +124,8 @@
        ;;factor
        ;;ledger               ; an accounting system in Emacs
        ;;lua                  ; one-based indices? one-based indices
-       markdown               ; writing docs for people to ignore
+       markdown ;; +grip               ; writing docs for people to ignore
+       yaml
        ;;nim                  ; python + lisp at the speed of c
        ;;nix                  ; I hereby declare "nix geht mehr!"
        ;;ocaml                ; an objective camel
@@ -132,10 +133,12 @@
         +roam
         +dragndrop            ; drag & drop files/images into org buffers
         +hugo                 ; use Emacs for hugo blogging
-        ;; +pandoc               ; export-with-pandoc support
-        +present            ; using org-mode for presentations
+        +pandoc               ; export-with-pandoc support
+        +present
+                                        ; using org-mode for presentations
         ;;+journal
-        +gnuplot)
+        +gnuplot
+        )
        ;;+jupyter             ; ipython/jupyter support for babel
        ;;+pomodoro            ; be fruitful with the tomato technique
        ;;perl                 ; write code no one else can comprehend
@@ -156,15 +159,15 @@
        ;;solidity             ; do you need a blockchain? No.
        ;;swift                ; who asked for emoji variables?
        ;;terra                ; Earth and Moon in alignment for performance.
-       ;;web                  ; the tubes
+       web                  ; the tubes
 
        :email
-       (mu4e +gmail)
+       ;; (mu4e +gmail)
        ;; notmuch
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar
+       ;; calendar
        ;;irc                  ; how neckbeards socialize
        ;;(rss +org)           ; emacs as an RSS reader
        ;; twitter             ; twitter client https://twitter.com/vnought

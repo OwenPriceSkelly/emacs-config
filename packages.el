@@ -15,3 +15,6 @@
   :pin nil)
 ;; (package! doom-themes
 ;;   :recipe (:local-repo  "~/.doom.d/emacs-doom-themes/"))
+(package! smooth-scrolling
+  :recipe (:host github :repo "aspiers/smooth-scrolling")
+  :pin "2462c13640aa")
