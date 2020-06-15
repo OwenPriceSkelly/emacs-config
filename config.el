@@ -57,7 +57,7 @@
                                   doom-oceanic-next)
        +my/themes-list-light     '(doom-gruvbox-light
                                    doom-nord-light)
-       doom-gruvbox-dark-variant 'soft
+       doom-gruvbox-dark-variant 'hard
        doom-gruvbox-light-variant 'soft
        +override-theme           nil ;'doom-gruvbox-light ;oceanic-next ;-light
        doom-theme                (or +override-theme
