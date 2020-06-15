@@ -53,14 +53,13 @@
       icon-title-format frame-title-format)
 
 (setq +my/themes-list-dark      '(doom-gruvbox
-                                  doom-oceanic-next
-                                   doom-nord
-                                   doom-city-lights)
+                                  doom-moonlight
+                                  doom-oceanic-next)
        +my/themes-list-light     '(doom-gruvbox-light
                                    doom-nord-light)
-       doom-gruvbox-dark-variant 'hard
+       doom-gruvbox-dark-variant 'soft
        doom-gruvbox-light-variant 'soft
-       +override-theme           'doom-gruvbox-light ;oceanic-next ;-light
+       +override-theme           nil ;'doom-gruvbox-light ;oceanic-next ;-light
        doom-theme                (or +override-theme
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
@@ -164,14 +163,8 @@
       company-idle-delay nil
       +workspaces-on-switch-project-behavior t)
 
-;; (use-package! zone
-;; :defer-incrementally t
-;; :config
-;; (zone-when-idle 600))
-
 (use-package! evil-textobj-line
   :demand t)
-;; (server-start)
 
 (use-package! eglot
   :commands eglot eglot-ensure
@@ -324,14 +317,12 @@
         evil-snipe-tab-increment             t
         evil-snipe-repeat-keys               t
         evil-snipe-override-evil-repeat-keys t)
-
-
   :config
   ;; when f/t/s searching, interpret open/close square brackets to be any
   ;; open/close delimiters, respectively
   (push '(?\[ "[[{(]") evil-snipe-aliases)
   (push '(?\] "[]})]") evil-snipe-aliases)
-  ;; if we've just s/S sniped, "C-;" pre-fills avy-goto-char-2 with the same chars
+  ;; "C-;" pre-fills avy-goto-char-2 with most recent snipe 
   (map! :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
         "C-;" (cmd! (if evil-snipe--last
                    (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
@@ -339,51 +330,53 @@
   (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 
-(map! :n [tab] (general-predicate-dispatch nil
-                   (and (featurep! :editor fold)
-                        (save-excursion (end-of-line) (invisible-p (point))))
-                   #'+fold/toggle
-                   (fboundp 'evil-jump-item)         #'evil-jump-item)
-;;; ^^ borrowed from hlissner's config, tab to unfold
+;; multiedit
+(map! :nv "R"     #'evil-multiedit-match-all
+      :n "C-n"    #'evil-multiedit-match-symbol-and-next
+      :n "C-S-n"  #'evil-multiedit-match-symbol-and-prev
+      :v "C-n"    #'evil-multiedit-match-and-next
+      :v "C-S-n"  #'evil-multiedit-match-and-prev
+      :nv "C-M-n" #'evil-multiedit-restore
+      (:after evil-multiedit
+       :map evil-multiedit-state-map
+       "n"       #'evil-multiedit-next
+       "N"       #'evil-multiedit-prev
+       "C-n"     #'evil-multiedit-match-and-next
+       "C-S-n"   #'evil-multiedit-match-and-prev
+       "V"       #'iedit-show/hide-unmatched-lines))
+;; multiple cursors
+(map! (:prefix ("gz" . "evil-mc")
+       :nv "n" #'evil-mc-make-and-goto-next-match
+       :nv "N" #'evil-mc-make-and-goto-prev-match
+       :nv "d" #'evil-mc-make-and-goto-next-cursor
+       :nv "D" #'evil-mc-make-and-goto-last-cursor
+       :nv "p" #'evil-mc-make-and-goto-prev-cursor
+       :nv "P" #'evil-mc-make-and-goto-first-cursor
+       :nv "j" #'evil-mc-make-cursor-move-next-line
+       :nv "k" #'evil-mc-make-cursor-move-prev-line
+       :nv "m" #'evil-mc-make-all-cursors
+       :nv "q" #'evil-mc-undo-all-cursors
+       :nv "t" #'+multiple-cursors/evil-mc-toggle-cursors
+       :nv "u" #'+multiple-cursors/evil-mc-undo-cursor
+       :nv "z" #'+multiple-cursors/evil-mc-toggle-cursor-here
+       :v  "I" #'evil-mc-make-cursor-in-visual-selection-beg
+       :v  "A" #'evil-mc-make-cursor-in-visual-selection-end))
+
+(map! :n [tab] (general-predicate-dispatch
+                   nil
+                 (and (featurep! :editor fold)
+                      (save-excursion (end-of-line) (invisible-p (point)))) #'+fold/toggle
+                 (fboundp 'evil-jump-item) #'evil-jump-item)
         :v [tab] (general-predicate-dispatch nil
-                   (and (bound-and-true-p yas-minor-mode)
-                        (or (eq evil-visual-selection 'line)
-                            (not (memq (char-after) (list ?\( ?\[ ?\{ ?\} ?\] ?\))))))
-                   #'yas-insert-snippet
                    (fboundp 'evil-jump-item)         #'evil-jump-item)
+;;; ^^ borrowed from hlissner's config, tab to unfold if it'd make sense, else jump item
+
         (:when (featurep! :ui workspaces)
-         :nvig [C-tab] #'+workspace/switch-right)
+         :g [C-tab] #'+workspace/switch-right)
 
         (:when (featurep! :completion company)
          :i "C-i" #'+company/complete)
-        ;; multiedit
-        (:when (featurep! :editor multiple-cursors)
-         :nv "R"     #'evil-multiedit-match-all
-         :n "C-n"    #'evil-multiedit-match-symbol-and-next
-         :n "C-S-n"  #'evil-multiedit-match-symbol-and-prev
-         :v "C-n"    #'evil-multiedit-match-and-next
-         :v "C-S-n"  #'evil-multiedit-match-and-prev
-         :nv "C-M-n" #'evil-multiedit-restore
-         (:after evil-multiedit
-          (:map evil-multiedit-state-map
-           "n"       #'evil-multiedit-next
-           "N"       #'evil-multiedit-prev
-           "C-n"     #'evil-multiedit-match-and-next
-           "C-S-n"   #'evil-multiedit-match-and-prev
-           "V"       #'iedit-show/hide-unmatched-lines))
-         ;; multiple cursors
-         (:prefix ("gz" . "evil-mc")
-          :nv "n" #'evil-mc-make-and-goto-next-match
-          :nv "N" #'evil-mc-make-and-goto-prev-match
-          :nv "d" #'evil-mc-make-and-goto-next-cursor
-          :nv "D" #'evil-mc-make-and-goto-last-cursor
-          :nv "p" #'evil-mc-make-and-goto-prev-cursor
-          :nv "P" #'evil-mc-make-and-goto-first-cursor))
-        ;; wgrep
-        (:when (featurep! :completion ivy)
-         (:map ivy-minibuffer-map
-          (:prefix "C-c"
-           :desc "Edit and replace"  "e" #'+ivy/woccur)))
+        ;;lispy
         (:when (featurep! :editor lispy)
          (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
           "[" nil
@@ -393,8 +386,8 @@
            "M-]" #'lispy-forward)))
 
 (map! :leader
-      :desc "Search project"         "/"    #'+default/search-project
-      :desc "Visual expand"          "v"    #'er/expand-region
+      :desc "Search project" "/" #'+default/search-project
+      :desc "Visual expand" "v" #'er/expand-region
 
       (:prefix ("w" . "window")
        :desc "Switch to last window" "w"    #'evil-window-mru)
@@ -407,22 +400,33 @@
       (:prefix ("f" . "file")
        :desc "find file new window"   "F"   #'find-file-other-window)
 
-      (:prefix ("t" . "toggle")
+      (:prefix ("t"  "toggle")
        :desc "toggle fullscreen" "F" #'toggle-frame-fullscreen
-       :desc "toggle decorated"  "d" (cmd! (set-frame-parameter
-                                            nil 'undecorated (not (frame-parameter nil 'undecorated))))
-
+       :desc "toggle hl-line mode" "h" (cmd! (hl-line-mode (if hl-line-mode -1 +1)))
+       :desc "toggle decorated"  "d" (cmd! (set-frame-parameter nil 'undecorated (not (frame-parameter nil 'undecorated))))
        (:prefix ("m" . "maximized")
-        :desc "both" "m" (cmd! (set-frame-parameter nil 'fullscreen 'fullboth))
-        :desc "vertically" "v" (cmd! (set-frame-parameter nil 'fullscreen 'fullheight))
-        :desc "horizontally" "s" (cmd! (set-frame-parameter nil 'fullscreen 'fullwidth))))
+        :desc "both" "m" #'toggle-frame-maximized ;; (cmd! (set-frame-parameter nil 'fullscreen 'fullboth))
+        :desc "vertically" "v"
+        (cmd! (set-frame-parameter nil 'fullscreen
+                                   (case (frame-parameter nil 'fullscreen)
+                                     ('fullheight nil)
+                                     (nil 'fullheight)
+                                     ('fullwidth 'fullboth)
+                                     ('fullboth  'fullwidth)))))
+
+       :desc "horizontally" "s"
+       (cmd! (set-frame-parameter nil 'fullscreen
+                                  (case (frame-parameter nil 'fullscreen)
+                                    ('fullwidth nil)
+                                    (nil 'fullwidth)
+                                    ('fullheight 'fullboth)
+                                    ('fullboth  'fullheight)))))
 
       (:when (featurep! :emacs undo +tree)
        :desc "Undo tree"              "U"   #'undo-tree-visualize)
 
       (:when (featurep! :ui treemacs)
        :desc "Project sidebar"        "0"   #'+treemacs/toggle)
-
 
       (:when (featurep! :ui workspaces)
        (:prefix "TAB"
