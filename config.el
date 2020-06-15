@@ -1,189 +1,66 @@
-(setq! user-full-name "Owen Price-Skelly"
-      user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; +mu4e-backend 'offlineimap TODO
-      iedit-occurrence-context-lines 1
-      fill-column 88
-      company-idle-delay nil
-      +workspaces-on-switch-project-behavior t)
+(use-package! solaire-mode
+  :init
+  (setq solaire-mode-auto-swap-bg t
+        solaire-mode-remap-line-numbers t))
 
-;; (use-package! zone
-;; :defer-incrementally t
-;; :config
-;; (zone-when-idle 600))
+;; (use-package! writeroom-mode
+;;   :hook (text-mode . writeroom-mode)
+;;   :config
+;;   (setq writeroom-width 100
+;;         writeroom-maximize-window nil
+;;         writeroom-mode-line t
+;;         writeroom-header-line nil))
 
-(use-package! evil-textobj-line
-  :demand t)
-;; (server-start)
-
-(defun +my/org-mode-vars-config ()
-  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (setq! org-src-window-setup             'other-frame
-         org-export-with-toc               nil
-         org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
-         org-directory                     (if IS-MAC "~/.org" "~/.org.d")
-         org-preview-latex-default-process 'dvisvgm
-         org-startup-folded                'content
-         org-startup-with-latex-preview    nil
-         org-highlight-latex-and-related   nil
-         org-entities-user
-         ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
-         '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
-           ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
-           ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
-           ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
-           ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
-           ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
-           ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
-         org-format-latex-options          '(:foreground default
-                                             :background default
-                                             :scale 1.0
-                                             :html-scale 1.0
-                                             :html-foreground "Black"
-                                             :html-background "Transparent"
-                                             :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
-                                                       "[X](d)" "[-](k)")
-                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
-                                                       "DONE(D)" "DROP(K)"))
-         org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
-                                             ("[*]"   . +org-todo-onhold)
-                                             ("PROG"  . +org-todo-active)
-                                             ("WAIT"  . +org-todo-onhold)))
-  (set-popup-rule! "^\\*Org Src" :ignore t))
-
-(map! :map org-mode-map
-      :localleader
-      :desc "Sort"                     "S" #'org-sort
-      :desc "preview LaTeX fragments"  "L" #'org-latex-preview
-      :desc "toggle pretty entities"   "p" #'+org-pretty-mode)
-
-(use-package! org
-  :after org
-  :hook (org-mode . toc-org-mode)
-  :hook (org-mode . +org-pretty-mode)
-  :hook (org-mode . writeroom-mode)
+(use-package! mixed-pitch
+  :hook ((org-mode markdown-mode) . mixed-pitch-mode)
   :config
-  (+my/org-mode-vars-config))
+  (pushnew! mixed-pitch-fixed-pitch-faces
+            'org-date
+            'org-special-keyword
+            'org-property-value
+            'org-ref-cite-face
+            'org-tag
+            'org-todo-keyword-todo
+            'org-todo-keyword-habt
+            'org-todo-keyword-done
+            'org-todo-keyword-wait
+            'org-todo-keyword-kill
+            'org-todo-keyword-outd
+            'org-todo
+            'org-done
+            'font-lock-comment-face
+            'line-number
+            'line-number-current-line))
 
-(defun +my/org-roam-templates-config ()
-    (setq org-roam-capture-ref-templates
-        (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
-                    "%?"
-                    :file-name "${slug}"
-                    :head (concat "#+TITLE: ${title}\n"
-                                  "#+ROAM_KEY: ${ref}\n"
-                                  "#+ROAM_TAGS:\n"
-                                  "* Description: \n"
-                                  "* Related: \n")
-                    :unnarrowed t))
-        org-roam-capture-templates
-        (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
-                    "%?"
-                    :file-name "%<%Y-%m-%d>-${slug}"
-                    :head (concat "#+TITLE: ${title}\n"
-                                  "#+ROAM_TAGS:\n"
-                                  "* Description: \n"
-                                  "* Related: \n" )
-                    :unnarrowed t))
-        org-roam-dailies-capture-templates
-        (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
-                    ""
-                    :immediate-finish t
-                    :file-name "%<%Y-%m-%d-%A>"
-                    :head (concat "#+TITLE: %<%A, %B %d, %Y>\n"
-                                  "#+ROAM_TAGS: journal\n"
-                                  "* Tasks: \n" )))
-        ;; '(("d" "daily" plain (function org-roam-capture--get-point)
-        ;;    ""
-        ;;    :immediate-finish t
-        ;;    :file-name "%<%Y-%m-%d-%A>"
-        ;;    :head "#+TITLE: %<%A, %B %d, %Y>"))
-        ))
+(setq which-key-side-window-location 'bottom
+      which-key-sort-order 'which-key-key-order-alpha
+      which-key-max-description-length nil
 
-(defun +my/org-roam-vars-config ()
-    (setq! org-roam-directory               org-directory
-           org-roam-index-file              "./index.org"
-           org-roam-tag-sort                t
-           org-roam-tag-sources             '(prop)
-           org-roam-tag-separator           ", "
-           org-roam-verbose                 t
-           org-roam-buffer-position         'right
-           org-roam-buffer-width            0.26
-           org-roam-graph-max-title-length  40
-           org-roam-graph-shorten-titles    'truncate
-           org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-           org-roam-graph-viewer            (executable-find
-                                             (if IS-MAC "open" "firefox"))
-           org-roam-graph-executable        "dot"
-           org-roam-graph-node-extra-config '(("shape" . "underline")
-                                              ("style" . "rounded,filled")
-                                              ("fillcolor" . "#EEEEEE")
-                                              ("color" . "#C9C9C9")
-                                              ("fontcolor" . "#111111"))))
+      display-line-numbers-type nil
 
-(map! :leader
-      (:prefix ("n" . "notes")
-       :desc "roam buffer"        "r"  #'org-roam
-       :desc "find"               "f"  #'org-roam-find-file
-       :desc "find"               "n"  #'org-roam-find-file
-       :desc "jump to index"      "x"  #'org-roam-jump-to-index
-       :desc "insert"             "i"  #'org-roam-insert
-       :desc "today's file"       "t"  #'org-roam-dailies-today
-       :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
-       :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
-       :desc "<date>'s file"      "d"  #'org-roam-dailies-date
-       :desc "mathpix.el"         "m"  #'mathpix-screenshot
-       (:prefix ( "g" . "graph")
-        :desc "toggle server"     "s"  #'org-roam-server-mode
-        :desc "graph all notes"   "g"  #'org-roam-graph
-        :desc "graph neighbors"   "n"  (λ! (org-roam-graph 1))
-        :desc "graph connected"   "c"  (λ!! #'org-roam-graph '(4)))))
+      evil-split-window-below t
+      evil-vsplit-window-right t
 
-(use-package! org-roam
-  :after org
-  :config
-  (+my/org-roam-templates-config)
-  (+my/org-roam-vars-config)
-  (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
-  (add-hook! 'org-roam-buffer-prepare-hook
-             :append
-             org-set-startup-visibility ;; (λ!! (org-global-cycle '(4)))
-             ))
+      doom-modeline-persp-name t
+      doom-modeline-major-mode-icon t)
 
-(use-package! org-roam-server
-  :commands (org-roam-server-mode))
+(+global-word-wrap-mode)
+(remove-hook! text-mode hl-line-mode)
 
-(use-package! mathpix
-  :commands (mathpix-screenshot)
-  :config
-  (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
-        mathpix-app-key           "0b3d8ae26f3762b4d5b8"
-        mathpix-screenshot-method "screencapture -i %s"))
-
-(setq +markdown-compile-functions '(+markdown-compile-pandoc
-                                    +markdown-compile-marked
-                                    +markdown-compile-markdown
-                                    +markdown-compile-multimarkdown))
-
-(use-package! eglot
-  :commands eglot eglot-ensure
-  ;; :init
-  ;; (defun project-root (project)
-  ;;   (car (project-roots project)))
-  :config
-  (setq eglot-send-changes-idle-time 0))
-  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+(if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
+(toggle-frame-fullscreen)
+(setq frame-title-format '("%b – Emacs")
+      icon-title-format frame-title-format)
 
 (setq +my/themes-list-dark      '(doom-gruvbox
-                                   doom-oceanic-next
+                                  doom-oceanic-next
                                    doom-nord
                                    doom-city-lights)
        +my/themes-list-light     '(doom-gruvbox-light
                                    doom-nord-light)
        doom-gruvbox-dark-variant 'hard
        doom-gruvbox-light-variant 'soft
-       +override-theme           'doom-gruvbox ;oceanic-next ;-light
+       +override-theme           'doom-gruvbox-light ;oceanic-next ;-light
        doom-theme                (or +override-theme
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
@@ -279,33 +156,156 @@
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
 
-(setq solaire-mode-auto-swap-bg       t
-      solaire-mode-remap-line-numbers t
+(setq! user-full-name "Owen Price-Skelly"
+      user-mail-address "Owen.Price.Skelly@gmail.com"
+      ;; +mu4e-backend 'offlineimap TODO
+      iedit-occurrence-context-lines 1
+      fill-column 88
+      company-idle-delay nil
+      +workspaces-on-switch-project-behavior t)
 
-      writeroom-width                  100
-      writeroom-maximize-window nil
-      writeroom-mode-line t
-      writeroom-header-line nil
+;; (use-package! zone
+;; :defer-incrementally t
+;; :config
+;; (zone-when-idle 600))
 
-      which-key-side-window-location  'bottom
-      which-key-sort-order            'which-key-key-order-alpha
-      which-key-max-description-length nil
+(use-package! evil-textobj-line
+  :demand t)
+;; (server-start)
 
-      display-line-numbers-type       'nil
+(use-package! eglot
+  :commands eglot eglot-ensure
+  :config
+  (setq eglot-send-changes-idle-time 0))
+  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
-      evil-split-window-below         t
-      evil-vsplit-window-right        t
+(defun +my/org-variables-config ()
+  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
+  (setq! org-src-window-setup             'other-frame
+         org-export-with-toc               nil
+         org-ellipsis                      " ▾ "
+         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-directory                     (if IS-MAC "~/.org" "~/.org.d")
+         org-preview-latex-default-process 'dvisvgm
+         org-startup-folded                'content
+         org-startup-with-latex-preview    nil
+         org-highlight-latex-and-related   nil
+         org-entities-user
+         ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
+         '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
+           ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
+           ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
+           ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
+           ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
+           ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
+           ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
+         org-format-latex-options          '(:foreground default
+                                             :background default
+                                             :scale 1.0
+                                             :html-scale 1.0
+                                             :html-foreground "Black"
+                                             :html-background "Transparent"
+                                             :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
+         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
+                                                       "[X](d)" "[-](k)")
+                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
+                                                       "DONE(D)" "DROP(K)"))
+         org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
+                                             ("[*]"   . +org-todo-onhold)
+                                             ("PROG"  . +org-todo-active)
+                                             ("WAIT"  . +org-todo-onhold)))
+  (set-popup-rule! "^\\*Org Src" :ignore t))
 
-      doom-modeline-persp-name t
-      doom-modeline-major-mode-icon t)
+(use-package! org
+  ;; :after org
+  :defer t
+  :hook (org-mode . toc-org-mode)
+  :hook (org-mode . +org-pretty-mode)
+;;  :hook (org-mode . writeroom-mode)
+  :config
+  (+my/org-variables-config))
 
-(+global-word-wrap-mode)
-(remove-hook! text-mode hl-line-mode)
+(defun +my/org-roam-templates-config ()
+    (setq org-roam-capture-ref-templates
+        (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
+                    "%?"
+                    :file-name "${slug}"
+                    :head (concat "#+TITLE: ${title}\n"
+                                  "#+ROAM_KEY: ${ref}\n"
+                                  "#+ROAM_TAGS:\n"
+                                  "* Description: \n"
+                                  "* Related: \n")
+                    :unnarrowed t))
+        org-roam-capture-templates
+        (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
+                    "%?"
+                    :file-name "%<%Y-%m-%d>-${slug}"
+                    :head (concat "#+TITLE: ${title}\n"
+                                  "#+ROAM_TAGS:\n"
+                                  "* Description: \n"
+                                  "* Related: \n" )
+                    :unnarrowed t))
+        org-roam-dailies-capture-templates
+        (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
+                    ""
+                    :immediate-finish t
+                    :file-name "%<%Y-%m-%d-%A>"
+                    :head (concat "#+TITLE: %<%A, %B %d, %Y>\n"
+                                  "#+ROAM_TAGS: journal\n"
+                                  "* Tasks: \n" )))
+        ;; '(("d" "daily" plain (function org-roam-capture--get-point)
+        ;;    ""
+        ;;    :immediate-finish t
+        ;;    :file-name "%<%Y-%m-%d-%A>"
+        ;;    :head "#+TITLE: %<%A, %B %d, %Y>"))
+        ))
 
-(if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
-(toggle-frame-fullscreen)
-(setq frame-title-format '("%b – Emacs")
-      icon-title-format frame-title-format)
+(defun +my/org-roam-vars-config ()
+    (setq! org-roam-directory               org-directory
+           org-roam-index-file              "./index.org"
+           org-roam-tag-sort                t
+           org-roam-tag-sources             '(prop)
+           org-roam-tag-separator           ", "
+           org-roam-verbose                 t
+           org-roam-buffer-position         'right
+           org-roam-buffer-width            0.26
+           org-roam-graph-max-title-length  40
+           org-roam-graph-shorten-titles    'truncate
+           org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+           org-roam-graph-viewer            (executable-find
+                                             (if IS-MAC "open" "firefox"))
+           org-roam-graph-executable        "dot"
+           org-roam-graph-node-extra-config '(("shape" . "underline")
+                                              ("style" . "rounded,filled")
+                                              ("fillcolor" . "#EEEEEE")
+                                              ("color" . "#C9C9C9")
+                                              ("fontcolor" . "#111111"))))
+
+(use-package! org-roam
+  :after org
+  :config
+  (+my/org-roam-templates-config)
+  (+my/org-roam-vars-config)
+  (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
+  (add-hook! 'org-roam-buffer-prepare-hook
+             :append
+             org-set-startup-visibility ;; (λ!! (org-global-cycle '(4)))
+             ))
+
+(use-package! org-roam-server
+  :commands (org-roam-server-mode))
+
+(use-package! mathpix
+  :commands (mathpix-screenshot)
+  :config
+  (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
+        mathpix-app-key           "0b3d8ae26f3762b4d5b8"
+        mathpix-screenshot-method "screencapture -i %s"))
+
+(setq +markdown-compile-functions '(+markdown-compile-pandoc
+                                    +markdown-compile-marked
+                                    +markdown-compile-markdown
+                                    +markdown-compile-multimarkdown))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
@@ -331,6 +331,7 @@
   ;; open/close delimiters, respectively
   (push '(?\[ "[[{(]") evil-snipe-aliases)
   (push '(?\] "[]})]") evil-snipe-aliases)
+  ;; if we've just s/S sniped, "C-;" pre-fills avy-goto-char-2 with the same chars
   (map! :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
         "C-;" (cmd! (if evil-snipe--last
                    (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
@@ -432,3 +433,27 @@
 
       (:when (featurep! :completion ivy)
        :desc "Ivy M-x"                "SPC" #'counsel-M-x))
+
+(map! :map org-mode-map
+      :localleader
+      :desc "Sort"                     "S" #'org-sort
+      :desc "preview LaTeX fragments"  "L" #'org-latex-preview
+      :desc "toggle pretty entities"   "p" #'+org-pretty-mode)
+
+(map! :leader
+      (:prefix ("n" . "notes")
+       :desc "roam buffer"        "r"  #'org-roam
+       :desc "find"               "f"  #'org-roam-find-file
+       :desc "find"               "n"  #'org-roam-find-file
+       :desc "jump to index"      "x"  #'org-roam-jump-to-index
+       :desc "insert"             "i"  #'org-roam-insert
+       :desc "today's file"       "t"  #'org-roam-dailies-today
+       :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
+       :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
+       :desc "<date>'s file"      "d"  #'org-roam-dailies-date
+       :desc "mathpix.el"         "m"  #'mathpix-screenshot
+       (:prefix ( "g" . "graph")
+        :desc "toggle server"     "s"  #'org-roam-server-mode
+        :desc "graph all notes"   "g"  #'org-roam-graph
+        :desc "graph neighbors"   "n"  (λ! (org-roam-graph 1))
+        :desc "graph connected"   "c"  (λ!! #'org-roam-graph '(4)))))
