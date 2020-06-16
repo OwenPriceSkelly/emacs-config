@@ -429,6 +429,12 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
            "M-]" #'lispy-forward)))
 #+END_SRC
 
+#+BEGIN_SRC emacs-lisp
+(map! :after evil-easymotion
+      :leader
+      :m "j" evilem-map)
+#+END_SRC
+
 *** multiedit/ multiple-cursors
 #+BEGIN_SRC emacs-lisp :lexical yes
 ;; multiedit

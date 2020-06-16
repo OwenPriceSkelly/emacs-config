@@ -344,6 +344,10 @@
            "M-[" #'lispy-backward
            "M-]" #'lispy-forward)))
 
+(map! :after evil-easymotion
+      :leader
+      :m "j" evilem-map)
+
 ;; multiedit
 (map! :nv "R"     #'evil-multiedit-match-all
       :n "C-n"    #'evil-multiedit-match-symbol-and-next
