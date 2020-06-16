@@ -344,9 +344,13 @@
            "M-[" #'lispy-backward
            "M-]" #'lispy-forward)))
 
+(map! :leader
+      :desc "Eval" ":" #'pp-eval-expression)
 (map! :after evil-easymotion
-      :leader
-      :m "j" evilem-map)
+      (:leader
+       :desc "evil-em/avy" ";" evilem-map)
+      (:map evilem-map
+       :m ";" #'evil-avy-goto-char-timer))
 
 ;; multiedit
 (map! :nv "R"     #'evil-multiedit-match-all

@@ -430,10 +430,17 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
+(map! :leader
+      :desc "Eval" ":" #'pp-eval-expression)
 (map! :after evil-easymotion
-      :leader
-      :m "j" evilem-map)
+      (:leader
+       :desc "evil-em/avy" ";" evilem-map)
+      (:map evilem-map
+       :m ";" #'evil-avy-goto-char-timer))
+
 #+END_SRC
+
+
 
 *** multiedit/ multiple-cursors
 #+BEGIN_SRC emacs-lisp :lexical yes
