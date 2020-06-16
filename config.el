@@ -12,7 +12,7 @@
 ;;         writeroom-header-line nil))
 
 (use-package! mixed-pitch
-  :hook ((org-mode markdown-mode) . mixed-pitch-mode)
+  :hook (org-mode . mixed-pitch-mode)
   :config
   (pushnew! mixed-pitch-fixed-pitch-faces
             'org-date
@@ -54,6 +54,7 @@
 
 (setq +my/themes-list-dark      '(doom-gruvbox
                                   doom-moonlight
+                                  doom-henna
                                   doom-oceanic-next)
        +my/themes-list-light     '(doom-gruvbox-light
                                    doom-nord-light)
@@ -69,8 +70,6 @@
                                                 +my/themes-list-dark)))
                                          (nth (mod sec (length theme-choices))
                                               theme-choices)))))
-
-(setq! doom-gruvbox-dark-variant 'soft)
 
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
@@ -330,6 +329,21 @@
   (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 
+(map! :nv          [tab]  #'evil-jump-item
+        (:when (featurep! :ui workspaces)
+         :g [C-tab] #'+workspace/switch-right)
+
+        (:when (featurep! :completion company)
+         :i "C-i" #'+company/complete)
+        ;;lispy
+        (:when (featurep! :editor lispy)
+         (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
+          "[" nil
+          "]" nil)
+         (:map lispyville-mode-map
+           "M-[" #'lispy-backward
+           "M-]" #'lispy-forward)))
+
 ;; multiedit
 (map! :nv "R"     #'evil-multiedit-match-all
       :n "C-n"    #'evil-multiedit-match-symbol-and-next
@@ -345,45 +359,22 @@
        "C-S-n"   #'evil-multiedit-match-and-prev
        "V"       #'iedit-show/hide-unmatched-lines))
 ;; multiple cursors
-(map! (:prefix ("gz" . "evil-mc")
-       :nv "n" #'evil-mc-make-and-goto-next-match
-       :nv "N" #'evil-mc-make-and-goto-prev-match
-       :nv "d" #'evil-mc-make-and-goto-next-cursor
-       :nv "D" #'evil-mc-make-and-goto-last-cursor
-       :nv "p" #'evil-mc-make-and-goto-prev-cursor
-       :nv "P" #'evil-mc-make-and-goto-first-cursor
-       :nv "j" #'evil-mc-make-cursor-move-next-line
-       :nv "k" #'evil-mc-make-cursor-move-prev-line
-       :nv "m" #'evil-mc-make-all-cursors
-       :nv "q" #'evil-mc-undo-all-cursors
-       :nv "t" #'+multiple-cursors/evil-mc-toggle-cursors
-       :nv "u" #'+multiple-cursors/evil-mc-undo-cursor
-       :nv "z" #'+multiple-cursors/evil-mc-toggle-cursor-here
-       :v  "I" #'evil-mc-make-cursor-in-visual-selection-beg
-       :v  "A" #'evil-mc-make-cursor-in-visual-selection-end))
-
-(map! :n [tab] (general-predicate-dispatch
-                   nil
-                 (and (featurep! :editor fold)
-                      (save-excursion (end-of-line) (invisible-p (point)))) #'+fold/toggle
-                 (fboundp 'evil-jump-item) #'evil-jump-item)
-        :v [tab] (general-predicate-dispatch nil
-                   (fboundp 'evil-jump-item)         #'evil-jump-item)
-;;; ^^ borrowed from hlissner's config, tab to unfold if it'd make sense, else jump item
-
-        (:when (featurep! :ui workspaces)
-         :g [C-tab] #'+workspace/switch-right)
-
-        (:when (featurep! :completion company)
-         :i "C-i" #'+company/complete)
-        ;;lispy
-        (:when (featurep! :editor lispy)
-         (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
-          "[" nil
-          "]" nil)
-         (:map lispyville-mode-map
-           "M-[" #'lispy-backward
-           "M-]" #'lispy-forward)))
+(map! :prefix ("gz" . "evil-mc")
+      :nv "n" #'evil-mc-make-and-goto-next-match
+      :nv "N" #'evil-mc-make-and-goto-prev-match
+      :nv "d" #'evil-mc-make-and-goto-next-cursor
+      :nv "D" #'evil-mc-make-and-goto-last-cursor
+      :nv "p" #'evil-mc-make-and-goto-prev-cursor
+      :nv "P" #'evil-mc-make-and-goto-first-cursor
+      :nv "j" #'evil-mc-make-cursor-move-next-line
+      :nv "k" #'evil-mc-make-cursor-move-prev-line
+      :nv "m" #'evil-mc-make-all-cursors
+      :nv "q" #'evil-mc-undo-all-cursors
+      :nv "t" #'+multiple-cursors/evil-mc-toggle-cursors
+      :nv "u" #'+multiple-cursors/evil-mc-undo-cursor
+      :nv "z" #'+multiple-cursors/evil-mc-toggle-cursor-here
+      :v  "I" #'evil-mc-make-cursor-in-visual-selection-beg
+      :v  "A" #'evil-mc-make-cursor-in-visual-selection-end)
 
 (map! :leader
       :desc "Search project" "/" #'+default/search-project
