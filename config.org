@@ -99,11 +99,7 @@ from a selection of light themes or dark themes, depending on the time of day.
                                          (nth (mod sec (length theme-choices))
                                               theme-choices)))))
 #+END_SRC
-
-
-*** Disable org-src block  background
-(looks especially bad with writeroom mode)
-
+Disable org-src block background
 #+BEGIN_SRC emacs-lisp :lexical yes
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
@@ -413,7 +409,7 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
 ** top-level
 *** misc.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(map! :nv          [tab]  #'evil-jump-item
+(map! :nv [tab]  #'evil-jump-item
         (:when (featurep! :ui workspaces)
          :g [C-tab] #'+workspace/switch-right)
 
@@ -430,17 +426,15 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-(map! :leader
-      :desc "Eval" ":" #'pp-eval-expression)
+;; (map! :leader
+;;       :desc "Eval" ":" #'pp-eval-expression)
 (map! :after evil-easymotion
       (:leader
        :desc "evil-em/avy" ";" evilem-map)
       (:map evilem-map
-       :m ";" #'evil-avy-goto-char-timer))
+       ";" #'evil-avy-goto-char-2))
 
 #+END_SRC
-
-
 
 *** multiedit/ multiple-cursors
 #+BEGIN_SRC emacs-lisp :lexical yes

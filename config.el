@@ -329,7 +329,7 @@
   (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 
-(map! :nv          [tab]  #'evil-jump-item
+(map! :nv [tab]  #'evil-jump-item
         (:when (featurep! :ui workspaces)
          :g [C-tab] #'+workspace/switch-right)
 
@@ -344,13 +344,13 @@
            "M-[" #'lispy-backward
            "M-]" #'lispy-forward)))
 
-(map! :leader
-      :desc "Eval" ":" #'pp-eval-expression)
+;; (map! :leader
+;;       :desc "Eval" ":" #'pp-eval-expression)
 (map! :after evil-easymotion
       (:leader
        :desc "evil-em/avy" ";" evilem-map)
       (:map evilem-map
-       :m ";" #'evil-avy-goto-char-timer))
+       ";" #'evil-avy-goto-char-2))
 
 ;; multiedit
 (map! :nv "R"     #'evil-multiedit-match-all
