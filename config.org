@@ -76,8 +76,7 @@
 #+END_SRC
 ** Theme
 *** Set theme by time
-Currently I'm still really liking gruvbox, but if/when that gets old
-changing ~+my/override-theme~ to nil will have this snippet will choose randomly
+changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq +my/themes-list-dark      '(doom-gruvbox
@@ -88,7 +87,7 @@ from a selection of light themes or dark themes, depending on the time of day.
                                    doom-nord-light)
        doom-gruvbox-dark-variant 'hard
        doom-gruvbox-light-variant 'soft
-       +override-theme           nil ;'doom-gruvbox-light ;oceanic-next ;-light
+       +override-theme           nil ;'doom-gruvbox-light ;oceanic-next
        doom-theme                (or +override-theme
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
@@ -99,7 +98,7 @@ from a selection of light themes or dark themes, depending on the time of day.
                                          (nth (mod sec (length theme-choices))
                                               theme-choices)))))
 #+END_SRC
-Disable org-src block background
+*** Disable block background
 #+BEGIN_SRC emacs-lisp :lexical yes
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
@@ -109,7 +108,7 @@ Disable org-src block background
 
 ** Font
 I like the iosevka font family for programming, and I like the 'quasi-spaced'
-options like Etoile/Sparkle for variable pitch stuff -- real variable pitch
+options like Etoile/Sparkle/Aile for variable pitch stuff -- real variable pitch
 fonts are a little jarring imo when switching between buffers or embedding
 something monospaced (like in this config). A /mostly/ monospaced font is more
 readable without obviously being a totally different font at a glance.
@@ -118,7 +117,7 @@ readable without obviously being a totally different font at a glance.
                                        :family "Iosevka Extended"
                                        :size 14)
       doom-variable-pitch-font        (font-spec
-                                       :family "Iosevka Sparkle"
+                                       :family "Iosevka Aile"
                                        :size 14)
 
       +zen-text-scale                 0
@@ -127,7 +126,8 @@ readable without obviously being a totally different font at a glance.
 #+END_SRC
 ** Dashboard
 *** ASCII-art
-  Modified `doom-dashboard-widget-banner' with ascii art lifted from https://github.com/plexus/chemacs. It looks better without all the double backslashes, promise.
+  Modified `doom-dashboard-widget-banner' with ascii art modified from https://github.com/plexus/chemacs.
+  It looks better without all the escaped backslashes.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/doom-dashboard-widget-banner ()
   (let ((point (point)))
@@ -223,22 +223,28 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
   (setq eglot-send-changes-idle-time 0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 #+END_SRC
-Note: the highlighting on hover can be too slow sometimes to keep up with most movements and isn't great. Everything else is solid though.
+Note: the highlighting on hover can be too slow sometimes to keep up with some
+movements and isn't great. If it doesn't noticably hurt performance, leaving it
+enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just
+disable it. Everything else is solid.
+Might want to mess around with the
+eglot-help buffer popup rules
 ** Note-Taking
 *** org-mode
-***** variables
+***** COMMENT variables
 #+BEGIN_SRC emacs-lisp :lexical yes
-(defun +my/org-variables-config ()
-  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (setq! org-src-window-setup             'other-frame
+(defun +my/org-basic-settings ()
+  (setq  org-src-window-setup             'other-frame
          org-export-with-toc               nil
-         org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-imenu-depth                   9
          org-directory                     (if IS-MAC "~/.org" "~/.org.d")
          org-preview-latex-default-process 'dvisvgm
          org-startup-folded                'content
          org-startup-with-latex-preview    nil
-         org-highlight-latex-and-related   nil
+         org-highlight-latex-and-related   nil))
+(defun +my/org-variables-config ()
+  (setq! org-ellipsis                      " ▾ "
+         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
          org-entities-user
          ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
          '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
@@ -263,10 +269,11 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
                                              ("[*]"   . +org-todo-onhold)
                                              ("PROG"  . +org-todo-active)
                                              ("WAIT"  . +org-todo-onhold)))
+  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
   (set-popup-rule! "^\\*Org Src" :ignore t))
 #+END_SRC
 
-***** use-package declaration
+***** use-package
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org
   ;; :after org
@@ -275,6 +282,7 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
   :hook (org-mode . +org-pretty-mode)
 ;;  :hook (org-mode . writeroom-mode)
   :config
+  (+my/org-basic-settings)
   (+my/org-variables-config))
 #+END_SRC
 
@@ -339,7 +347,7 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
                                               ("color" . "#C9C9C9")
                                               ("fontcolor" . "#111111"))))
 #+END_SRC
-***** use-package declaration
+***** use-package
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam
   :after org
@@ -383,7 +391,7 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
   :config
   (setq expand-region-contract-fast-key "V"))
 #+END_SRC
-
+*** evil-snipe/evil-easymotion/avy
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! evil-snipe
   :init
@@ -406,6 +414,18 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
   (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 #+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+;; (map! :leader
+;;       :desc "Eval" ":" #'pp-eval-expression)
+(map! :after evil-easymotion
+      (:leader
+       :desc "evil-em/avy" ";" evilem-map)
+      (:map evilem-map
+       ";" #'evil-avy-goto-word-or-subword-1))
+
+#+END_SRC
+
 ** top-level
 *** misc.
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -425,16 +445,8 @@ Note: the highlighting on hover can be too slow sometimes to keep up with most m
            "M-]" #'lispy-forward)))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-;; (map! :leader
-;;       :desc "Eval" ":" #'pp-eval-expression)
-(map! :after evil-easymotion
-      (:leader
-       :desc "evil-em/avy" ";" evilem-map)
-      (:map evilem-map
-       ";" #'evil-avy-goto-char-2))
 
-#+END_SRC
+#+RESULTS:
 
 *** multiedit/ multiple-cursors
 #+BEGIN_SRC emacs-lisp :lexical yes

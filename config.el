@@ -60,7 +60,7 @@
                                    doom-nord-light)
        doom-gruvbox-dark-variant 'hard
        doom-gruvbox-light-variant 'soft
-       +override-theme           nil ;'doom-gruvbox-light ;oceanic-next ;-light
+       +override-theme           nil ;'doom-gruvbox-light ;oceanic-next
        doom-theme                (or +override-theme
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
@@ -80,7 +80,7 @@
                                        :family "Iosevka Extended"
                                        :size 14)
       doom-variable-pitch-font        (font-spec
-                                       :family "Iosevka Sparkle"
+                                       :family "Iosevka Aile"
                                        :size 14)
 
       +zen-text-scale                 0
@@ -171,43 +171,6 @@
   (setq eglot-send-changes-idle-time 0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
-(defun +my/org-variables-config ()
-  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (setq! org-src-window-setup             'other-frame
-         org-export-with-toc               nil
-         org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
-         org-directory                     (if IS-MAC "~/.org" "~/.org.d")
-         org-preview-latex-default-process 'dvisvgm
-         org-startup-folded                'content
-         org-startup-with-latex-preview    nil
-         org-highlight-latex-and-related   nil
-         org-entities-user
-         ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
-         '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
-           ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
-           ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
-           ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
-           ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
-           ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
-           ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
-         org-format-latex-options          '(:foreground default
-                                             :background default
-                                             :scale 1.0
-                                             :html-scale 1.0
-                                             :html-foreground "Black"
-                                             :html-background "Transparent"
-                                             :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
-                                                       "[X](d)" "[-](k)")
-                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
-                                                       "DONE(D)" "DROP(K)"))
-         org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
-                                             ("[*]"   . +org-todo-onhold)
-                                             ("PROG"  . +org-todo-active)
-                                             ("WAIT"  . +org-todo-onhold)))
-  (set-popup-rule! "^\\*Org Src" :ignore t))
-
 (use-package! org
   ;; :after org
   :defer t
@@ -215,6 +178,7 @@
   :hook (org-mode . +org-pretty-mode)
 ;;  :hook (org-mode . writeroom-mode)
   :config
+  (+my/org-basic-settings)
   (+my/org-variables-config))
 
 (defun +my/org-roam-templates-config ()
@@ -329,6 +293,14 @@
   (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 
+;; (map! :leader
+;;       :desc "Eval" ":" #'pp-eval-expression)
+(map! :after evil-easymotion
+      (:leader
+       :desc "evil-em/avy" ";" evilem-map)
+      (:map evilem-map
+       ";" #'evil-avy-goto-word-or-subword-1))
+
 (map! :nv [tab]  #'evil-jump-item
         (:when (featurep! :ui workspaces)
          :g [C-tab] #'+workspace/switch-right)
@@ -343,14 +315,6 @@
          (:map lispyville-mode-map
            "M-[" #'lispy-backward
            "M-]" #'lispy-forward)))
-
-;; (map! :leader
-;;       :desc "Eval" ":" #'pp-eval-expression)
-(map! :after evil-easymotion
-      (:leader
-       :desc "evil-em/avy" ";" evilem-map)
-      (:map evilem-map
-       ";" #'evil-avy-goto-char-2))
 
 ;; multiedit
 (map! :nv "R"     #'evil-multiedit-match-all
