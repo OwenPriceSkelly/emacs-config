@@ -171,6 +171,45 @@
   (setq eglot-send-changes-idle-time 0))
   ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
+(defun +my/org-basic-settings ()
+  (setq  org-src-window-setup             'other-frame
+         org-export-with-toc               nil
+         org-imenu-depth                   9
+         org-directory                     (if IS-MAC "~/.org" "~/.org.d")
+         org-preview-latex-default-process 'dvisvgm
+         org-startup-folded                'content
+         org-startup-with-latex-preview    nil
+         org-highlight-latex-and-related   nil))
+(defun +my/org-variables-config ()
+  (setq! org-ellipsis                      " ▾ "
+         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-entities-user
+         ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
+         '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
+           ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
+           ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
+           ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
+           ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
+           ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
+           ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
+         org-format-latex-options          '(:foreground default
+                                             :background default
+                                             :scale 1.0
+                                             :html-scale 1.0
+                                             :html-foreground "Black"
+                                             :html-background "Transparent"
+                                             :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
+         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
+                                                       "[X](d)" "[-](k)")
+                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
+                                                       "DONE(D)" "DROP(K)"))
+         org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
+                                             ("[*]"   . +org-todo-onhold)
+                                             ("PROG"  . +org-todo-active)
+                                             ("WAIT"  . +org-todo-onhold)))
+  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
+  (set-popup-rule! "^\\*Org Src" :ignore t))
+
 (use-package! org
   ;; :after org
   :defer t

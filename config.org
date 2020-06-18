@@ -231,7 +231,7 @@ Might want to mess around with the
 eglot-help buffer popup rules
 ** Note-Taking
 *** org-mode
-***** COMMENT variables
+***** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/org-basic-settings ()
   (setq  org-src-window-setup             'other-frame
