@@ -324,11 +324,13 @@
   ;; open/close delimiters, respectively
   (push '(?\[ "[[{(]") evil-snipe-aliases)
   (push '(?\] "[]})]") evil-snipe-aliases)
-  ;; "C-;" pre-fills avy-goto-char-2 with most recent snipe 
+  ;; "C-;" pre-fills avy-goto-char-2 with most recent snipe
   (map! :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
         "C-;" (cmd! (if evil-snipe--last
-                   (apply #'avy-goto-char-2 (nth 1 evil-snipe--last))
-                 (call-interactively #'avy-goto-char-2))))
+                        (let ((most-recent-chars (nth 1 evil-snipe--last)))
+                          (if (eq 2 (length most-recent-chars))
+                              (apply #'avy-goto-char-2 most-recent-chars)
+                            (call-interactively #'avy-goto-char-2))))))
   (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 
