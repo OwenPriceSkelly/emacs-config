@@ -168,8 +168,8 @@
 (use-package! eglot
   :commands eglot eglot-ensure
   :config
-  (setq eglot-send-changes-idle-time 0))
-  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+  (setq eglot-send-changes-idle-time 0.1)
+  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 
 (defun +my/org-basic-settings ()
   (setq  org-src-window-setup             'other-frame
@@ -301,6 +301,11 @@
                                     +markdown-compile-marked
                                     +markdown-compile-markdown
                                     +markdown-compile-multimarkdown))
+
+(use-package! python
+  :after python
+  :config
+  (sp-local-pair "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"

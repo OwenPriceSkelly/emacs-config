@@ -9,6 +9,7 @@
   - [[#misc][Misc.]]
   - [[#lsp][LSP]]
   - [[#note-taking][Note-Taking]]
+  - [[#languages][Languages]]
 - [[#keybindings][Keybindings]]
   - [[#related-variablespackages][related variables/packages]]
   - [[#top-level][top-level]]
@@ -220,9 +221,13 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
 (use-package! eglot
   :commands eglot eglot-ensure
   :config
-  (setq eglot-send-changes-idle-time 0))
-  ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+  (setq eglot-send-changes-idle-time 0.1)
+  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
 #+END_SRC
+
+#+RESULTS:
+: t
+
 Note: the highlighting on hover can be too slow sometimes to keep up with some
 movements and isn't great. If it doesn't noticably hurt performance, leaving it
 enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just
@@ -376,6 +381,14 @@ eglot-help buffer popup rules
                                     +markdown-compile-marked
                                     +markdown-compile-markdown
                                     +markdown-compile-multimarkdown))
+#+END_SRC
+** Languages
+*** Python
+#+BEGIN_SRC emacs-lisp
+(use-package! python
+  :after python
+  :config
+  (sp-local-pair "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 #+END_SRC
 * Keybindings
 ** related variables/packages
