@@ -74,13 +74,14 @@
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
   '(org-block-end-line :background nil)
-  '(org-block :background nil))
+  ;; '(org-block :background nil)
+  )
 
 (setq doom-font                       (font-spec
                                        :family "Iosevka Extended"
                                        :size 14)
       doom-variable-pitch-font        (font-spec
-                                       :family "Iosevka Aile"
+                                       :family "Iosevka Sparkle"
                                        :size 14)
 
       +zen-text-scale                 0
@@ -155,12 +156,12 @@
                                    doom-dashboard-widget-loaded))
 
 (setq! user-full-name "Owen Price-Skelly"
-      user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; +mu4e-backend 'offlineimap TODO
-      iedit-occurrence-context-lines 1
-      fill-column 88
-      company-idle-delay nil
-      +workspaces-on-switch-project-behavior t)
+       user-mail-address "Owen.Price.Skelly@gmail.com"
+       ;; +mu4e-backend 'offlineimap TODO
+       iedit-occurrence-context-lines 1
+       fill-column 88
+       company-idle-delay 0.1
+       +workspaces-on-switch-project-behavior t)
 
 (use-package! evil-textobj-line
   :demand t)
@@ -169,7 +170,8 @@
   :commands eglot eglot-ensure
   :config
   (setq eglot-send-changes-idle-time 0.1)
-  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
+  )
 
 (defun +my/org-basic-settings ()
   (setq  org-src-window-setup             'other-frame
@@ -305,7 +307,7 @@
 (use-package! python
   :after python
   :config
-  (sp-local-pair "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
@@ -341,18 +343,19 @@
 
 ;; (map! :leader
 ;;       :desc "Eval" ":" #'pp-eval-expression)
-(map! :after evil-easymotion
-      (:leader
-       :desc "evil-em/avy" ";" evilem-map)
-      (:map evilem-map
-       ";" #'evil-avy-goto-word-or-subword-1))
+;; (map! :after evil-easymotion
+;;       (:leader
+;;        :desc "evil-em/avy" ";" evilem-map)
+;;       (:map evilem-map
+;;        ";" #'evil-avy-goto-word-or-subword-1))
 
 (map! :nv [tab]  #'evil-jump-item
         (:when (featurep! :ui workspaces)
          :g [C-tab] #'+workspace/switch-right)
 
         (:when (featurep! :completion company)
-         :i "C-i" #'+company/complete)
+         :i [C-i] #'+company/complete)
+        
         ;;lispy
         (:when (featurep! :editor lispy)
          (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)

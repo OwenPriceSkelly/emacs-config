@@ -1,20 +1,34 @@
 #+TITLE: Literate Config
-* Contents :TOC_2:
+* Contents :TOC_3:
 - [[#ui][UI]]
   - [[#misc-appearancedisplay][misc. appearance/display]]
+    - [[#frame-settings][Frame settings]]
   - [[#theme][Theme]]
+    - [[#set-theme-by-time][Set theme by time]]
+    - [[#disable-block-background][Disable block background]]
   - [[#font][Font]]
   - [[#dashboard][Dashboard]]
+    - [[#ascii-art][ASCII-art]]
+    - [[#shortcuts-icons][Shortcuts, icons]]
 - [[#editor][Editor]]
   - [[#misc][Misc.]]
   - [[#lsp][LSP]]
   - [[#note-taking][Note-Taking]]
+    - [[#org-mode][org-mode]]
+    - [[#org-roam][org-roam]]
+    - [[#other-note-taking-packages][other note-taking packages]]
   - [[#languages][Languages]]
+    - [[#python][python]]
 - [[#keybindings][Keybindings]]
   - [[#related-variablespackages][related variables/packages]]
+    - [[#evil-snipeevil-easymotionavy][evil-snipe/evil-easymotion/avy]]
   - [[#top-level][top-level]]
+    - [[#misc-1][misc.]]
+    - [[#multiedit-multiple-cursors][multiedit/ multiple-cursors]]
   - [[#leader][leader]]
   - [[#mode-specific][mode-specific]]
+    - [[#org][org]]
+    - [[#org-roam-1][org-roam]]
 
 * UI
 ** misc. appearance/display
@@ -104,7 +118,8 @@ from a selection of light themes or dark themes, depending on the time of day.
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
   '(org-block-end-line :background nil)
-  '(org-block :background nil))
+  ;; '(org-block :background nil)
+  )
 #+END_SRC
 
 ** Font
@@ -118,7 +133,7 @@ readable without obviously being a totally different font at a glance.
                                        :family "Iosevka Extended"
                                        :size 14)
       doom-variable-pitch-font        (font-spec
-                                       :family "Iosevka Aile"
+                                       :family "Iosevka Sparkle"
                                        :size 14)
 
       +zen-text-scale                 0
@@ -205,16 +220,17 @@ readable without obviously being a totally different font at a glance.
 Miscellaneous variables/ packages that don't warrant their own section.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq! user-full-name "Owen Price-Skelly"
-      user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; +mu4e-backend 'offlineimap TODO
-      iedit-occurrence-context-lines 1
-      fill-column 88
-      company-idle-delay nil
-      +workspaces-on-switch-project-behavior t)
+       user-mail-address "Owen.Price.Skelly@gmail.com"
+       ;; +mu4e-backend 'offlineimap TODO
+       iedit-occurrence-context-lines 1
+       fill-column 88
+       company-idle-delay 0.1
+       +workspaces-on-switch-project-behavior t)
 
 (use-package! evil-textobj-line
   :demand t)
 #+END_SRC
+
 ** LSP
 Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ python. I don't really use lsp for anything else currently.
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -222,18 +238,17 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
   :commands eglot eglot-ensure
   :config
   (setq eglot-send-changes-idle-time 0.1)
-  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
+  )
 #+END_SRC
 
 #+RESULTS:
 : t
 
-Note: the highlighting on hover can be too slow sometimes to keep up with some
-movements and isn't great. If it doesn't noticably hurt performance, leaving it
-enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just
-disable it. Everything else is solid.
-Might want to mess around with the
-eglot-help buffer popup rules
+- Note:
+  the highlighting on hover can be too slow sometimes to keep up with some movements and isn't great. If it doesn't noticably hurt performance, leaving it enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just disable it. Everything else is solid.
+
+- Might also want to mess around with the eglot-help buffer popup rules -- see the lsp module's [[~/.emacs.d/modules/tools/lsp/+eglot.el][+eglot.el]]
 ** Note-Taking
 *** org-mode
 ***** variables
@@ -365,7 +380,7 @@ eglot-help buffer popup rules
              org-set-startup-visibility ;; (λ!! (org-global-cycle '(4)))
              ))
 #+END_SRC
-*** misc. other packages
+*** other note-taking packages
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
@@ -383,12 +398,12 @@ eglot-help buffer popup rules
                                     +markdown-compile-multimarkdown))
 #+END_SRC
 ** Languages
-*** Python
+*** python
 #+BEGIN_SRC emacs-lisp
 (use-package! python
   :after python
   :config
-  (sp-local-pair "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 #+END_SRC
 * Keybindings
 ** related variables/packages
@@ -433,11 +448,11 @@ eglot-help buffer popup rules
 #+BEGIN_SRC emacs-lisp
 ;; (map! :leader
 ;;       :desc "Eval" ":" #'pp-eval-expression)
-(map! :after evil-easymotion
-      (:leader
-       :desc "evil-em/avy" ";" evilem-map)
-      (:map evilem-map
-       ";" #'evil-avy-goto-word-or-subword-1))
+;; (map! :after evil-easymotion
+;;       (:leader
+;;        :desc "evil-em/avy" ";" evilem-map)
+;;       (:map evilem-map
+;;        ";" #'evil-avy-goto-word-or-subword-1))
 
 #+END_SRC
 
@@ -449,7 +464,8 @@ eglot-help buffer popup rules
          :g [C-tab] #'+workspace/switch-right)
 
         (:when (featurep! :completion company)
-         :i "C-i" #'+company/complete)
+         :i [C-i] #'+company/complete)
+        
         ;;lispy
         (:when (featurep! :editor lispy)
          (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
@@ -460,8 +476,6 @@ eglot-help buffer popup rules
            "M-]" #'lispy-forward)))
 #+END_SRC
 
-
-#+RESULTS:
 
 *** multiedit/ multiple-cursors
 #+BEGIN_SRC emacs-lisp :lexical yes
