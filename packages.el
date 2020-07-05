@@ -13,5 +13,7 @@
 ;;   :pin "cce2db8b5a2c1f1258bcb35f4a3241067e4f950e")
 (package! org-roam-server
   :pin nil)
+(package! lsp-mode
+  :pin "728134a2320c06d")
 ;; (package! doom-themes
 ;;   :recipe (:local-repo  "~/.doom.d/emacs-doom-themes/"))

@@ -60,7 +60,7 @@
                                    doom-nord-light)
        doom-gruvbox-dark-variant 'hard
        doom-gruvbox-light-variant 'soft
-       +override-theme           nil ;'doom-gruvbox-light ;oceanic-next
+       +override-theme           'doom-oceanic-next ; nil ;'doom-gruvbox-light ;oceanic-next
        doom-theme                (or +override-theme
                                      (let ((hour (caddr (decode-time nil)))
                                            (sec (car (decode-time nil))))
@@ -85,7 +85,7 @@
                                        :size 14)
 
       +zen-text-scale                 0
-      +latex-viewers                  (if IS-MAC '(pdf-tools))
+      ;+latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
 
 (defun +my/doom-dashboard-widget-banner ()
@@ -166,19 +166,33 @@
 (use-package! evil-textobj-line
   :demand t)
 
-(use-package! eglot
-  :commands eglot eglot-ensure
-  :config
-  (setq eglot-send-changes-idle-time 0.1)
-  (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
-  )
+(when (featurep! :tools lsp)
+  (if (featurep! :tools lsp +eglot)
+      (use-package! eglot
+        :commands eglot eglot-ensure
+        :config
+        (setq eglot-send-changes-idle-time 0.05)
+        (set-lookup-handlers! 'eglot--managed-mode ;:async t
+          :implementations #'eglot-find-implementation
+          :type-definition #'eglot-find-typeDefinition
+          :documentation #'+eglot/documentation-lookup-handler
+          ;; :definition
+          ;; :references
+          )
+        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+    (use-package! lsp-mode
+      :after lsp-mode
+      ;; TODO
+      )))
 
 (defun +my/org-basic-settings ()
   (setq  org-src-window-setup             'other-frame
          org-export-with-toc               nil
          org-imenu-depth                   9
          org-directory                     (if IS-MAC "~/.org" "~/.org.d")
-         org-preview-latex-default-process 'dvisvgm
+         ;; org-preview-latex-default-process 'dvisvgm
+         ;; org-preview-latex-default-process 'imagemagick
+         ;; org-preview-latex-default-process 'dvipng
          org-startup-folded                'content
          org-startup-with-latex-preview    nil
          org-highlight-latex-and-related   nil))
@@ -201,12 +215,14 @@
                                              :html-foreground "Black"
                                              :html-background "Transparent"
                                              :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
-         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "|"
+         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "[!](r)" "|"
                                                        "[X](d)" "[-](k)")
-                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "|"
+                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "WARN(R)" "|"
                                                        "DONE(D)" "DROP(K)"))
          org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
                                              ("[*]"   . +org-todo-onhold)
+                                             ("[!]"   . compilation-error)
+                                             ("WARN"   . compilation-error)
                                              ("PROG"  . +org-todo-active)
                                              ("WAIT"  . +org-todo-onhold)))
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
@@ -310,9 +326,10 @@
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
 (setq  doom-leader-key "SPC"
-       doom-leader-alt-key "C-SPC"
+       ;doom-leader-alt-key "C-SPC"
        doom-localleader-key ","
-       doom-localleader-alt-key "C-,")
+       ;doom-localleader-alt-key "C-,"
+       )
 
 (use-package! expand-region
   :config
@@ -341,23 +358,16 @@
   (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 
-;; (map! :leader
-;;       :desc "Eval" ":" #'pp-eval-expression)
-;; (map! :after evil-easymotion
-;;       (:leader
-;;        :desc "evil-em/avy" ";" evilem-map)
-;;       (:map evilem-map
-;;        ";" #'evil-avy-goto-word-or-subword-1))
-
 (map! :nv [tab]  #'evil-jump-item
         (:when (featurep! :ui workspaces)
          :g [C-tab] #'+workspace/switch-right)
 
         (:when (featurep! :completion company)
+         :i "C-i" #'+company/complete
          :i [C-i] #'+company/complete)
-        
+
         ;;lispy
-        (:when (featurep! :editor lispy)
+        (:after lispy
          (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
           "[" nil
           "]" nil)
@@ -367,35 +377,17 @@
 
 ;; multiedit
 (map! :nv "R"     #'evil-multiedit-match-all
-      :n "C-n"    #'evil-multiedit-match-symbol-and-next
-      :n "C-S-n"  #'evil-multiedit-match-symbol-and-prev
-      :v "C-n"    #'evil-multiedit-match-and-next
-      :v "C-S-n"  #'evil-multiedit-match-and-prev
-      :nv "C-M-n" #'evil-multiedit-restore
+      :n "s-d"    #'evil-multiedit-match-symbol-and-next
+      :n "s-D"  #'evil-multiedit-match-symbol-and-prev
+      :v "s-d"    #'evil-multiedit-match-and-next
+      :v "s-D"  #'evil-multiedit-match-and-prev
       (:after evil-multiedit
-       :map evil-multiedit-state-map
-       "n"       #'evil-multiedit-next
-       "N"       #'evil-multiedit-prev
-       "C-n"     #'evil-multiedit-match-and-next
-       "C-S-n"   #'evil-multiedit-match-and-prev
-       "V"       #'iedit-show/hide-unmatched-lines))
-;; multiple cursors
-(map! :prefix ("gz" . "evil-mc")
-      :nv "n" #'evil-mc-make-and-goto-next-match
-      :nv "N" #'evil-mc-make-and-goto-prev-match
-      :nv "d" #'evil-mc-make-and-goto-next-cursor
-      :nv "D" #'evil-mc-make-and-goto-last-cursor
-      :nv "p" #'evil-mc-make-and-goto-prev-cursor
-      :nv "P" #'evil-mc-make-and-goto-first-cursor
-      :nv "j" #'evil-mc-make-cursor-move-next-line
-      :nv "k" #'evil-mc-make-cursor-move-prev-line
-      :nv "m" #'evil-mc-make-all-cursors
-      :nv "q" #'evil-mc-undo-all-cursors
-      :nv "t" #'+multiple-cursors/evil-mc-toggle-cursors
-      :nv "u" #'+multiple-cursors/evil-mc-undo-cursor
-      :nv "z" #'+multiple-cursors/evil-mc-toggle-cursor-here
-      :v  "I" #'evil-mc-make-cursor-in-visual-selection-beg
-      :v  "A" #'evil-mc-make-cursor-in-visual-selection-end)
+       (:map evil-multiedit-state-map
+        "n"       #'evil-multiedit-next
+        "N"       #'evil-multiedit-prev
+        "s-d"     #'evil-multiedit-match-and-next
+        "s-D"   #'evil-multiedit-match-and-prev
+        "V"       #'iedit-show/hide-unmatched-lines)))
 
 (map! :leader
       :desc "Search project" "/" #'+default/search-project
@@ -415,24 +407,7 @@
       (:prefix ("t"  "toggle")
        :desc "toggle fullscreen" "F" #'toggle-frame-fullscreen
        :desc "toggle hl-line mode" "h" (cmd! (hl-line-mode (if hl-line-mode -1 +1)))
-       :desc "toggle decorated"  "d" (cmd! (set-frame-parameter nil 'undecorated (not (frame-parameter nil 'undecorated))))
-       (:prefix ("m" . "maximized")
-        :desc "both" "m" #'toggle-frame-maximized ;; (cmd! (set-frame-parameter nil 'fullscreen 'fullboth))
-        :desc "vertically" "v"
-        (cmd! (set-frame-parameter nil 'fullscreen
-                                   (case (frame-parameter nil 'fullscreen)
-                                     ('fullheight nil)
-                                     (nil 'fullheight)
-                                     ('fullwidth 'fullboth)
-                                     ('fullboth  'fullwidth)))))
-
-       :desc "horizontally" "s"
-       (cmd! (set-frame-parameter nil 'fullscreen
-                                  (case (frame-parameter nil 'fullscreen)
-                                    ('fullwidth nil)
-                                    (nil 'fullwidth)
-                                    ('fullheight 'fullboth)
-                                    ('fullboth  'fullheight)))))
+       :desc "toggle decorated"  "d" (cmd! (set-frame-parameter nil 'undecorated (not (frame-parameter nil 'undecorated)))))
 
       (:when (featurep! :emacs undo +tree)
        :desc "Undo tree"              "U"   #'undo-tree-visualize)

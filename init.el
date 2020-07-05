@@ -80,8 +80,8 @@
        ;;gist                 ; interacting with github gists
        lookup                 ; helps you navigate your code and documentation
        ;; +docsets)           ; ...or in Dash docsets locally
-       (lsp
-        +eglot)
+       ;; (lsp +eglot)
+       lsp
        macos                  ; MacOS-specific commands
        (magit +forge)                  ; a git porcelain for Emacs
        ;;make                 ; run make tasks from Emacs
@@ -119,7 +119,7 @@
        ;;julia                ; a better, faster MATLAB
        ;;kotlin               ; a better, slicker Java(Script)
        (:if IS-MAC
-        (latex +cdlatex))
+        (latex +cdlatex +latexmk))
        ;;lean
        ;;factor
        ;;ledger               ; an accounting system in Emacs
