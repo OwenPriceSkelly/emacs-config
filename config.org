@@ -26,7 +26,7 @@
     - [[#misc-1][misc.]]
     - [[#multiedit-multiple-cursors][multiedit/ multiple-cursors]]
   - [[#leader][leader]]
-  - [[#mode-specific][mode-specific]]
+  - [[#localmode-specific][local/mode-specific]]
     - [[#org][org]]
     - [[#org-roam-1][org-roam]]
 
@@ -543,7 +543,7 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
        :desc "Ivy M-x"                "SPC" #'counsel-M-x))
 #+END_SRC
 
-** mode-specific
+** local/mode-specific
 *** org
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :map org-mode-map
@@ -567,10 +567,16 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
        :desc "<date>'s file"      "d"  #'org-roam-dailies-date
        :desc "mathpix.el"         "m"  #'mathpix-screenshot
        (:prefix ( "g" . "graph")
-        :desc "toggle server"     "s"  #'org-roam-server-mode
+        :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
+                                               (org-roam-server-mode))
+                                             (browse-url
+                                              (url-recreate-url
+                                               (url-generic-parse-url
+                                                (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
         :desc "graph all notes"   "g"  #'org-roam-graph
         :desc "graph neighbors"   "n"  (λ! (org-roam-graph 1))
         :desc "graph connected"   "c"  (λ!! #'org-roam-graph '(4)))))
 #+END_SRC
 
-
+#+RESULTS:
+| closure | (t) | (&rest _) | (interactive) | (funcall-interactively (function org-roam-graph) (quote (4))) |

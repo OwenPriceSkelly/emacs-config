@@ -447,7 +447,12 @@
        :desc "<date>'s file"      "d"  #'org-roam-dailies-date
        :desc "mathpix.el"         "m"  #'mathpix-screenshot
        (:prefix ( "g" . "graph")
-        :desc "toggle server"     "s"  #'org-roam-server-mode
+        :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
+                                               (org-roam-server-mode))
+                                             (browse-url
+                                              (url-recreate-url
+                                               (url-generic-parse-url
+                                                (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
         :desc "graph all notes"   "g"  #'org-roam-graph
         :desc "graph neighbors"   "n"  (λ! (org-roam-graph 1))
         :desc "graph connected"   "c"  (λ!! #'org-roam-graph '(4)))))
