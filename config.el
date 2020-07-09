@@ -180,17 +180,18 @@
           ;; :references
           )
         (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
-    (use-package! lsp-mode
-      :after lsp-mode
-      ;; TODO
-      )))
+    ;; (use-package! lsp-mode
+    ;;   :after lsp-mode
+    ;;   ;; TODO
+    ;;   )
+    ))
 
 (defun +my/org-basic-settings ()
-  (setq  org-src-window-setup             'other-frame
+  (setq  org-src-window-setup             'plain
          org-export-with-toc               nil
          org-imenu-depth                   9
          org-directory                     (if IS-MAC "~/.org" "~/.org.d")
-         ;; org-preview-latex-default-process 'dvisvgm
+         org-preview-latex-default-process 'dvisvgm
          ;; org-preview-latex-default-process 'imagemagick
          ;; org-preview-latex-default-process 'dvipng
          org-startup-folded                'content
@@ -198,7 +199,7 @@
          org-highlight-latex-and-related   nil))
 (defun +my/org-variables-config ()
   (setq! org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-superstar-headline-bullets-list '("#") ;; '("☰" "☱" "☳" "☷" "☶" "☴")
          org-entities-user
          ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
          '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
@@ -226,7 +227,8 @@
                                              ("PROG"  . +org-todo-active)
                                              ("WAIT"  . +org-todo-onhold)))
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (set-popup-rule! "^\\*Org Src" :ignore t))
+  ;; (set-popup-rule! "^\\*Org Src" :ignore t)
+  )
 
 (use-package! org
   ;; :after org
@@ -326,9 +328,10 @@
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
 (setq  doom-leader-key "SPC"
-       ;doom-leader-alt-key "C-SPC"
+       doom-leader-alt-key (if IS-LINUX "C-SPC"
+                             "M-SPC" )
        doom-localleader-key ","
-       ;doom-localleader-alt-key "C-,"
+       doom-localleader-alt-key "C-,"
        )
 
 (use-package! expand-region

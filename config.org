@@ -13,7 +13,7 @@
 - [[#editor][Editor]]
   - [[#misc][Misc.]]
   - [[#lsp][LSP]]
-  - [[#note-taking][Note-Taking]]
+  - [[#org-and-note-taking][org and note-taking]]
     - [[#org-mode][org-mode]]
     - [[#org-roam][org-roam]]
     - [[#other-note-taking-packages][other note-taking packages]]
@@ -249,10 +249,11 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
           ;; :references
           )
         (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
-    (use-package! lsp-mode
-      :after lsp-mode
-      ;; TODO
-      )))
+    ;; (use-package! lsp-mode
+    ;;   :after lsp-mode
+    ;;   ;; TODO
+    ;;   )
+    ))
 
 
 #+END_SRC
@@ -261,16 +262,16 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
   the highlighting on hover can be too slow sometimes to keep up with some movements and isn't great. If it doesn't noticably hurt performance, leaving it enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just disable it. Everything else is solid.
 
 - Might also want to mess around with the eglot-help buffer popup rules -- see the lsp module's [[~/.emacs.d/modules/tools/lsp/+eglot.el][+eglot.el]]
-** Note-Taking
+** org and note-taking
 *** org-mode
 ***** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/org-basic-settings ()
-  (setq  org-src-window-setup             'other-frame
+  (setq  org-src-window-setup             'plain
          org-export-with-toc               nil
          org-imenu-depth                   9
          org-directory                     (if IS-MAC "~/.org" "~/.org.d")
-         ;; org-preview-latex-default-process 'dvisvgm
+         org-preview-latex-default-process 'dvisvgm
          ;; org-preview-latex-default-process 'imagemagick
          ;; org-preview-latex-default-process 'dvipng
          org-startup-folded                'content
@@ -278,7 +279,7 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
          org-highlight-latex-and-related   nil))
 (defun +my/org-variables-config ()
   (setq! org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-superstar-headline-bullets-list '("#") ;; '("☰" "☱" "☳" "☷" "☶" "☴")
          org-entities-user
          ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
          '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
@@ -306,7 +307,8 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
                                              ("PROG"  . +org-todo-active)
                                              ("WAIT"  . +org-todo-onhold)))
   (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  (set-popup-rule! "^\\*Org Src" :ignore t))
+  ;; (set-popup-rule! "^\\*Org Src" :ignore t)
+  )
 #+END_SRC
 
 ***** use-package
@@ -415,6 +417,7 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
 #+END_SRC
 ** Languages
 *** python
+Fixes problem where f-strings in python mode weren't inserting closing quotation marks
 #+BEGIN_SRC emacs-lisp
 (use-package! python
   :after python
@@ -425,9 +428,10 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
 ** related variables/packages
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
-       ;doom-leader-alt-key "C-SPC"
+       doom-leader-alt-key (if IS-LINUX "C-SPC"
+                             "M-SPC" )
        doom-localleader-key ","
-       ;doom-localleader-alt-key "C-,"
+       doom-localleader-alt-key "C-,"
        )
 #+END_SRC
 
