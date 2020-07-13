@@ -52,24 +52,26 @@
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
 
-(setq +my/themes-list-dark      '(doom-gruvbox
-                                  doom-moonlight
-                                  doom-henna
-                                  doom-oceanic-next)
-       +my/themes-list-light     '(doom-gruvbox-light
-                                   doom-nord-light)
-       doom-gruvbox-dark-variant 'hard
-       doom-gruvbox-light-variant 'soft
-       +override-theme           'doom-oceanic-next ; nil ;'doom-gruvbox-light ;oceanic-next
-       doom-theme                (or +override-theme
-                                     (let ((hour (caddr (decode-time nil)))
-                                           (sec (car (decode-time nil))))
-                                       (let ((theme-choices
-                                              (if (<= 9 hour 15)
-                                                  +my/themes-list-light
-                                                +my/themes-list-dark)))
-                                         (nth (mod sec (length theme-choices))
-                                              theme-choices)))))
+(let* ((+override-theme nil)
+       (+my/themes-list-dark
+        '(doom-gruvbox
+          doom-horizon
+          doom-oceanic-next))
+       (+my/themes-list-light
+        (append +my/themes-list-dark
+                '(doom-gruvbox-light
+                  doom-nord-light)))
+       (hour (caddr (decode-time nil)))
+       (sec (car (decode-time nil))))
+  (setq doom-gruvbox-dark-variant 'hard
+        doom-gruvbox-light-variant 'soft
+        doom-theme                (or +override-theme
+                                      (let ((theme-choices
+                                             (if (<= 9 hour 15)
+                                                 +my/themes-list-light
+                                               +my/themes-list-dark)))
+                                        (nth (mod sec (length theme-choices))
+                                             theme-choices)))))
 
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
@@ -155,36 +157,10 @@
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
 
-(setq! user-full-name "Owen Price-Skelly"
-       user-mail-address "Owen.Price.Skelly@gmail.com"
-       ;; +mu4e-backend 'offlineimap TODO
-       iedit-occurrence-context-lines 1
-       fill-column 88
-       company-idle-delay 0.1
-       +workspaces-on-switch-project-behavior t)
-
-(use-package! evil-textobj-line
-  :demand t)
-
-(when (featurep! :tools lsp)
-  (if (featurep! :tools lsp +eglot)
-      (use-package! eglot
-        :commands eglot eglot-ensure
-        :config
-        (setq eglot-send-changes-idle-time 0.05)
-        (set-lookup-handlers! 'eglot--managed-mode ;:async t
-          :implementations #'eglot-find-implementation
-          :type-definition #'eglot-find-typeDefinition
-          :documentation #'+eglot/documentation-lookup-handler
-          ;; :definition
-          ;; :references
-          )
-        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
-    ;; (use-package! lsp-mode
-    ;;   :after lsp-mode
-    ;;   ;; TODO
-    ;;   )
-    ))
+(use-package! python
+  :after python
+  :config
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
 (defun +my/org-basic-settings ()
   (setq  org-src-window-setup             'plain
@@ -322,10 +298,36 @@
                                     +markdown-compile-markdown
                                     +markdown-compile-multimarkdown))
 
-(use-package! python
-  :after python
-  :config
-  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+(when (featurep! :tools lsp)
+  (if (featurep! :tools lsp +eglot)
+      (use-package! eglot
+        :commands eglot eglot-ensure
+        :config
+        (setq eglot-send-changes-idle-time 0.05)
+        (set-lookup-handlers! 'eglot--managed-mode ;:async t
+          :implementations #'eglot-find-implementation
+          :type-definition #'eglot-find-typeDefinition
+          :documentation #'+eglot/documentation-lookup-handler
+          ;; :definition
+          ;; :references
+          )
+        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+    ;; (use-package! lsp-mode
+    ;;   :after lsp-mode
+    ;;   ;; TODO
+    ;;   )
+    ))
+
+(setq! user-full-name "Owen Price-Skelly"
+       user-mail-address "Owen.Price.Skelly@gmail.com"
+       ;; +mu4e-backend 'offlineimap TODO
+       iedit-occurrence-context-lines 1
+       fill-column 88
+       company-idle-delay 0.1
+       +workspaces-on-switch-project-behavior t)
+
+(use-package! evil-textobj-line
+  :demand t)
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key (if IS-LINUX "C-SPC"
@@ -379,18 +381,18 @@
            "M-]" #'lispy-forward)))
 
 ;; multiedit
-(map! :nv "R"     #'evil-multiedit-match-all
-      :n "s-d"    #'evil-multiedit-match-symbol-and-next
-      :n "s-D"  #'evil-multiedit-match-symbol-and-prev
-      :v "s-d"    #'evil-multiedit-match-and-next
-      :v "s-D"  #'evil-multiedit-match-and-prev
+(map! :nv "R"  #'evil-multiedit-match-all
+      :n "s-d" #'evil-multiedit-match-symbol-and-next
+      :n "s-D" #'evil-multiedit-match-symbol-and-prev
+      :v "s-d" #'evil-multiedit-match-and-next
+      :v "s-D" #'evil-multiedit-match-and-prev
       (:after evil-multiedit
        (:map evil-multiedit-state-map
-        "n"       #'evil-multiedit-next
-        "N"       #'evil-multiedit-prev
-        "s-d"     #'evil-multiedit-match-and-next
-        "s-D"   #'evil-multiedit-match-and-prev
-        "V"       #'iedit-show/hide-unmatched-lines)))
+        "n"    #'evil-multiedit-next
+        "N"    #'evil-multiedit-prev
+        "s-d"  #'evil-multiedit-match-and-next
+        "s-D"  #'evil-multiedit-match-and-prev
+        "V"    #'iedit-show/hide-unmatched-lines)))
 
 (map! :leader
       :desc "Search project" "/" #'+default/search-project
@@ -437,15 +439,15 @@
 (map! :leader
       (:prefix ("n" . "notes")
        :desc "roam buffer"        "r"  #'org-roam
-       :desc "find"               "f"  #'org-roam-find-file
        :desc "find"               "n"  #'org-roam-find-file
        :desc "jump to index"      "x"  #'org-roam-jump-to-index
        :desc "insert"             "i"  #'org-roam-insert
+       :desc "insert immediate"   "I"  #'org-roam-insert-immediate
        :desc "today's file"       "t"  #'org-roam-dailies-today
        :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
        :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
        :desc "<date>'s file"      "d"  #'org-roam-dailies-date
-       :desc "mathpix.el"         "m"  #'mathpix-screenshot
+       :desc "mathpix screenshot" "m"  #'mathpix-screenshot
        (:prefix ( "g" . "graph")
         :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
                                                (org-roam-server-mode))
@@ -453,6 +455,4 @@
                                               (url-recreate-url
                                                (url-generic-parse-url
                                                 (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
-        :desc "graph all notes"   "g"  #'org-roam-graph
-        :desc "graph neighbors"   "n"  (λ! (org-roam-graph 1))
-        :desc "graph connected"   "c"  (λ!! #'org-roam-graph '(4)))))
+        :desc "graph all notes"   "g"  #'org-roam-graph)))

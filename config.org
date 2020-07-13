@@ -11,14 +11,11 @@
     - [[#ascii-art][ASCII-art]]
     - [[#shortcuts-icons][Shortcuts, icons]]
 - [[#editor][Editor]]
-  - [[#misc][Misc.]]
-  - [[#lsp][LSP]]
-  - [[#org-and-note-taking][org and note-taking]]
-    - [[#org-mode][org-mode]]
-    - [[#org-roam][org-roam]]
-    - [[#other-note-taking-packages][other note-taking packages]]
   - [[#languages][Languages]]
     - [[#python][python]]
+    - [[#org-and-note-taking][org and note-taking]]
+  - [[#lsp][LSP]]
+  - [[#misc][Misc.]]
 - [[#keybindings][Keybindings]]
   - [[#related-variablespackages][related variables/packages]]
     - [[#evil-snipeevil-easymotionavy][evil-snipe/evil-easymotion/avy]]
@@ -28,7 +25,7 @@
   - [[#leader][leader]]
   - [[#localmode-specific][local/mode-specific]]
     - [[#org][org]]
-    - [[#org-roam-1][org-roam]]
+    - [[#org-roam][org-roam]]
 
 * UI
 ** misc. appearance/display
@@ -94,25 +91,28 @@
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(setq +my/themes-list-dark      '(doom-gruvbox
-                                  doom-moonlight
-                                  doom-henna
-                                  doom-oceanic-next)
-       +my/themes-list-light     '(doom-gruvbox-light
-                                   doom-nord-light)
-       doom-gruvbox-dark-variant 'hard
-       doom-gruvbox-light-variant 'soft
-       +override-theme           'doom-oceanic-next ; nil ;'doom-gruvbox-light ;oceanic-next
-       doom-theme                (or +override-theme
-                                     (let ((hour (caddr (decode-time nil)))
-                                           (sec (car (decode-time nil))))
-                                       (let ((theme-choices
-                                              (if (<= 9 hour 15)
-                                                  +my/themes-list-light
-                                                +my/themes-list-dark)))
-                                         (nth (mod sec (length theme-choices))
-                                              theme-choices)))))
+(let* ((+override-theme nil)
+       (+my/themes-list-dark
+        '(doom-gruvbox
+          doom-horizon
+          doom-oceanic-next))
+       (+my/themes-list-light
+        (append +my/themes-list-dark
+                '(doom-gruvbox-light
+                  doom-nord-light)))
+       (hour (caddr (decode-time nil)))
+       (sec (car (decode-time nil))))
+  (setq doom-gruvbox-dark-variant 'hard
+        doom-gruvbox-light-variant 'soft
+        doom-theme                (or +override-theme
+                                      (let ((theme-choices
+                                             (if (<= 9 hour 15)
+                                                 +my/themes-list-light
+                                               +my/themes-list-dark)))
+                                        (nth (mod sec (length theme-choices))
+                                             theme-choices)))))
 #+END_SRC
+
 *** Disable block background
 #+BEGIN_SRC emacs-lisp :lexical yes
 (doom-themes-set-faces nil
@@ -216,55 +216,18 @@ readable without obviously being a totally different font at a glance.
 
 #+END_SRC
 * Editor
-** Misc.
-Miscellaneous variables/ packages that don't warrant their own section.
-#+BEGIN_SRC emacs-lisp :lexical yes
-(setq! user-full-name "Owen Price-Skelly"
-       user-mail-address "Owen.Price.Skelly@gmail.com"
-       ;; +mu4e-backend 'offlineimap TODO
-       iedit-occurrence-context-lines 1
-       fill-column 88
-       company-idle-delay 0.1
-       +workspaces-on-switch-project-behavior t)
-
-(use-package! evil-textobj-line
-  :demand t)
+** Languages
+*** python
+Fixes problem where f-strings in python mode weren't inserting closing quotation marks
+#+BEGIN_SRC emacs-lisp
+(use-package! python
+  :after python
+  :config
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 #+END_SRC
-
-** LSP
-Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ python. I don't really use lsp for anything else currently.
-#+BEGIN_SRC emacs-lisp :lexical yes
-
-(when (featurep! :tools lsp)
-  (if (featurep! :tools lsp +eglot)
-      (use-package! eglot
-        :commands eglot eglot-ensure
-        :config
-        (setq eglot-send-changes-idle-time 0.05)
-        (set-lookup-handlers! 'eglot--managed-mode ;:async t
-          :implementations #'eglot-find-implementation
-          :type-definition #'eglot-find-typeDefinition
-          :documentation #'+eglot/documentation-lookup-handler
-          ;; :definition
-          ;; :references
-          )
-        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
-    ;; (use-package! lsp-mode
-    ;;   :after lsp-mode
-    ;;   ;; TODO
-    ;;   )
-    ))
-
-
-#+END_SRC
-
-- Note:
-  the highlighting on hover can be too slow sometimes to keep up with some movements and isn't great. If it doesn't noticably hurt performance, leaving it enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just disable it. Everything else is solid.
-
-- Might also want to mess around with the eglot-help buffer popup rules -- see the lsp module's [[~/.emacs.d/modules/tools/lsp/+eglot.el][+eglot.el]]
-** org and note-taking
-*** org-mode
-***** variables
+*** org and note-taking
+**** org-mode
+****** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/org-basic-settings ()
   (setq  org-src-window-setup             'plain
@@ -311,7 +274,7 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
   )
 #+END_SRC
 
-***** use-package
+****** use-package
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org
   ;; :after org
@@ -324,8 +287,8 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
   (+my/org-variables-config))
 #+END_SRC
 
-*** org-roam
-***** templates
+**** org-roam
+****** templates
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/org-roam-templates-config ()
     (setq org-roam-capture-ref-templates
@@ -362,7 +325,7 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
         ;;    :head "#+TITLE: %<%A, %B %d, %Y>"))
         ))
 #+END_SRC
-***** variables
+****** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/org-roam-vars-config ()
     (setq! org-roam-directory               org-directory
@@ -385,7 +348,7 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
                                               ("color" . "#C9C9C9")
                                               ("fontcolor" . "#111111"))))
 #+END_SRC
-***** use-package
+****** use-package
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam
   :after org
@@ -398,7 +361,7 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
              org-set-startup-visibility ;; (λ!! (org-global-cycle '(4)))
              ))
 #+END_SRC
-*** other note-taking packages
+**** other note-taking packages
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
@@ -415,15 +378,52 @@ Currently preferring eglot over lsp-mode. Fewer moving parts, and just works w/ 
                                     +markdown-compile-markdown
                                     +markdown-compile-multimarkdown))
 #+END_SRC
-** Languages
-*** python
-Fixes problem where f-strings in python mode weren't inserting closing quotation marks
-#+BEGIN_SRC emacs-lisp
-(use-package! python
-  :after python
-  :config
-  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+** LSP
+lsp-mode is noticably faster than eglot as of the most recent release, especially on my laptop. Haven't bothered to reconfigure anything yet
+#+BEGIN_SRC emacs-lisp :lexical yes
+
+(when (featurep! :tools lsp)
+  (if (featurep! :tools lsp +eglot)
+      (use-package! eglot
+        :commands eglot eglot-ensure
+        :config
+        (setq eglot-send-changes-idle-time 0.05)
+        (set-lookup-handlers! 'eglot--managed-mode ;:async t
+          :implementations #'eglot-find-implementation
+          :type-definition #'eglot-find-typeDefinition
+          :documentation #'+eglot/documentation-lookup-handler
+          ;; :definition
+          ;; :references
+          )
+        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+    ;; (use-package! lsp-mode
+    ;;   :after lsp-mode
+    ;;   ;; TODO
+    ;;   )
+    ))
+
+
 #+END_SRC
+
+- Note:
+  the highlighting on hover can be too slow sometimes to keep up with some movements and isn't great. If it doesn't noticably hurt performance, leaving it enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just disable it. Everything else is solid.
+
+- Might also want to mess around with the eglot-help buffer popup rules -- see the lsp module's [[~/.emacs.d/modules/tools/lsp/+eglot.el][+eglot.el]]
+** Misc.
+Miscellaneous variables/ packages that don't warrant their own section.
+#+BEGIN_SRC emacs-lisp :lexical yes
+(setq! user-full-name "Owen Price-Skelly"
+       user-mail-address "Owen.Price.Skelly@gmail.com"
+       ;; +mu4e-backend 'offlineimap TODO
+       iedit-occurrence-context-lines 1
+       fill-column 88
+       company-idle-delay 0.1
+       +workspaces-on-switch-project-behavior t)
+
+(use-package! evil-textobj-line
+  :demand t)
+#+END_SRC
+
 * Keybindings
 ** related variables/packages
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -485,23 +485,21 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
            "M-[" #'lispy-backward
            "M-]" #'lispy-forward)))
 #+END_SRC
-
-
 *** multiedit/ multiple-cursors
 #+BEGIN_SRC emacs-lisp :lexical yes
 ;; multiedit
-(map! :nv "R"     #'evil-multiedit-match-all
-      :n "s-d"    #'evil-multiedit-match-symbol-and-next
-      :n "s-D"  #'evil-multiedit-match-symbol-and-prev
-      :v "s-d"    #'evil-multiedit-match-and-next
-      :v "s-D"  #'evil-multiedit-match-and-prev
+(map! :nv "R"  #'evil-multiedit-match-all
+      :n "s-d" #'evil-multiedit-match-symbol-and-next
+      :n "s-D" #'evil-multiedit-match-symbol-and-prev
+      :v "s-d" #'evil-multiedit-match-and-next
+      :v "s-D" #'evil-multiedit-match-and-prev
       (:after evil-multiedit
        (:map evil-multiedit-state-map
-        "n"       #'evil-multiedit-next
-        "N"       #'evil-multiedit-prev
-        "s-d"     #'evil-multiedit-match-and-next
-        "s-D"   #'evil-multiedit-match-and-prev
-        "V"       #'iedit-show/hide-unmatched-lines)))
+        "n"    #'evil-multiedit-next
+        "N"    #'evil-multiedit-prev
+        "s-d"  #'evil-multiedit-match-and-next
+        "s-D"  #'evil-multiedit-match-and-prev
+        "V"    #'iedit-show/hide-unmatched-lines)))
 #+END_SRC
 
 ** leader
@@ -557,15 +555,15 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
 (map! :leader
       (:prefix ("n" . "notes")
        :desc "roam buffer"        "r"  #'org-roam
-       :desc "find"               "f"  #'org-roam-find-file
        :desc "find"               "n"  #'org-roam-find-file
        :desc "jump to index"      "x"  #'org-roam-jump-to-index
        :desc "insert"             "i"  #'org-roam-insert
+       :desc "insert immediate"   "I"  #'org-roam-insert-immediate
        :desc "today's file"       "t"  #'org-roam-dailies-today
        :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
        :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
        :desc "<date>'s file"      "d"  #'org-roam-dailies-date
-       :desc "mathpix.el"         "m"  #'mathpix-screenshot
+       :desc "mathpix screenshot" "m"  #'mathpix-screenshot
        (:prefix ( "g" . "graph")
         :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
                                                (org-roam-server-mode))
@@ -573,10 +571,6 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
                                               (url-recreate-url
                                                (url-generic-parse-url
                                                 (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
-        :desc "graph all notes"   "g"  #'org-roam-graph
-        :desc "graph neighbors"   "n"  (λ! (org-roam-graph 1))
-        :desc "graph connected"   "c"  (λ!! #'org-roam-graph '(4)))))
+        :desc "graph all notes"   "g"  #'org-roam-graph)))
 #+END_SRC
 
-#+RESULTS:
-| closure | (t) | (&rest _) | (interactive) | (funcall-interactively (function org-roam-graph) (quote (4))) |
