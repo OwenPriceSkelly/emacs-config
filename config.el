@@ -47,8 +47,9 @@
 (+global-word-wrap-mode)
 (remove-hook! text-mode hl-line-mode)
 
-(if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
-(toggle-frame-fullscreen)
+;; (if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
+(unless IS-MAC
+  (toggle-frame-fullscreen))
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
 
@@ -175,7 +176,7 @@
          org-highlight-latex-and-related   nil))
 (defun +my/org-variables-config ()
   (setq! org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("#") ;; '("☰" "☱" "☳" "☷" "☶" "☴")
+         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴") ;; '("#")
          org-entities-user
          ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
          '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
@@ -330,11 +331,9 @@
   :demand t)
 
 (setq  doom-leader-key "SPC"
-       doom-leader-alt-key (if IS-LINUX "C-SPC"
-                             "M-SPC" )
+       doom-leader-alt-key "C-SPC"
        doom-localleader-key ","
-       doom-localleader-alt-key "C-,"
-       )
+       doom-localleader-alt-key "C-,")
 
 (use-package! expand-region
   :config
