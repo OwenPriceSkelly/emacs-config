@@ -48,10 +48,10 @@
 (remove-hook! text-mode hl-line-mode)
 
 ;; (if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
-(unless IS-MAC
-  (toggle-frame-fullscreen))
+
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
+(set-frame-parameter nil 'fullscreen 'fullboth)
 
 (let* ((+override-theme nil)
        (+my/themes-list-dark
@@ -158,8 +158,7 @@
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
 
-(use-package! org-mode
-  :after org
+(use-package! org
   :defer t
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
@@ -172,17 +171,17 @@
          org-imenu-depth          9
          org-startup-folded       'content)  ;; showeverything ;; t ;; nil
   ;; org-specific fontification/keywords
-  (setq! org-ellipsis                      " ▾ "
-         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "[!](r)" "|"
-                                                       "[X](d)" "[-](k)")
-                                             (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "WARN(R)" "|"
-                                                       "DONE(D)" "DROP(K)"))
-         org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
-                                             ("[*]"   . +org-todo-onhold)
-                                             ("[!]"   . compilation-error)
-                                             ("WARN"  . compilation-error)
-                                             ("PROG"  . +org-todo-active)
-                                             ("WAIT"  . +org-todo-onhold)))
+  (setq org-ellipsis                      " ▾ "
+        org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "[!](r)" "|"
+                                                      "[X](d)" "[-](k)")
+                                            (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "WARN(R)" "|"
+                                                      "DONE(D)" "DROP(K)"))
+        org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
+                                            ("[*]"   . +org-todo-onhold)
+                                            ("[!]"   . compilation-error)
+                                            ("WARN"  . compilation-error)
+                                            ("PROG"  . +org-todo-active)
+                                            ("WAIT"  . +org-todo-onhold)))
   ;; inline LaTeX/math-related
   (sp-local-pair '(org-mode) "$" "$")
   (setq org-preview-latex-default-process 'dvisvgm ;; 'imagemagick ;; 'dvipng

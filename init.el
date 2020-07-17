@@ -85,12 +85,10 @@
        ;;(lsp +eglot)
        lsp
        macos                            ; MacOS-specific commands
-       (magit                           ; a git porcelain for Emacs
-        ;;+forge
-        )
+       (magit +forge) ; a git porcelain for Emacs
        ;;make                 ; run make tasks from Emacs
        pass                             ; password manager for nerds
-       (:if IS-MAC pdf)                 ; pdf enhancements
+       ;; pdf                 ; pdf enhancements
        ;;prodigy              ; FIXME managing external services & code builders
        rgb             ; creating color strings
        terraform       ; infrastructure as code
@@ -100,8 +98,8 @@
        :lang
        ;;agda                 ; types of types of types of types...
        ;;assembly             ; assembly for fun or debugging
-       ;;cc                   ; C/C++/Obj-C madness
-       (:if IS-MAC clojure)             ; java with a lisp
+       cc                   ; C/C++/Obj-C madness
+       clojure             ; java with a lisp
        ;;common-lisp          ; if you've seen one lisp, you've seen them all
        ;;coq                  ; proofs-as-programs
        ;;crystal              ; ruby at the speed of c
@@ -122,13 +120,12 @@
        ;;javascript           ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia                ; a better, faster MATLAB
        ;;kotlin               ; a better, slicker Java(Script)
-       (:if IS-MAC
-        (latex +cdlatex +latexmk))
+       (latex +latexmk)
        ;;lean
        ;;factor
        ;;ledger               ; an accounting system in Emacs
        ;;lua                  ; one-based indices? one-based indices
-       markdown ;;+grip       ; writing docs for people to ignore
+       markdown ; writing docs for people to ignore
        yaml
        ;;nim                  ; python + lisp at the speed of c
        nix                           ; I hereby declare "nix geht mehr!"
