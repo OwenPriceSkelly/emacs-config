@@ -158,41 +158,21 @@
                                    doom-dashboard-widget-shortmenu
                                    doom-dashboard-widget-loaded))
 
-(use-package! python
-  :after python
+(use-package! org-mode
+  :after org
+  :defer t
+  :hook (org-mode . toc-org-mode)
+  :hook (org-mode . +org-pretty-mode)
   :config
-  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
-
-(defun +my/org-basic-settings ()
-  (setq  org-src-window-setup             'plain
-         org-export-with-toc               nil
-         org-imenu-depth                   9
-         org-directory                     (if IS-MAC "~/.org" "~/.org.d")
-         org-preview-latex-default-process 'dvisvgm
-         ;; org-preview-latex-default-process 'imagemagick
-         ;; org-preview-latex-default-process 'dvipng
-         org-startup-folded                'content
-         org-startup-with-latex-preview    nil
-         org-highlight-latex-and-related   nil))
-(defun +my/org-variables-config ()
+  ;; basic settings
+  (setq  org-directory            (if IS-MAC "~/.org" "~/.org.d")
+         org-src-window-setup     'plain
+         org-export-with-toc      nil
+         org-use-sub-superscripts t ;; '{}
+         org-imenu-depth          9
+         org-startup-folded       'content)  ;; showeverything ;; t ;; nil
+  ;; org-specific fontification/keywords
   (setq! org-ellipsis                      " ▾ "
-         org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴") ;; '("#")
-         org-entities-user
-         ;; org |   LaTeX | mathp | html  |ascii|latin1|utf-8
-         '(("Z"   "\\mathbb{Z}" t "&#x2124;"  "Z" "Z"  "ℤ")
-           ("C"   "\\mathbb{C}" t "&#x2102;"  "C" "C"  "ℂ")
-           ("H"   "\\mathbb{H}" t "&#x210D;"  "H" "H"  "ℍ")
-           ("N"   "\\mathbb{N}" t "&#x2115;"  "N" "N"  "ℕ")
-           ("P"   "\\mathbb{P}" t "&#x2119;"  "P" "P"  "ℙ")
-           ("Q"   "\\mathbb{Q}" t "&#x211A;"  "Q" "Q"  "ℚ")
-           ("R"   "\\mathbb{R}" t "&#x211D;"  "R" "R"  "ℝ"))
-         org-format-latex-options          '(:foreground default
-                                             :background default
-                                             :scale 1.0
-                                             :html-scale 1.0
-                                             :html-foreground "Black"
-                                             :html-background "Transparent"
-                                             :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))
          org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "[!](r)" "|"
                                                        "[X](d)" "[-](k)")
                                              (sequence "TODO(T)" "PROG(P)" "WAIT(W)" "WARN(R)" "|"
@@ -200,57 +180,41 @@
          org-todo-keyword-faces            '(("[~]"   . +org-todo-active)
                                              ("[*]"   . +org-todo-onhold)
                                              ("[!]"   . compilation-error)
-                                             ("WARN"   . compilation-error)
+                                             ("WARN"  . compilation-error)
                                              ("PROG"  . +org-todo-active)
                                              ("WAIT"  . +org-todo-onhold)))
-  (sp-local-pair '(org-mode) "$" "$") ;; For inline latex stuff
-  ;; (set-popup-rule! "^\\*Org Src" :ignore t)
-  )
+  ;; inline LaTeX/math-related
+  (sp-local-pair '(org-mode) "$" "$")
+  (setq org-preview-latex-default-process 'dvisvgm ;; 'imagemagick ;; 'dvipng
+        org-startup-with-latex-preview nil
+        org-highlight-latex-and-related nil
+        org-entities-user
+        ;;org  | LaTeX str |math?| html     |ascii|latin1|utf-8
+        '(("Z" "\\mathbb{Z}" t    "&#x2124;"  "Z"   "Z"    "ℤ")
+          ("C" "\\mathbb{C}" t    "&#x2102;"  "C"   "C"    "ℂ")
+          ("H" "\\mathbb{H}" t    "&#x210D;"  "H"   "H"    "ℍ")
+          ("N" "\\mathbb{N}" t    "&#x2115;"  "N"   "N"    "ℕ")
+          ("P" "\\mathbb{P}" t    "&#x2119;"  "P"   "P"    "ℙ")
+          ("Q" "\\mathbb{Q}" t    "&#x211A;"  "Q"   "Q"    "ℚ")
+          ("R" "\\mathbb{R}" t    "&#x211D;"  "R"   "R"    "ℝ"))
+        org-format-latex-options '(:foreground default
+                                   :background default
+                                   :scale 1.0
+                                   :html-scale 1.0
+                                   :html-foreground "Black"
+                                   :html-background "Transparent"
+                                   :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
 
-(use-package! org
-  ;; :after org
-  :defer t
-  :hook (org-mode . toc-org-mode)
-  :hook (org-mode . +org-pretty-mode)
-;;  :hook (org-mode . writeroom-mode)
+(use-package! org-superstar ; "prettier" bullets
+  :hook (org-mode . org-superstar-mode)
   :config
-  (+my/org-basic-settings)
-  (+my/org-variables-config))
-
-(defun +my/org-roam-templates-config ()
-    (setq org-roam-capture-ref-templates
-        (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
-                    "%?"
-                    :file-name "${slug}"
-                    :head (concat "#+TITLE: ${title}\n"
-                                  "#+ROAM_KEY: ${ref}\n"
-                                  "#+ROAM_TAGS:\n"
-                                  "* Description: \n"
-                                  "* Related: \n")
-                    :unnarrowed t))
-        org-roam-capture-templates
-        (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
-                    "%?"
-                    :file-name "%<%Y-%m-%d>-${slug}"
-                    :head (concat "#+TITLE: ${title}\n"
-                                  "#+ROAM_TAGS:\n"
-                                  "* Description: \n"
-                                  "* Related: \n" )
-                    :unnarrowed t))
-        org-roam-dailies-capture-templates
-        (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
-                    ""
-                    :immediate-finish t
-                    :file-name "%<%Y-%m-%d-%A>"
-                    :head (concat "#+TITLE: %<%A, %B %d, %Y>\n"
-                                  "#+ROAM_TAGS: journal\n"
-                                  "* Tasks: \n" )))
-        ;; '(("d" "daily" plain (function org-roam-capture--get-point)
-        ;;    ""
-        ;;    :immediate-finish t
-        ;;    :file-name "%<%Y-%m-%d-%A>"
-        ;;    :head "#+TITLE: %<%A, %B %d, %Y>"))
-        ))
+  (setq org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")  ;; '("#")
+        org-superstar-prettify-item-bullets t
+        org-superstar-item-bullet-alist
+        '((?* . ?»)
+          (?+ . ?»)
+          (?- . ?›))
+        org-superstar-special-todo-items nil))
 
 (defun +my/org-roam-vars-config ()
     (setq! org-roam-directory               org-directory
@@ -264,8 +228,7 @@
            org-roam-graph-max-title-length  40
            org-roam-graph-shorten-titles    'truncate
            org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-           org-roam-graph-viewer            (executable-find
-                                             (if IS-MAC "open" "firefox"))
+           org-roam-graph-viewer            (executable-find (if IS-MAC "open" "firefox"))
            org-roam-graph-executable        "dot"
            org-roam-graph-node-extra-config '(("shape" . "underline")
                                               ("style" . "rounded,filled")
@@ -276,13 +239,36 @@
 (use-package! org-roam
   :after org
   :config
-  (+my/org-roam-templates-config)
+  (setq ;; capture templates setup
+   org-roam-capture-ref-templates (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
+                                              "%?"
+                                              :file-name "${slug}"
+                                              :head (concat "#+TITLE: ${title}\n"
+                                                            "#+ROAM_KEY: ${ref}\n"
+                                                            "#+ROAM_TAGS:\n"
+                                                            "* Description: \n"
+                                                            "* Related: \n")
+                                              :unnarrowed t))
+   org-roam-capture-templates (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
+                                          "%?"
+                                          :file-name "%<%Y-%m-%d>-${slug}"
+                                          :head (concat "#+TITLE: ${title}\n"
+                                                        "#+ROAM_TAGS:\n"
+                                                        "* Description: \n"
+                                                        "* Related: \n" )
+                                          :unnarrowed t))
+   org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
+                                                  ""
+                                                  :immediate-finish t
+                                                  :file-name "%<%Y-%m-%d-%A>"
+                                                  :head (concat "#+TITLE: %<%A, %B %d, %Y>\n"
+                                                                "#+ROAM_TAGS: journal\n"
+                                                                "* Tasks: \n" ))))
   (+my/org-roam-vars-config)
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
   (add-hook! 'org-roam-buffer-prepare-hook
              :append
-             org-set-startup-visibility ;; (λ!! (org-global-cycle '(4)))
-             ))
+             org-set-startup-visibility))
 
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
@@ -293,11 +279,15 @@
   (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
         mathpix-app-key           "0b3d8ae26f3762b4d5b8"
         mathpix-screenshot-method "screencapture -i %s"))
-
 (setq +markdown-compile-functions '(+markdown-compile-pandoc
                                     +markdown-compile-marked
                                     +markdown-compile-markdown
                                     +markdown-compile-multimarkdown))
+
+(use-package! python
+  :after python
+  :config
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
 (when (featurep! :tools lsp)
   (if (featurep! :tools lsp +eglot)
