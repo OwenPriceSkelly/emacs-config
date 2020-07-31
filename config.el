@@ -322,8 +322,8 @@
 (use-package! mathpix
   :commands (mathpix-screenshot)
   :config
-  (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
-        mathpix-app-key           "0b3d8ae26f3762b4d5b8"
+  (setq mathpix-app-id            (password-store-get "mathpix.com/app-id")
+        mathpix-app-key           (password-store-get "mathpix.com/app-key")
         mathpix-screenshot-method "screencapture -i %s"))
 
 (setq +markdown-compile-functions '(+markdown-compile-pandoc
