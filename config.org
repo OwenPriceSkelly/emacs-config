@@ -285,6 +285,17 @@ See also: [[#org-1][org keybindings]]
                                    :html-background "Transparent"
                                    :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
 #+END_SRC
+***** package: ox-hugo
+#+BEGIN_SRC emacs-lisp
+(use-package! ox-hugo
+  :after ox
+  :hook (org-roam-mode . org-hugo-auto-export-mode)
+  :config
+  (setq org-hugo-preserve-filling nil
+        org-hugo-section "notes"))
+#+END_SRC
+
+
 **** package: org-roam
 See also: [[#org-roam][org-roam keybindings]]
 #+BEGIN_SRC emacs-lisp :lexical yes

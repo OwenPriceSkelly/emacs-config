@@ -225,6 +225,13 @@
                                    :html-background "Transparent"
                                    :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
 
+(use-package! ox-hugo
+  :after ox
+  :hook (org-roam-mode . org-hugo-auto-export-mode)
+  :config
+  (setq org-hugo-preserve-filling nil
+        org-hugo-section "notes"))
+
 (use-package! org-roam
   :after org
   :commands (org-roam-buffer-toggle-display
