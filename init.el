@@ -1,34 +1,27 @@
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :completion
-       (company
-        +childframe)                    ; the ultimate code completion backend
-
-       (ivy
-        +fuzzy
-        +prescient
-        +icons
-        ;;+childframe
-        )                               ; a search engine for love and life
-
+       company ;; +childframe            ; the ultimate code completion backend
+       (ivy +fuzzy
+            +prescient
+            +icons)
+       ;; +childframe                           ; a search engine for love and life
        :ui
-       ;;deft                 ; notational velocity for Emacs
+       deft                             ; notational velocity for Emacs
        zen
-       doom                             ; what makes DOOM look the way it does
-       doom-dashboard                   ; a nifty splash screen for Emacs
+       doom                   ; what makes DOOM look the way it does
+       doom-dashboard         ; a nifty splash screen for Emacs
        ;;doom-quit
-       (pretty-code
-        +iosevka)
+       ;; (pretty-code +iosevka)
        hl-todo                ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;;indent-guides        ; highlighted indent columns
        ;;minimap
-       modeline        ; snazzy, Atom-inspired modeline, plus API
-       nav-flash       ; blink the current line after jumping
-       ophints         ; highlight the region an operation acts on
-       (popup          ; tame sudden yet inevitable temporary windows
-        +all           ; catch all popups that start with an asterix
-        +defaults)     ; default popup rules
-       treemacs        ; a project drawer, like neotree but cooler
+       modeline                      ; snazzy, Atom-inspired modeline, plus API
+       nav-flash                     ; blink the current line after jumping
+       ophints                       ; highlight the region an operation acts on
+       (popup +all ; tame sudden yet inevitable temporary windows; catch all popups that start with an asterix
+              +defaults)             ; default popup rules
+       treemacs                      ; a project drawer, like neotree but cooler
        ;;unicode
        vc-gutter       ; vcs diff in the fringe
        ;;vi-tilde-fringe      ; fringe tildes to mark beyond EOB
@@ -37,36 +30,35 @@
 
        :editor
        lispy
-       (evil
-        +commands
-        +everywhere)                    ; come to the dark side, we have cookies
+       (evil +commands
+             +everywhere)               ; come to the dark side, we have cookies
        file-templates                   ; auto-snippets for empty files
        fold                             ; (nigh) universal code folding
-       (format
-        +onsave)         ; automated prettiness
-       multiple-cursors  ; editing in many places at once
+       (format +onsave)                 ; automated prettiness
+       multiple-cursors                 ; editing in many places at once
        ;;parinfer             ; turn lisp into python, sort of
        rotate-text               ; cycle region at point between text candidates
        snippets                  ; my elves. They type so I don't have to
        word-wrap                 ; soft wrapping with language-aware indent ;
 
        :emacs
-       (dired
-        +ranger
-        +icons)                   ; making dired pretty [functional]
+       (dired +ranger
+              +icons)             ; making dired pretty [functional]
        electric                   ; smarter, keyword-based electric-indent
        (ibuffer +icons)           ; interactive buffer management
        vc                         ; version-control and Emacs, sitting in a tree
        (undo +tree)
 
        :term
-       eshell                 ; a consistent, cross-platform shell (WIP)
-       ;;shell                ; a terminal REPL for Emacs
-       (:if IS-MAC vterm
-        term)                           ; another terminals in Emacs
+       eshell                         ; a consistent, cross-platform shell (WIP)
+       vterm
+       ;; shell                ; a terminal REPL for Emacs
+       ;; term
+                                        ; another terminals in Emacs
 
        :checkers
-       (syntax  +childframe)         ; tasing you for every semicolon you forget
+       (syntax ;; +childframe
+        )      ; tasing you for every semicolon you forget
        ;;spell                ; tasing you for misspelling mispelling
        ;;grammar              ; tasing grammar mistake every you make
 
@@ -81,13 +73,12 @@
        ;;gist                 ; interacting with github gists
        (:if IS-MAC (lookup +docsets)) ; helps you navigate your code and documentation
                                         ; ...or in Dash docsets locally
-       (:if IS-LINUX lookup)    ; helps you navigate your code and documentation
-       ;;(lsp +eglot)
-       lsp
-       macos                            ; MacOS-specific commands
-       (magit +forge) ; a git porcelain for Emacs
+       (lsp +eglot)
+       ;; lsp
+       macos                  ; MacOS-specific commands
+       (magit +forge)         ; a git porcelain for Emacs
        ;;make                 ; run make tasks from Emacs
-       pass                             ; password manager for nerds
+       pass                            ; password manager for nerds
        ;; pdf                 ; pdf enhancements
        ;;prodigy              ; FIXME managing external services & code builders
        rgb             ; creating color strings
@@ -98,8 +89,8 @@
        :lang
        ;;agda                 ; types of types of types of types...
        ;;assembly             ; assembly for fun or debugging
-       cc                   ; C/C++/Obj-C madness
-       clojure             ; java with a lisp
+       cc                               ; C/C++/Obj-C madness
+       clojure                          ; java with a lisp
        ;;common-lisp          ; if you've seen one lisp, you've seen them all
        ;;coq                  ; proofs-as-programs
        ;;crystal              ; ruby at the speed of c
@@ -120,12 +111,14 @@
        ;;javascript           ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia                ; a better, faster MATLAB
        ;;kotlin               ; a better, slicker Java(Script)
-       (latex +latexmk)
+       (latex +cdlatex
+              ;; +latexmk
+              )
        ;;lean
        ;;factor
        ;;ledger               ; an accounting system in Emacs
        ;;lua                  ; one-based indices? one-based indices
-       markdown ; writing docs for people to ignore
+       markdown                         ; writing docs for people to ignore
        yaml
        ;;nim                  ; python + lisp at the speed of c
        nix                           ; I hereby declare "nix geht mehr!"
@@ -133,19 +126,21 @@
        (org                             ; organize your plain life in plain text
         +roam
         +dragndrop ; drag & drop files/images into org buffers
-        +hugo      ; use Emacs for hugo blogging
-        +pandoc    ; export-with-pandoc support
-        ;;+present            ; using org-mode for presentations
-        ;;+journal
-        ;;+gnuplot
-        ;;+jupyter            ; ipython/jupyter support for babel
-        ;;+pomodoro           ; be fruitful with the tomato technique
-        )
+        +hugo                        ; use Emacs for hugo blogging
+        +pandoc                         ; export-with-pandoc support
+        +noter)
+       ;;+present            ; using org-mode for presentations
+       ;;+journal
+       ;;+gnuplot
+       ;;+jupyter            ; ipython/jupyter support for babel
+       ;;+pomodoro           ; be fruitful with the tomato technique
+
        ;;perl                 ; write code no one else can comprehend
        ;;php                  ; perl's insecure younger brother
        ;;plantuml             ; diagrams for confusing people more
        ;;purescript           ; javascript, but functional
-       (python +lsp)    ; beautiful is better than ugly ;
+       (python +lsp)
+                                        ; beautiful is better than ugly ;
        ;;qt                   ; the 'cutest' gui framework ever
        ;;racket               ; a DSL for DSLs
        rest                             ; Emacs as a REST client
@@ -154,8 +149,7 @@
        ;;rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala                ; java, but good
        scheme                           ; a fully conniving family of lisps
-       (sh
-        +fish)
+       (sh +fish)
        ;;solidity             ; do you need a blockchain? No.
        ;;swift                ; who asked for emoji variables?
        ;;terra                ; Earth and Moon in alignment for performance.

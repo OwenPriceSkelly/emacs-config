@@ -1,16 +1,3 @@
-(use-package! solaire-mode
-  :init
-  (setq solaire-mode-auto-swap-bg t
-        solaire-mode-remap-line-numbers t))
-
-;; (use-package! writeroom-mode
-;;   :hook (text-mode . writeroom-mode)
-;;   :config
-;;   (setq writeroom-width 100
-;;         writeroom-maximize-window nil
-;;         writeroom-mode-line t
-;;         writeroom-header-line nil))
-
 (use-package! mixed-pitch
   :hook (org-mode . mixed-pitch-mode)
   :config
@@ -32,12 +19,16 @@
             'line-number
             'line-number-current-line))
 
+(use-package! solaire-mode
+  :init
+  (setq solaire-mode-auto-swap-bg t
+        solaire-mode-remap-line-numbers t))
+
 (setq which-key-side-window-location 'bottom
       which-key-sort-order 'which-key-key-order-alpha
       which-key-max-description-length nil
 
       display-line-numbers-type nil
-
       evil-split-window-below t
       evil-vsplit-window-right t
 
@@ -46,22 +37,20 @@
 
 (+global-word-wrap-mode)
 (remove-hook! text-mode hl-line-mode)
-
-;; (if IS-MAC (set-frame-parameter nil 'internal-border-width 4))
+(add-hook! prog-mode hl-line-mode)
 
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
-(set-frame-parameter nil 'fullscreen 'fullboth)
+(setq initial-frame-alist
+       '((top . 1) (left . 1) (width . 140) (height . 58)))
+(pushnew! default-frame-alist
+          '(width . 90)
+          '(height . 58)
+          '(left . 878))
 
-(let* ((+override-theme nil)
-       (+my/themes-list-dark
-        '(doom-gruvbox
-          doom-horizon
-          doom-oceanic-next))
-       (+my/themes-list-light
-        (append +my/themes-list-dark
-                '(doom-gruvbox-light
-                  doom-nord-light)))
+(let* ((+override-theme 'doom-gruvbox-light)
+       (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
+       (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
   (setq doom-gruvbox-dark-variant 'hard
@@ -76,16 +65,15 @@
 
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
-  '(org-block-end-line :background nil)
-  ;; '(org-block :background nil)
-  )
+  '(org-block :background nil)
+  '(org-block-end-line :background nil))
 
 (setq doom-font                       (font-spec
                                        :family "Iosevka Extended"
-                                       :size 14)
+                                       :size 12)
       doom-variable-pitch-font        (font-spec
-                                       :family "Iosevka Sparkle"
-                                       :size 14)
+                                       :family "Iosevka Etoile"
+                                       :size 12)
 
       +zen-text-scale                 0
       ;+latex-viewers                  (if IS-MAC '(pdf-tools))
@@ -128,6 +116,24 @@
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
 
 (add-hook! +doom-dashboard-mode (hl-line-mode -1))
+
+(defun +my/doom-dashboard-widget-loaded ()
+  (insert
+   "\n\n"
+   (propertize
+    (+doom-dashboard--center
+     +doom-dashboard--width
+     (+my/doom-display-benchmark-h 'return))
+    'face 'doom-dashboard-loaded)
+   "\n"))
+(defun +my/doom-display-benchmark-h (&optional return-p)
+  (funcall (if return-p #'format #'message)
+           "Loaded %d packages across %d modules in %.03fs"
+           (- (length load-path) (length doom--initial-load-path))
+           (if doom-modules (hash-table-count doom-modules) 0)
+           (or doom-init-time
+               (setq doom-init-time
+                     (float-time (time-subtract (current-time) before-init-time))))))
 (setq! +doom-dashboard-menu-sections
        '(("Reload last session"
           :icon (all-the-icons-octicon "history" :face 'doom-dashboard-menu-title)
@@ -140,15 +146,15 @@
          ("Open today's note"
           :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
           :action org-roam-dailies-today)
-         ("Recently opened files"
-          :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
-          :action recentf-open-files)
+         ;; ("Recently opened files"
+         ;;  :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
+         ;;  :action recentf-open-files)
          ("Open project"
           :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
           :action projectile-switch-project)
-         ("Jump to bookmark"
-          :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
-          :action bookmark-jump)
+         ;; ("Jump to bookmark"
+         ;;  :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
+         ;;  :action bookmark-jump)
          ("Open private configuration"
           :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title)
           :when (file-directory-p doom-private-dir)
@@ -156,7 +162,18 @@
 
        +doom-dashboard-functions '(+my/doom-dashboard-widget-banner
                                    doom-dashboard-widget-shortmenu
-                                   doom-dashboard-widget-loaded))
+                                   +my/doom-dashboard-widget-loaded))
+
+(setq user-full-name "Owen Price Skelly"
+      user-mail-address "Owen.Price.Skelly@gmail.com"
+      ;; +mu4e-backend 'offlineimap TODO
+      iedit-occurrence-context-lines 1
+      fill-column 88
+      company-idle-delay nil
+      +workspaces-on-switch-project-behavior t)
+
+(use-package! evil-textobj-line
+  :demand t)
 
 (use-package! org
   :defer t
@@ -164,13 +181,17 @@
   :hook (org-mode . +org-pretty-mode)
   :config
   ;; basic settings
-  (setq  org-directory            (if IS-MAC "~/.org" "~/.org.d")
-         org-src-window-setup     'plain
-         org-export-with-toc      nil
-         org-use-sub-superscripts t ;; '{}
-         org-imenu-depth          9
-         org-startup-folded       'content)  ;; showeverything ;; t ;; nil
-  ;; org-specific fontification/keywords
+  (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app
+        org-agenda-files         (list org-directory)
+        org-src-window-setup     'plain
+        org-export-with-toc      nil
+        org-export-with-section-numbers nil
+        org-use-sub-superscripts t
+        org-export-with-entities t
+        org-imenu-depth          9
+        org-startup-folded       'content)  ;; showeverything ;; t ;; nil
+
+  ;; fontifying, keywords
   (setq org-ellipsis                      " ▾ "
         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "[!](r)" "|"
                                                       "[X](d)" "[-](k)")
@@ -184,7 +205,7 @@
                                             ("WAIT"  . +org-todo-onhold)))
   ;; inline LaTeX/math-related
   (sp-local-pair '(org-mode) "$" "$")
-  (setq org-preview-latex-default-process 'dvisvgm ;; 'imagemagick ;; 'dvipng
+  (setq org-preview-latex-default-process 'imagemagick ;'dvipng ;'dvisvgm
         org-startup-with-latex-preview nil
         org-highlight-latex-and-related nil
         org-entities-user
@@ -204,6 +225,89 @@
                                    :html-background "Transparent"
                                    :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
 
+(use-package! org-roam
+  :after org
+  :commands (org-roam-buffer-toggle-display
+             org-roam-find-file
+             org-roam-dailies-date
+             org-roam-dailies-today
+             org-roam-dailies-tomorrow
+             org-roam-dailies-yesterday)
+  :init
+  (setq! org-roam-directory               org-directory
+         org-roam-tag-sort                t
+         org-roam-tag-sources             '(prop)
+         org-roam-tag-separator           ", "
+         org-roam-verbose                 t
+         org-roam-buffer-width            0.25
+         org-roam-graph-max-title-length  40
+         org-roam-graph-shorten-titles    'truncate
+         org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+         org-roam-graph-viewer            (executable-find "open"))
+  (+my/org-roam-templates)
+
+  (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
+  ;; (add-hook! 'org-roam-buffer-prepare-hook :append org-set-startup-visibility)
+  )
+
+(defun +my/org-roam-templates ()
+  (setq org-roam-capture-ref-templates (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
+                                                   "%?"
+                                                   :file-name "${slug}"
+                                                   :head (concat "#+title: ${title}\n"
+                                                                 "#+roam_key: ${ref}\n"
+                                                                 "#+roam_tags:\n"
+                                                                 "* Description: \n"
+                                                                 "* Related: \n"
+                                                                 "  - [[${ref}][url]]\n")
+                                                   :unnarrowed t))
+        org-roam-capture-templates (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
+                                               "%?"
+                                               :file-name "%<%Y-%m-%d>-${slug}"
+                                               :head (concat "#+title: ${title}\n"
+                                                             "#+roam_tags:\n"
+                                                             "* Description: \n"
+                                                             "* Related: \n" )
+                                               :unnarrowed t))
+        org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
+                                                       ""
+                                                       :immediate-finish t
+                                                       :file-name "%<%Y-%m-%d-%A>"
+                                                       :head (concat "#+title: %<%a, %b %d, %y>\n"
+                                                                     "#+roam_tags: journal\n"
+                                                                     "* Tasks: \n" )))))
+
+(defun my/org-roam--backlinks-list-with-content (file)
+  (with-temp-buffer
+    (if-let* ((backlinks (org-roam--get-backlinks file))
+              (grouped-backlinks (--group-by (nth 0 it) backlinks)))
+        (progn
+          (insert (format "\n\n* %d Backlinks\n"
+                          (length backlinks)))
+          (dolist (group grouped-backlinks)
+            (let ((file-from (car group))
+                  (bls (cdr group)))
+              (insert (format "** [[file:%s][%s]]\n"
+                              file-from
+                              (org-roam--get-title-or-slug file-from)))
+              (dolist (backlink bls)
+                (pcase-let ((`(,file-from _ ,props) backlink))
+                  (insert (s-trim (s-replace "\n" " " (plist-get props :content))))
+                  (insert "\n\n")))))))
+    (buffer-string)))
+
+  (defun my/org-export-preprocessor (backend)
+    (let ((links (my/org-roam--backlinks-list-with-content (buffer-file-name))))
+      (unless (string= links "")
+        (save-excursion
+          (goto-char (point-max))
+          (insert (concat "\n* Backlinks\n") links)))))
+
+  (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
+
+(use-package! org-roam-server
+  :commands (org-roam-server-mode))
+
 (use-package! org-superstar ; "prettier" bullets
   :hook (org-mode . org-superstar-mode)
   :config
@@ -215,69 +319,13 @@
           (?- . ?›))
         org-superstar-special-todo-items nil))
 
-(defun +my/org-roam-vars-config ()
-    (setq! org-roam-directory               org-directory
-           org-roam-index-file              "./index.org"
-           org-roam-tag-sort                t
-           org-roam-tag-sources             '(prop)
-           org-roam-tag-separator           ", "
-           org-roam-verbose                 t
-           org-roam-buffer-position         'right
-           org-roam-buffer-width            0.26
-           org-roam-graph-max-title-length  40
-           org-roam-graph-shorten-titles    'truncate
-           org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-           org-roam-graph-viewer            (executable-find (if IS-MAC "open" "firefox"))
-           org-roam-graph-executable        "dot"
-           org-roam-graph-node-extra-config '(("shape" . "underline")
-                                              ("style" . "rounded,filled")
-                                              ("fillcolor" . "#EEEEEE")
-                                              ("color" . "#C9C9C9")
-                                              ("fontcolor" . "#111111"))))
-
-(use-package! org-roam
-  :after org
-  :config
-  (setq ;; capture templates setup
-   org-roam-capture-ref-templates (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
-                                              "%?"
-                                              :file-name "${slug}"
-                                              :head (concat "#+TITLE: ${title}\n"
-                                                            "#+ROAM_KEY: ${ref}\n"
-                                                            "#+ROAM_TAGS:\n"
-                                                            "* Description: \n"
-                                                            "* Related: \n")
-                                              :unnarrowed t))
-   org-roam-capture-templates (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
-                                          "%?"
-                                          :file-name "%<%Y-%m-%d>-${slug}"
-                                          :head (concat "#+TITLE: ${title}\n"
-                                                        "#+ROAM_TAGS:\n"
-                                                        "* Description: \n"
-                                                        "* Related: \n" )
-                                          :unnarrowed t))
-   org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
-                                                  ""
-                                                  :immediate-finish t
-                                                  :file-name "%<%Y-%m-%d-%A>"
-                                                  :head (concat "#+TITLE: %<%A, %B %d, %Y>\n"
-                                                                "#+ROAM_TAGS: journal\n"
-                                                                "* Tasks: \n" ))))
-  (+my/org-roam-vars-config)
-  (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-citelinks)
-  (add-hook! 'org-roam-buffer-prepare-hook
-             :append
-             org-set-startup-visibility))
-
-(use-package! org-roam-server
-  :commands (org-roam-server-mode))
-
 (use-package! mathpix
   :commands (mathpix-screenshot)
   :config
   (setq mathpix-app-id            "owenpriceskelly_gmail_com_2bbd51"
         mathpix-app-key           "0b3d8ae26f3762b4d5b8"
         mathpix-screenshot-method "screencapture -i %s"))
+
 (setq +markdown-compile-functions '(+markdown-compile-pandoc
                                     +markdown-compile-marked
                                     +markdown-compile-markdown
@@ -288,8 +336,7 @@
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
-(when (featurep! :tools lsp)
-  (if (featurep! :tools lsp +eglot)
+(when (featurep! :tools lsp +eglot)
       (use-package! eglot
         :commands eglot eglot-ensure
         :config
@@ -301,23 +348,7 @@
           ;; :definition
           ;; :references
           )
-        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
-    ;; (use-package! lsp-mode
-    ;;   :after lsp-mode
-    ;;   ;; TODO
-    ;;   )
-    ))
-
-(setq! user-full-name "Owen Price-Skelly"
-       user-mail-address "Owen.Price.Skelly@gmail.com"
-       ;; +mu4e-backend 'offlineimap TODO
-       iedit-occurrence-context-lines 1
-       fill-column 88
-       company-idle-delay 0.1
-       +workspaces-on-switch-project-behavior t)
-
-(use-package! evil-textobj-line
-  :demand t)
+        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
@@ -399,6 +430,7 @@
 
       (:prefix ("t"  "toggle")
        :desc "toggle fullscreen" "F" #'toggle-frame-fullscreen
+       :desc "toggle maximized" "M" #'toggle-frame-maximized
        :desc "toggle hl-line mode" "h" (cmd! (hl-line-mode (if hl-line-mode -1 +1)))
        :desc "toggle decorated"  "d" (cmd! (set-frame-parameter nil 'undecorated (not (frame-parameter nil 'undecorated)))))
 
@@ -443,4 +475,6 @@
                                               (url-recreate-url
                                                (url-generic-parse-url
                                                 (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
-        :desc "graph all notes"   "g"  #'org-roam-graph)))
+        :desc "graph all"   "g"  #'org-roam-graph
+        :desc ""
+        :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4)))))
