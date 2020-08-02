@@ -35,25 +35,37 @@
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t)
 
-(+global-word-wrap-mode)
-(remove-hook! text-mode hl-line-mode)
-(add-hook! prog-mode hl-line-mode)
+(setq! +popup-defaults
+       (list :side   'bottom
+             :height .20 ;; 0.16
+             :width  40
+             :quit   t
+             :select #'ignore
+             :ttl    5))
+
+;; (+global-word-wrap-mode)
+
+;; (remove-hook! text-mode hl-line-mode)
+;; (add-hook! prog-mode hl-line-mode)
 
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
 (setq initial-frame-alist
        '((top . 1) (left . 1) (width . 140) (height . 58)))
 (pushnew! default-frame-alist
-          '(width . 90)
+          ;; '(width . 90)
+          ;; '(height . 58)
+          ;; '(left . 878)
+          '(width . 238)
           '(height . 58)
-          '(left . 878))
+          '(fullscreen . maximized))
 
-(let* ((+override-theme 'doom-gruvbox-light)
+(let* ((+override-theme 'doom-oceanic-next  ) ;; 'doom-gruvbox-light
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
-  (setq doom-gruvbox-dark-variant 'hard
+  (setq doom-gruvbox-dark-variant 'soft
         doom-gruvbox-light-variant 'soft
         doom-theme                (or +override-theme
                                       (let ((theme-choices
@@ -116,6 +128,7 @@
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
 
 (add-hook! +doom-dashboard-mode (hl-line-mode -1))
+(setq! +doom-dashboard-name "*dashboard*" )
 
 (defun +my/doom-dashboard-widget-loaded ()
   (insert
@@ -226,8 +239,7 @@
                                    :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
 
 (use-package! ox-hugo
-  :after ox
-  :hook (org-roam-mode . org-hugo-auto-export-mode)
+  :after org
   :config
   (setq org-hugo-preserve-filling nil
         org-hugo-section "notes"))
@@ -254,8 +266,7 @@
   (+my/org-roam-templates)
 
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
-  ;; (add-hook! 'org-roam-buffer-prepare-hook :append org-set-startup-visibility)
-  )
+  (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
 
 (defun +my/org-roam-templates ()
   (setq org-roam-capture-ref-templates (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
@@ -263,8 +274,8 @@
                                                    :file-name "${slug}"
                                                    :head (concat "#+title: ${title}\n"
                                                                  "#+roam_key: ${ref}\n"
-                                                                 "#+roam_tags:\n"
-                                                                 "* Description: \n"
+                                                                 "#+roam_tags: article\n"
+                                                                 "#+setupfile: ./setup.org\n"
                                                                  "* Related: \n"
                                                                  "  - [[${ref}][url]]\n")
                                                    :unnarrowed t))
@@ -273,9 +284,20 @@
                                                :file-name "%<%Y-%m-%d>-${slug}"
                                                :head (concat "#+title: ${title}\n"
                                                              "#+roam_tags:\n"
+                                                             "#+setupfile: ./setup.org\n"
                                                              "* Description: \n"
                                                              "* Related: \n" )
                                                :unnarrowed t))
+        org-roam-capture-immediate-template `("d" "default" plain #'org-roam-capture--get-point
+                                             "%?"
+                                             :file-name "%<%Y-%m-%d>-${slug}"
+                                             :head ,(concat "#+title: ${title}\n"
+                                                            "#+roam_tags:\n"
+                                                            "#+setupfile: ./setup.org\n"
+                                                            "* Description: \n"
+                                                            "* Related: \n")
+                                             :unnarrowed t
+                                             :immediate-finish t)
         org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
                                                        ""
                                                        :immediate-finish t
@@ -283,34 +305,6 @@
                                                        :head (concat "#+title: %<%a, %b %d, %y>\n"
                                                                      "#+roam_tags: journal\n"
                                                                      "* Tasks: \n" )))))
-
-(defun my/org-roam--backlinks-list-with-content (file)
-  (with-temp-buffer
-    (if-let* ((backlinks (org-roam--get-backlinks file))
-              (grouped-backlinks (--group-by (nth 0 it) backlinks)))
-        (progn
-          (insert (format "\n\n* %d Backlinks\n"
-                          (length backlinks)))
-          (dolist (group grouped-backlinks)
-            (let ((file-from (car group))
-                  (bls (cdr group)))
-              (insert (format "** [[file:%s][%s]]\n"
-                              file-from
-                              (org-roam--get-title-or-slug file-from)))
-              (dolist (backlink bls)
-                (pcase-let ((`(,file-from _ ,props) backlink))
-                  (insert (s-trim (s-replace "\n" " " (plist-get props :content))))
-                  (insert "\n\n")))))))
-    (buffer-string)))
-
-  (defun my/org-export-preprocessor (backend)
-    (let ((links (my/org-roam--backlinks-list-with-content (buffer-file-name))))
-      (unless (string= links "")
-        (save-excursion
-          (goto-char (point-max))
-          (insert (concat "\n* Backlinks\n") links)))))
-
-  (add-hook 'org-export-before-processing-hook 'my/org-export-preprocessor)
 
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
@@ -464,24 +458,23 @@
       :desc "toggle pretty entities"   "p" #'+org-pretty-mode)
 
 (map! :leader
-      (:prefix ("n" . "notes")
-       :desc "roam buffer"        "r"  #'org-roam
-       :desc "find"               "n"  #'org-roam-find-file
-       :desc "jump to index"      "x"  #'org-roam-jump-to-index
-       :desc "insert"             "i"  #'org-roam-insert
-       :desc "insert immediate"   "I"  #'org-roam-insert-immediate
-       :desc "today's file"       "t"  #'org-roam-dailies-today
-       :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
-       :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
-       :desc "<date>'s file"      "d"  #'org-roam-dailies-date
-       :desc "mathpix screenshot" "m"  #'mathpix-screenshot
-       (:prefix ( "g" . "graph")
-        :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
-                                               (org-roam-server-mode))
-                                             (browse-url
-                                              (url-recreate-url
-                                               (url-generic-parse-url
-                                                (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
-        :desc "graph all"   "g"  #'org-roam-graph
-        :desc ""
-        :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4)))))
+      :prefix ("n" . "notes")
+      :desc "roam buffer"        "r"  #'org-roam
+      :desc "find"               "n"  #'org-roam-find-file
+      :desc "jump to index"      "x"  #'org-roam-jump-to-index
+      :desc "insert"             "i"  #'org-roam-insert
+      :desc "insert immediate"   "I"  #'org-roam-insert-immediate
+      :desc "today's file"       "t"  #'org-roam-dailies-today
+      :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
+      :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
+      :desc "<date>'s file"      "d"  #'org-roam-dailies-date
+      :desc "mathpix screenshot" "m"  #'mathpix-screenshot
+      (:prefix ( "g" . "graph")
+       :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
+                                              (org-roam-server-mode))
+                                            (browse-url
+                                             (url-recreate-url
+                                              (url-generic-parse-url
+                                               (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
+       :desc "graph all"   "g"  #'org-roam-graph
+       :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4))))
