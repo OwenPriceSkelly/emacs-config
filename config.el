@@ -50,15 +50,17 @@
 
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
-(setq initial-frame-alist
-       '((top . 1) (left . 1) (width . 140) (height . 58)))
-(pushnew! default-frame-alist
-          ;; '(width . 90)
-          ;; '(height . 58)
-          ;; '(left . 878)
-          '(width . 238)
-          '(height . 58)
-          '(fullscreen . maximized))
+(modify-frame-parameters nil '((fullscreen . maximized)
+                               (undecorated . t)))
+;; (setq initial-frame-alist
+;;        '((top . 1) (left . 1) (width . 140) (height . 58)))
+;; (pushnew! default-frame-alist
+;;           ;; '(width . 90)
+;;           ;; '(height . 58)
+;;           ;; '(left . 878)
+;;           '(width . 238)
+;;           '(height . 58)
+;;           '(fullscreen . maximized))
 
 (let* ((+override-theme 'doom-oceanic-next  ) ;; 'doom-gruvbox-light
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
@@ -218,7 +220,7 @@
                                             ("WAIT"  . +org-todo-onhold)))
   ;; inline LaTeX/math-related
   (sp-local-pair '(org-mode) "$" "$")
-  (setq org-preview-latex-default-process 'imagemagick ;'dvipng ;'dvisvgm
+  (setq org-preview-latex-default-process 'dvisvgm ;'imagemagick ;'dvipng
         org-startup-with-latex-preview nil
         org-highlight-latex-and-related nil
         org-entities-user
