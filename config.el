@@ -62,12 +62,12 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-(let* ((+override-theme 'doom-oceanic-next  ) ;; 'doom-gruvbox-light
+(let* ((+override-theme 'doom-gruvbox) ;; 'doom-gruvbox-light
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
-  (setq doom-gruvbox-dark-variant 'soft
+  (setq! doom-gruvbox-dark-variant 'soft
         doom-gruvbox-light-variant 'soft
         doom-theme                (or +override-theme
                                       (let ((theme-choices
@@ -357,9 +357,10 @@
     :defer t
     :config
     (setq lsp-ui-doc-max-height 10
-          lsp-ui-doc-max-width 45
+          lsp-ui-doc-max-width 88
+          lsp-ui-sideline-diagnostic-max-line-length 35
           lsp-ui-sideline-ignore-duplicate t
-          lsp-ui-doc-enable t
+          lsp-ui-doc-enable nil
           ;; Don't show symbol definitions in the sideline. They are pretty noisy,
           ;; and there is a bug preventing Flycheck errors from being shown (the
           ;; errors flash briefly and then disappear).
