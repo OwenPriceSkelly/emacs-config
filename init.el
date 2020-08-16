@@ -1,17 +1,17 @@
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :completion
-       company ;; +childframe            ; the ultimate code completion backend
+       (company +childframe)            ; the ultimate code completion backend
        (ivy +fuzzy
             +prescient
-            +icons)
-       ;; +childframe                           ; a search engine for love and life
+            +icons
+            +childframe)                           ; a search engine for love and life
        :ui
        deft                             ; notational velocity for Emacs
        zen
        doom                   ; what makes DOOM look the way it does
        doom-dashboard         ; a nifty splash screen for Emacs
        ;;doom-quit
-       ;; (pretty-code +iosevka)
+       pretty-code
        hl-todo                ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;;indent-guides        ; highlighted indent columns
@@ -57,8 +57,7 @@
                                         ; another terminals in Emacs
 
        :checkers
-       (syntax ;; +childframe
-        )      ; tasing you for every semicolon you forget
+       (syntax +childframe)      ; tasing you for every semicolon you forget
        ;;spell                ; tasing you for misspelling mispelling
        ;;grammar              ; tasing grammar mistake every you make
 
@@ -73,13 +72,13 @@
        ;;gist                 ; interacting with github gists
        (:if IS-MAC (lookup +docsets)) ; helps you navigate your code and documentation
                                         ; ...or in Dash docsets locally
-       (lsp +eglot)
-       ;; lsp
+       ;; (lsp +eglot)
+       (lsp +peek)
        macos                  ; MacOS-specific commands
        (magit +forge)         ; a git porcelain for Emacs
        ;;make                 ; run make tasks from Emacs
        pass                            ; password manager for nerds
-       ;; pdf                 ; pdf enhancements
+       pdf                 ; pdf enhancements
        ;;prodigy              ; FIXME managing external services & code builders
        rgb             ; creating color strings
        terraform       ; infrastructure as code
@@ -112,8 +111,7 @@
        ;;julia                ; a better, faster MATLAB
        ;;kotlin               ; a better, slicker Java(Script)
        (latex +cdlatex
-              ;; +latexmk
-              )
+              +latexmk)
        ;;lean
        ;;factor
        ;;ledger               ; an accounting system in Emacs
@@ -140,7 +138,8 @@
        ;;php                  ; perl's insecure younger brother
        ;;plantuml             ; diagrams for confusing people more
        ;;purescript           ; javascript, but functional
-       (python +lsp)
+       (python +lsp
+               +pyright)
                                         ; beautiful is better than ugly ;
        ;;qt                   ; the 'cutest' gui framework ever
        ;;racket               ; a DSL for DSLs
