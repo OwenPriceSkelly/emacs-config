@@ -1,5 +1,5 @@
 (use-package! mixed-pitch
-  :hook (org-mode . mixed-pitch-mode)
+  :hook (text-mode . mixed-pitch-mode)
   :config
   (pushnew! mixed-pitch-fixed-pitch-faces
             'org-date
@@ -340,18 +340,30 @@
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
 (when (featurep! :tools lsp +eglot)
-      (use-package! eglot
-        :commands eglot eglot-ensure
-        :config
-        (setq eglot-send-changes-idle-time 0.05)
-        (set-lookup-handlers! 'eglot--managed-mode ;:async t
-          :implementations #'eglot-find-implementation
-          :type-definition #'eglot-find-typeDefinition
-          :documentation #'+eglot/documentation-lookup-handler
-          ;; :definition
-          ;; :references
-          )
-        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
+  (use-package! eglot
+    :commands eglot eglot-ensure
+    :config
+    (setq eglot-send-changes-idle-time 0.05)
+    (set-lookup-handlers! 'eglot--managed-mode ;:async t
+      :implementations #'eglot-find-implementation
+      :type-definition #'eglot-find-typeDefinition
+      :documentation #'+eglot/documentation-lookup-handler
+      ;; :definition
+      ;; :references
+      )
+    (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
+(when (featurep! :tools lsp +peek)
+  (use-package! lsp-ui
+    :defer t
+    :config
+    (setq lsp-ui-doc-max-height 10
+          lsp-ui-doc-max-width 45
+          lsp-ui-sideline-ignore-duplicate t
+          lsp-ui-doc-enable t
+          ;; Don't show symbol definitions in the sideline. They are pretty noisy,
+          ;; and there is a bug preventing Flycheck errors from being shown (the
+          ;; errors flash briefly and then disappear).
+          lsp-ui-sideline-show-hover nil)))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
@@ -386,21 +398,21 @@
   (evil-snipe-override-mode +1))
 
 (map! :nv [tab]  #'evil-jump-item
-        (:when (featurep! :ui workspaces)
-         :g [C-tab] #'+workspace/switch-right)
+      (:when (featurep! :ui workspaces)
+       :g [C-tab] #'+workspace/switch-right)
 
-        (:when (featurep! :completion company)
-         :i "C-i" #'+company/complete
-         :i [C-i] #'+company/complete)
+      (:when (featurep! :completion company)
+       :i "C-i" #'+company/complete
+       :i [C-i] #'+company/complete)
 
-        ;;lispy
-        (:after lispy
-         (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
-          "[" nil
-          "]" nil)
-         (:map lispyville-mode-map
-           "M-[" #'lispy-backward
-           "M-]" #'lispy-forward)))
+      ;;lispy
+      (:after lispy
+       (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
+        "[" nil
+        "]" nil)
+       (:map lispyville-mode-map
+        "M-[" #'lispy-backward
+        "M-]" #'lispy-forward)))
 
 ;; multiedit
 (map! :nv "R"  #'evil-multiedit-match-all
@@ -462,14 +474,16 @@
 (map! :leader
       :prefix ("n" . "notes")
       :desc "roam buffer"        "r"  #'org-roam
+      :desc "random note"        "R"  #'org-roam-random-note
       :desc "find"               "n"  #'org-roam-find-file
-      :desc "jump to index"      "x"  #'org-roam-jump-to-index
+      ;; :desc "jump to index"      "x"  #'org-roam-jump-to-index
       :desc "insert"             "i"  #'org-roam-insert
       :desc "insert immediate"   "I"  #'org-roam-insert-immediate
       :desc "today's file"       "t"  #'org-roam-dailies-today
       :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
       :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
       :desc "<date>'s file"      "d"  #'org-roam-dailies-date
+      ;; :desc "daily entries map" "d"  org-roam-dailies-map
       :desc "mathpix screenshot" "m"  #'mathpix-screenshot
       (:prefix ( "g" . "graph")
        :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
