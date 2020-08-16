@@ -21,7 +21,7 @@
 *** package: mixed-pitch-mode
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! mixed-pitch
-  :hook (org-mode . mixed-pitch-mode)
+  :hook (text-mode . mixed-pitch-mode)
   :config
   (pushnew! mixed-pitch-fixed-pitch-faces
             'org-date
@@ -487,21 +487,21 @@ holding on to eglot options in case I switch back.
 *** misc.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :nv [tab]  #'evil-jump-item
-        (:when (featurep! :ui workspaces)
-         :g [C-tab] #'+workspace/switch-right)
+      (:when (featurep! :ui workspaces)
+       :g [C-tab] #'+workspace/switch-right)
 
-        (:when (featurep! :completion company)
-         :i "C-i" #'+company/complete
-         :i [C-i] #'+company/complete)
+      (:when (featurep! :completion company)
+       :i "C-i" #'+company/complete
+       :i [C-i] #'+company/complete)
 
-        ;;lispy
-        (:after lispy
-         (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
-          "[" nil
-          "]" nil)
-         (:map lispyville-mode-map
-           "M-[" #'lispy-backward
-           "M-]" #'lispy-forward)))
+      ;;lispy
+      (:after lispy
+       (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
+        "[" nil
+        "]" nil)
+       (:map lispyville-mode-map
+        "M-[" #'lispy-backward
+        "M-]" #'lispy-forward)))
 #+END_SRC
 *** multiedit
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -574,14 +574,16 @@ holding on to eglot options in case I switch back.
 (map! :leader
       :prefix ("n" . "notes")
       :desc "roam buffer"        "r"  #'org-roam
+      :desc "random note"        "R"  #'org-roam-random-note
       :desc "find"               "n"  #'org-roam-find-file
-      :desc "jump to index"      "x"  #'org-roam-jump-to-index
+      ;; :desc "jump to index"      "x"  #'org-roam-jump-to-index
       :desc "insert"             "i"  #'org-roam-insert
       :desc "insert immediate"   "I"  #'org-roam-insert-immediate
       :desc "today's file"       "t"  #'org-roam-dailies-today
       :desc "tomorrow's file"    "T"  #'org-roam-dailies-tomorrow
       :desc "yesterday's file"   "y"  #'org-roam-dailies-yesterday
       :desc "<date>'s file"      "d"  #'org-roam-dailies-date
+      ;; :desc "daily entries map" "d"  org-roam-dailies-map
       :desc "mathpix screenshot" "m"  #'mathpix-screenshot
       (:prefix ( "g" . "graph")
        :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
