@@ -98,20 +98,24 @@ changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (let* ((+override-theme 'doom-oceanic-next) ;; 'doom-gruvbox-light
+
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
   (setq! doom-gruvbox-dark-variant 'soft
         doom-gruvbox-light-variant 'soft
+
         doom-theme                (or +override-theme
                                       (let ((theme-choices
                                              (if (<= 9 hour 15)
                                                  +my/themes-list-light
                                                +my/themes-list-dark)))
                                         (nth (mod sec (length theme-choices))
-                                             theme-choices)))))
+                                             theme-choices))))
+  (intern (concat (symbol-name doom-theme) "-brighter-comments"))  t)
 #+END_SRC
+
 *** Disable embedded block background
 #+BEGIN_SRC emacs-lisp :lexical yes
 (doom-themes-set-faces nil
