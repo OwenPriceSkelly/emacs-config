@@ -11,7 +11,7 @@
        doom                   ; what makes DOOM look the way it does
        doom-dashboard         ; a nifty splash screen for Emacs
        ;;doom-quit
-       pretty-code
+       (ligatures +extra)         ; ligatures and symbols to make your code pretty again
        hl-todo                ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;;indent-guides        ; highlighted indent columns
@@ -74,7 +74,6 @@
                                         ; ...or in Dash docsets locally
        ;; (lsp +eglot)
        (lsp +peek)
-       macos                  ; MacOS-specific commands
        (magit +forge)         ; a git porcelain for Emacs
        ;;make                 ; run make tasks from Emacs
        pass                            ; password manager for nerds
@@ -84,6 +83,10 @@
        terraform       ; infrastructure as code
        ;;tmux                 ; an API for interacting with tmux
        upload                         ; map local to remote projects via ssh/ftp
+
+       :os
+       (:if IS-MAC macos)  ; improve compatibility with macOS
+       tty               ; improve the terminal Emacs experience
 
        :lang
        ;;agda                 ; types of types of types of types...
