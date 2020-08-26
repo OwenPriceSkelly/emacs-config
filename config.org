@@ -97,7 +97,7 @@
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'doom-gruvbox) ;; 'doom-gruvbox-light
+(let* ((+override-theme 'doom-oceanic-next) ;; 'doom-gruvbox-light
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))

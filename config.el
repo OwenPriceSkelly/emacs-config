@@ -62,7 +62,7 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-(let* ((+override-theme 'doom-gruvbox) ;; 'doom-gruvbox-light
+(let* ((+override-theme 'doom-oceanic-next) ;; 'doom-gruvbox-light
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))
