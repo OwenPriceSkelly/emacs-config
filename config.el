@@ -62,20 +62,24 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-(let* ((+override-theme 'doom-oceanic-next) ;; 'doom-gruvbox-light
+(let* ((+override-theme 'doom-old-hope ;; 'doom-oceanic-next
+        ) ;; 'doom-gruvbox-light
+
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
   (setq! doom-gruvbox-dark-variant 'soft
         doom-gruvbox-light-variant 'soft
+
         doom-theme                (or +override-theme
                                       (let ((theme-choices
                                              (if (<= 9 hour 15)
                                                  +my/themes-list-light
                                                +my/themes-list-dark)))
                                         (nth (mod sec (length theme-choices))
-                                             theme-choices)))))
+                                             theme-choices))))
+  (intern (concat (symbol-name doom-theme) "-brighter-comments"))  t)
 
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
@@ -90,7 +94,7 @@
                                        :size 12)
 
       +zen-text-scale                 0
-      ;+latex-viewers                  (if IS-MAC '(pdf-tools))
+      +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
 
 (defun +my/doom-dashboard-widget-banner ()

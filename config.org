@@ -97,7 +97,8 @@
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'doom-oceanic-next) ;; 'doom-gruvbox-light
+(let* ((+override-theme 'doom-old-hope ;; 'doom-oceanic-next
+        ) ;; 'doom-gruvbox-light
 
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
@@ -139,7 +140,7 @@ readable without obviously being a totally different font at a glance.
                                        :size 12)
 
       +zen-text-scale                 0
-      ;+latex-viewers                  (if IS-MAC '(pdf-tools))
+      +latex-viewers                  (if IS-MAC '(pdf-tools))
       +pretty-code-enabled-modes      '(org-mode))
 #+END_SRC
 ** Dashboard
