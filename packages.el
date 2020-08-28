@@ -5,7 +5,8 @@
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el")
   :pin "52bc9a6acd34d2282555ac576e905af3c5a0e767")
-(package! org-roam-server
-  :pin nil)
+(package! zoom :pin "a373e7eed59ad93315e5ae88c816ca70404d2d34")
+
+(package! org-roam-server  :pin "832ba1ab6b3eea89da3355f7676626266a172adc")
 ;; existing packages pinned separately
 (unpin! org-roam)

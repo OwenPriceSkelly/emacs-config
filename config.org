@@ -70,6 +70,10 @@
              :select #'ignore
              :ttl    5))
 
+(use-package! zoom
+  :commands (zoom-mode))
+
+
 ;; (+global-word-wrap-mode)
 
 ;; (remove-hook! text-mode hl-line-mode)
@@ -249,7 +253,7 @@ Miscellaneous variables/ packages that don't warrant their own section.
       +workspaces-on-switch-project-behavior t)
 
 (use-package! evil-textobj-line
-  :demand t)
+  :commands (evil-line-range))
 #+END_SRC
 ** Plaintext
 *** org
@@ -433,7 +437,7 @@ holding on to eglot options in case I switch back.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (when (featurep! :tools lsp +eglot)
   (use-package! eglot
-    :commands eglot eglot-ensure
+    :commands (eglot eglot-ensure)
     :config
     (setq eglot-send-changes-idle-time 0.05)
     (set-lookup-handlers! 'eglot--managed-mode ;:async t

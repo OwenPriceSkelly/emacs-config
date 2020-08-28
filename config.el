@@ -43,6 +43,10 @@
              :select #'ignore
              :ttl    5))
 
+(use-package! zoom
+  :commands (zoom-mode))
+
+
 ;; (+global-word-wrap-mode)
 
 ;; (remove-hook! text-mode hl-line-mode)
@@ -192,7 +196,7 @@
       +workspaces-on-switch-project-behavior t)
 
 (use-package! evil-textobj-line
-  :demand t)
+  :commands (evil-line-range))
 
 (use-package! org
   :defer t
@@ -345,7 +349,7 @@
 
 (when (featurep! :tools lsp +eglot)
   (use-package! eglot
-    :commands eglot eglot-ensure
+    :commands (eglot eglot-ensure)
     :config
     (setq eglot-send-changes-idle-time 0.05)
     (set-lookup-handlers! 'eglot--managed-mode ;:async t
