@@ -253,7 +253,7 @@ Miscellaneous variables/ packages that don't warrant their own section.
       +workspaces-on-switch-project-behavior t)
 
 (use-package! evil-textobj-line
-  :commands (evil-line-range))
+  :commands (evil-inner-line evil-a-line))
 #+END_SRC
 ** Plaintext
 *** org

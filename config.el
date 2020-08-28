@@ -196,7 +196,7 @@
       +workspaces-on-switch-project-behavior t)
 
 (use-package! evil-textobj-line
-  :commands (evil-line-range))
+  :commands (evil-inner-line evil-a-line))
 
 (use-package! org
   :defer t
