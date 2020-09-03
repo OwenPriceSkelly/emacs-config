@@ -98,8 +98,7 @@
                                        :size 12)
 
       +zen-text-scale                 0
-      +latex-viewers                  (if IS-MAC '(pdf-tools))
-      +pretty-code-enabled-modes      '(org-mode))
+      +ligatures-in-modes      '(org-mode))
 
 (defun +my/doom-dashboard-widget-banner ()
   (let ((point (point)))
@@ -202,6 +201,7 @@
   :defer t
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
+  :hook (org-mode . auto-fill-mode)
   :config
   ;; basic settings
   (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app
@@ -209,7 +209,8 @@
         org-src-window-setup     'plain
         org-export-with-toc      nil
         org-export-with-section-numbers nil
-        org-use-sub-superscripts t
+        org-use-sub-superscripts '{}
+        org-export-with-sub-superscripts '{}
         org-export-with-entities t
         org-imenu-depth          9
         org-startup-folded       'content)  ;; showeverything ;; t ;; nil
