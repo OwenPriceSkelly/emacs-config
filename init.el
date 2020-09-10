@@ -52,7 +52,7 @@
 
        :term
        eshell                         ; a consistent, cross-platform shell (WIP)
-       vterm
+       (:if IS-MAC vterm)
        ;; shell                ; a terminal REPL for Emacs
        ;; term
                                         ; another terminals in Emacs
@@ -71,8 +71,7 @@
        ein                  ; tame Jupyter notebooks with emacs
        (eval +overlay)    ; run code, run (also, repls)
        ;;gist                 ; interacting with github gists
-       lookup  ; helps you navigate your code and documentation
-                                        ; ...or in Dash docsets locally
+       lookup  ; helps you navigate your code and documentation ...or in Dash docsets locally
        ;; (lsp +eglot)
        (lsp +peek)
        (magit +forge)         ; a git porcelain for Emacs

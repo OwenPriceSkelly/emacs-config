@@ -1,24 +1,3 @@
-(use-package! mixed-pitch
-  :hook (text-mode . mixed-pitch-mode)
-  :config
-  (pushnew! mixed-pitch-fixed-pitch-faces
-            'org-date
-            'org-special-keyword
-            'org-property-value
-            'org-ref-cite-face
-            'org-tag
-            'org-todo-keyword-todo
-            'org-todo-keyword-habt
-            'org-todo-keyword-done
-            'org-todo-keyword-wait
-            'org-todo-keyword-kill
-            'org-todo-keyword-outd
-            'org-todo
-            'org-done
-            'font-lock-comment-face
-            'line-number
-            'line-number-current-line))
-
 (use-package! solaire-mode
   :init
   (setq solaire-mode-auto-swap-bg t
@@ -66,7 +45,7 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-(let* ((+override-theme 'modus-operandi ;'doom-old-hope;; 'doom-oceanic-next
+((((let* ((+override-theme 'doom-old-hope;; 'doom-oceanic-next
         ) ;; 'doom-gruvbox-light
 
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
@@ -100,7 +79,29 @@
                                        :size 12)
 
       +zen-text-scale                 0
+      +ligatures-extras-in-modes '(org-mode)
       +ligatures-in-modes      '(org-mode))
+
+(use-package! mixed-pitch
+  :hook (text-mode . mixed-pitch-mode)
+  :config
+  (pushnew! mixed-pitch-fixed-pitch-faces
+            'org-date
+            'org-special-keyword
+            'org-property-value
+            'org-ref-cite-face
+            'org-tag
+            'org-todo-keyword-todo
+            'org-todo-keyword-habt
+            'org-todo-keyword-done
+            'org-todo-keyword-wait
+            'org-todo-keyword-kill
+            'org-todo-keyword-outd
+            'org-todo
+            'org-done
+            'font-lock-comment-face
+            'line-number
+            'line-number-current-line))
 
 (defun +my/doom-dashboard-widget-banner ()
   (let ((point (point)))
@@ -197,7 +198,7 @@
       +workspaces-on-switch-project-behavior t)
 
 (use-package! evil-textobj-line
-  :commands (evil-inner-line evil-a-line))
+  :demand t)
 
 (use-package! org
   :defer t

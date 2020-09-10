@@ -19,29 +19,6 @@
 * UI
 TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borrow
 ** General appearance/display
-*** package: mixed-pitch-mode
-#+BEGIN_SRC emacs-lisp :lexical yes
-(use-package! mixed-pitch
-  :hook (text-mode . mixed-pitch-mode)
-  :config
-  (pushnew! mixed-pitch-fixed-pitch-faces
-            'org-date
-            'org-special-keyword
-            'org-property-value
-            'org-ref-cite-face
-            'org-tag
-            'org-todo-keyword-todo
-            'org-todo-keyword-habt
-            'org-todo-keyword-done
-            'org-todo-keyword-wait
-            'org-todo-keyword-kill
-            'org-todo-keyword-outd
-            'org-todo
-            'org-done
-            'font-lock-comment-face
-            'line-number
-            'line-number-current-line))
-#+END_SRC
 *** package: solaire-mode
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! solaire-mode
@@ -147,7 +124,31 @@ readable without obviously being a totally different font at a glance.
                                        :size 12)
 
       +zen-text-scale                 0
+      +ligatures-extras-in-modes '(org-mode)
       +ligatures-in-modes      '(org-mode))
+#+END_SRC
+*** package: mixed-pitch-mode
+#+BEGIN_SRC emacs-lisp :lexical yes
+(use-package! mixed-pitch
+  :hook (text-mode . mixed-pitch-mode)
+  :config
+  (pushnew! mixed-pitch-fixed-pitch-faces
+            'org-date
+            'org-special-keyword
+            'org-property-value
+            'org-ref-cite-face
+            'org-tag
+            'org-todo-keyword-todo
+            'org-todo-keyword-habt
+            'org-todo-keyword-done
+            'org-todo-keyword-wait
+            'org-todo-keyword-kill
+            'org-todo-keyword-outd
+            'org-todo
+            'org-done
+            'font-lock-comment-face
+            'line-number
+            'line-number-current-line))
 #+END_SRC
 ** Dashboard
 *** ASCII-art
@@ -255,7 +256,7 @@ Miscellaneous variables/ packages that don't warrant their own section.
       +workspaces-on-switch-project-behavior t)
 
 (use-package! evil-textobj-line
-  :commands (evil-inner-line evil-a-line))
+  :demand t)
 #+END_SRC
 ** Plaintext
 *** org
