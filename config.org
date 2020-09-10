@@ -17,6 +17,7 @@
   - [[#local][local]]
 
 * UI
+TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borrow
 ** General appearance/display
 *** package: mixed-pitch-mode
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -101,7 +102,7 @@
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'doom-old-hope;; 'doom-oceanic-next
+(let* ((+override-theme 'modus-operandi ;'doom-old-hope;; 'doom-oceanic-next
         ) ;; 'doom-gruvbox-light
 
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
@@ -118,7 +119,9 @@ from a selection of light themes or dark themes, depending on the time of day.
                                                +my/themes-list-dark)))
                                         (nth (mod sec (length theme-choices))
                                              theme-choices))))
-  (intern (concat (symbol-name doom-theme) "-brighter-comments"))  t)
+  ;(intern (concat (symbol-name doom-theme) "-brighter-comments"))  t
+
+  )
 #+END_SRC
 
 *** Disable embedded block background
@@ -387,7 +390,6 @@ See also: [[#org-roam][org-roam keybindings]]
                                                                      "* Tasks: \n" )))))
 #+END_SRC
 
-
 ***** package: org-roam-server
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam-server
@@ -617,4 +619,10 @@ holding on to eglot options in case I switch back.
                                                (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
        :desc "graph all"   "g"  #'org-roam-graph
        :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4))))
+#+END_SRC
+*** python
+#+BEGIN_SRC emacs-lisp :lexical yes
+(map! :map python-mode-map
+      :localleader
+      :desc "ipython repl"         "I" #'+python/open-ipython-repl)
 #+END_SRC

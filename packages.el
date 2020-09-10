@@ -10,5 +10,6 @@
 (package! org-roam-server  :pin "832ba1ab6b3eea89da3355f7676626266a172adc")
 ;; existing packages pinned separately
 (unpin! org-roam)
+(unpin! doom-themes)
 (package! visual-basic-mode
   :recipe (:host github :repo "emacsmirror/visual-basic-mode") :pin "79689e97d9dc0f90388c4111c5409d544a173631")

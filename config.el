@@ -66,7 +66,7 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-(let* ((+override-theme 'doom-old-hope ;; 'doom-oceanic-next
+(let* ((+override-theme 'modus-operandi ;'doom-old-hope;; 'doom-oceanic-next
         ) ;; 'doom-gruvbox-light
 
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
@@ -83,7 +83,9 @@
                                                +my/themes-list-dark)))
                                         (nth (mod sec (length theme-choices))
                                              theme-choices))))
-  (intern (concat (symbol-name doom-theme) "-brighter-comments"))  t)
+  ;(intern (concat (symbol-name doom-theme) "-brighter-comments"))  t
+
+  )
 
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
@@ -504,3 +506,7 @@
                                                (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
        :desc "graph all"   "g"  #'org-roam-graph
        :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4))))
+
+(map! :map python-mode-map
+      :localleader
+      :desc "ipython repl"         "I" #'+python/open-ipython-repl)
