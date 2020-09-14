@@ -45,7 +45,7 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-((((let* ((+override-theme 'doom-old-hope;; 'doom-oceanic-next
+(let* ((+override-theme nil; 'doom-oceanic-next ; 'modus-operandi ;'doom-old-hope;;
         ) ;; 'doom-gruvbox-light
 
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
@@ -204,8 +204,12 @@
   :defer t
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
+  :hook (org-mode . writeroom-mode)
   :hook (org-mode . auto-fill-mode)
+
   :config
+  (add-hook! org-mode (hl-line-mode -1))
+
   ;; basic settings
   (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app
         org-agenda-files         (list org-directory)
@@ -280,6 +284,7 @@
   (+my/org-roam-templates)
 
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
+  (add-hook! 'org-roam-buffer-prepare-hook #'org-set-startup-visibility)
   (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
 
 (defun +my/org-roam-templates ()
@@ -350,6 +355,20 @@
   :after python
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+
+(use-package! csharp-mode
+  :mode ("\\.csx?\\'"))
+(use-package! omnisharp
+  :hook (csharp-mode . omnisharp-mode)
+  :init
+  (setq omnisharp-server-executable-path "/home/owen/.nix-profile/bin/omnisharp")
+  :config
+  (set-company-backend! 'csharp-mode 'company-omnisharp)
+  (setq omnisharp-imenu-support t
+        omnisharp-completing-read-function #'ivy-completing-read)
+  ;; (map! :mode 'csharp-mode
+  ;;       "," omnisharp-mode-map)
+  )
 
 (when (featurep! :tools lsp +eglot)
   (use-package! eglot

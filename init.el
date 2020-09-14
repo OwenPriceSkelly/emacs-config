@@ -1,10 +1,12 @@
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :completion
        (company +childframe)            ; the ultimate code completion backend
+       ;; (helm +childframe +fuzzy)
        (ivy +fuzzy
             +prescient
             +icons
-            +childframe)                           ; a search engine for love and life
+            +childframe)
+                                        ; a search engine for love and life
        :ui
        deft                             ; notational velocity for Emacs
        zen

@@ -13,3 +13,5 @@
 (unpin! doom-themes)
 (package! visual-basic-mode
   :recipe (:host github :repo "emacsmirror/visual-basic-mode") :pin "79689e97d9dc0f90388c4111c5409d544a173631")
+(package! csharp-mode :pin "5a9c8eb2e851f0ba1f5d94548afab9381e6da7bc")
+(package! omnisharp :pin "e658a18a762438c3e1737612737b05d02a21ca2a")

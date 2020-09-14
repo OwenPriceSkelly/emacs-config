@@ -79,7 +79,7 @@ TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borr
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'modus-operandi ;'doom-old-hope;; 'doom-oceanic-next
+(let* ((+override-theme nil; 'doom-oceanic-next ; 'modus-operandi ;'doom-old-hope;;
         ) ;; 'doom-gruvbox-light
 
        (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
@@ -267,8 +267,12 @@ See also: [[#org-1][org keybindings]]
   :defer t
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
+  :hook (org-mode . writeroom-mode)
   :hook (org-mode . auto-fill-mode)
+
   :config
+  (add-hook! org-mode (hl-line-mode -1))
+
   ;; basic settings
   (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app
         org-agenda-files         (list org-directory)
@@ -348,6 +352,7 @@ See also: [[#org-roam][org-roam keybindings]]
   (+my/org-roam-templates)
 
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
+  (add-hook! 'org-roam-buffer-prepare-hook #'org-set-startup-visibility)
   (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
 #+END_SRC
 ***** org-roam: templates
@@ -433,6 +438,23 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
   :after python
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+#+END_SRC
+*** C#
+#+BEGIN_SRC emacs-lisp
+(use-package! csharp-mode
+  :mode ("\\.csx?\\'"))
+(use-package! omnisharp
+  :hook (csharp-mode . omnisharp-mode)
+  :init
+  (setq omnisharp-server-executable-path "/home/owen/.nix-profile/bin/omnisharp")
+  :config
+  (set-company-backend! 'csharp-mode 'company-omnisharp)
+  (setq omnisharp-imenu-support t
+        omnisharp-completing-read-function #'ivy-completing-read)
+  ;; (map! :mode 'csharp-mode
+  ;;       "," omnisharp-mode-map)
+  )
+
 #+END_SRC
 *** LSP
 lsp-mode is noticably faster than eglot as of the most recent release,
