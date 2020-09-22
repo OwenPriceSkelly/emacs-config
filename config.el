@@ -1,8 +1,3 @@
-(use-package! solaire-mode
-  :init
-  (setq solaire-mode-auto-swap-bg t
-        solaire-mode-remap-line-numbers t))
-
 (setq which-key-side-window-location 'bottom
       which-key-sort-order 'which-key-key-order-alpha
       which-key-max-description-length nil
@@ -16,7 +11,7 @@
 
 (setq! +popup-defaults
        (list :side   'bottom
-             :height .20 ;; 0.16
+             :height .25 ;; 0.16
              :width  40
              :quit   t
              :select #'ignore
@@ -31,10 +26,15 @@
 ;; (remove-hook! text-mode hl-line-mode)
 ;; (add-hook! prog-mode hl-line-mode)
 
+(use-package! solaire-mode
+  :init
+  (setq solaire-mode-auto-swap-bg t
+        solaire-mode-remap-line-numbers t))
+
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
 (modify-frame-parameters nil '((fullscreen . maximized)
-                               (undecorated . t)))
+                               (undecorated . nil)))
 ;; (setq initial-frame-alist
 ;;        '((top . 1) (left . 1) (width . 140) (height . 58)))
 ;; (pushnew! default-frame-alist
@@ -45,10 +45,9 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-(let* ((+override-theme nil; 'doom-oceanic-next ; 'modus-operandi ;'doom-old-hope;;
-        ) ;; 'doom-gruvbox-light
+(let* ((+override-theme nil) ;; 'doom-gruvbox-light
 
-       (+my/themes-list-dark '(doom-gruvbox doom-horizon doom-oceanic-next))
+       (+my/themes-list-dark '(doom-nord doom-gruvbox doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
@@ -139,6 +138,109 @@
                                    2)))) 32))))
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
 
+(defvar fancy-splash-image-template
+  (expand-file-name "misc/splash-images/blackhole-lines-template.svg" doom-private-dir)
+  "Default template svg used for the splash image, with substitutions from ")
+(defvar fancy-splash-image-nil
+  (expand-file-name "misc/splash-images/transparent-pixel.png" doom-private-dir)
+  "An image to use at minimum size, usually a transparent pixel")
+
+(setq fancy-splash-sizes
+  `((:height 500 :min-height 50 :padding (0 . 2) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+    (:height 440 :min-height 42 :padding (1 . 2) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+    (:height 400 :min-height 38 :padding (1 . 3) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+    (:height 350 :min-height 36 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+    (:height 300 :min-height 34 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+    (:height 250 :min-height 32 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+    (:height 200 :min-height 30 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+    (:height 100 :min-height 24 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir))
+    (:height 0   :min-height 0  :padding (0 . 0) :file ,fancy-splash-image-nil)))
+
+(defvar fancy-splash-sizes
+  `((:height 500 :min-height 50 :padding (0 . 2))
+    (:height 440 :min-height 42 :padding (1 . 4))
+    (:height 330 :min-height 35 :padding (1 . 3))
+    (:height 200 :min-height 30 :padding (1 . 2))
+    (:height 0   :min-height 0  :padding (0 . 0) :file ,fancy-splash-image-nil))
+  "list of plists with the following properties
+  :height the height of the image
+  :min-height minimum `frame-height' for image
+  :padding `+doom-dashboard-banner-padding' to apply
+  :template non-default template file
+  :file file to use instead of template")
+
+(defvar fancy-splash-template-colours
+  '(("$colour1" . keywords) ("$colour2" . type) ("$colour3" . base5) ("$colour4" . base8))
+  "list of colour-replacement alists of the form (\"$placeholder\" . 'theme-colour) which applied the template")
+
+(unless (file-exists-p (expand-file-name "theme-splashes" doom-cache-dir))
+  (make-directory (expand-file-name "theme-splashes" doom-cache-dir) t))
+
+(defun fancy-splash-filename (theme-name height)
+  (expand-file-name (concat (file-name-as-directory "theme-splashes")
+                            (symbol-name doom-theme)
+                            "-" (number-to-string height) ".svg")
+                    doom-cache-dir))
+
+(defun fancy-splash-clear-cache ()
+  "Delete all cached fancy splash images"
+  (interactive)
+  (delete-directory (expand-file-name "theme-splashes" doom-cache-dir) t)
+  (message "Cache cleared!"))
+
+(defun fancy-splash-generate-image (template height)
+  "Read TEMPLATE and create an image if HEIGHT with colour substitutions as  ;described by `fancy-splash-template-colours' for the current theme"
+    (with-temp-buffer
+      (insert-file-contents template)
+      (re-search-forward "$height" nil t)
+      (replace-match (number-to-string height) nil nil)
+      (dolist (substitution fancy-splash-template-colours)
+        (beginning-of-buffer)
+        (while (re-search-forward (car substitution) nil t)
+          (replace-match (doom-color (cdr substitution)) nil nil)))
+      (write-region nil nil
+                    (fancy-splash-filename (symbol-name doom-theme) height) nil nil)))
+
+(defun fancy-splash-generate-images ()
+  "Perform `fancy-splash-generate-image' in bulk"
+  (dolist (size fancy-splash-sizes)
+    (unless (plist-get size :file)
+      (fancy-splash-generate-image (or (plist-get size :file)
+                                       (plist-get size :template)
+                                       fancy-splash-image-template)
+                                   (plist-get size :height)))))
+
+(defun ensure-theme-splash-images-exist (&optional height)
+  (unless (file-exists-p (fancy-splash-filename
+                          (symbol-name doom-theme)
+                          (or height
+                              (plist-get (car fancy-splash-sizes) :height))))
+    (fancy-splash-generate-images)))
+
+(defun get-appropriate-splash ()
+  (let ((height (frame-height)))
+    (cl-some (lambda (size) (when (>= height (plist-get size :min-height)) size))
+             fancy-splash-sizes)))
+
+(setq fancy-splash-last-size nil)
+(setq fancy-splash-last-theme nil)
+(defun set-appropriate-splash (&optional frame)
+  (let ((appropriate-image (get-appropriate-splash)))
+    (unless (and (equal appropriate-image fancy-splash-last-size)
+                 (equal doom-theme fancy-splash-last-theme)))
+    (unless (plist-get appropriate-image :file)
+      (ensure-theme-splash-images-exist (plist-get appropriate-image :height)))
+    (setq fancy-splash-image
+          (or (plist-get appropriate-image :file)
+              (fancy-splash-filename (symbol-name doom-theme) (plist-get appropriate-image :height))))
+    (setq +doom-dashboard-banner-padding (plist-get appropriate-image :padding))
+    (setq fancy-splash-last-size appropriate-image)
+    (setq fancy-splash-last-theme doom-theme)
+    (+doom-dashboard-reload)))
+
+(add-hook 'window-size-change-functions #'set-appropriate-splash)
+(add-hook 'doom-load-theme-hook #'set-appropriate-splash)
+
 (add-hook! +doom-dashboard-mode (hl-line-mode -1))
 (setq! +doom-dashboard-name "*dashboard*" )
 
@@ -171,9 +273,9 @@
          ("Open today's note"
           :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
           :action org-roam-dailies-today)
-         ;; ("Recently opened files"
-         ;;  :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
-         ;;  :action recentf-open-files)
+         ("Recently opened files"
+          :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
+          :action recentf-open-files)
          ("Open project"
           :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
           :action projectile-switch-project)
@@ -194,17 +296,125 @@
       ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
       fill-column 88
-      company-idle-delay nil
+      company-idle-delay 0
+      completion-ignore-case t
       +workspaces-on-switch-project-behavior t)
 
+(add-to-list 'completion-styles 'flex)
 (use-package! evil-textobj-line
   :demand t)
+
+(use-package! python
+  :after python
+  :config
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+
+(if (featurep! :tools lsp +eglot)
+    (use-package! lsp-jedi
+      :after (python eglot)
+      :config
+      (add-to-list 'eglot-server-programs
+                   `(python-mode . ("jedi-language-server"))))
+  (use-package! lsp-jedi
+    :after (python lsp-mode)
+    :config
+    (add-to-list 'lsp-disabled-clients 'pyls)
+    (add-to-list 'lsp-disabled-clients 'pyright)
+    (add-to-list 'lsp-enabled-clients 'jedi)))
+
+(use-package! csharp-mode
+  ;:init (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
+  :mode ("\\.csx?\\'"))
+;; (use-package! omnisharp
+;;   :hook (csharp-mode . omnisharp-mode)
+;;   :init
+;;   (setq omnisharp-server-executable-path "/home/owen/.nix-profile/bin/omnisharp")
+;;   ;; (after! format-all
+;;   ;;   (define-format-all-formatter omnisharp-format
+;;   ;;     (:modes csharp-mode)
+;;   ;;     (:format (omnisharp-code-format-entire-file))))
+;;   ;; (set-lookup-handlers! 'csharp-mode
+;;   ;;   :definition #'omnisharp-go-to-definition-other-window
+;;   ;;   :implementations #'omnisharp-find-implementations
+;;   ;;   :type-definition #'omnisharp-current-type-documentation
+;;   ;;   :references #'omnisharp-find-usages
+;;   ;;   :documentation #'omnisharp-eldoc-function
+;;   ;;   :file #'omnisharp-find-implementations)
+;;   :config
+;;   (set-company-backend! 'csharp-mode 'company-omnisharp)
+;;   (setq omnisharp-imenu-support t
+;;         omnisharp-completing-read-function #'ivy-completing-read)
+;;   ;; (map! :mode 'csharp-mode
+;;   ;;       :localleader
+;;   ;;       "f" #'omnisharp-code-format-entire-file)
+;;   )
+
+(when (featurep! :tools lsp +eglot)
+  (use-package! eglot
+    :commands (eglot eglot-ensure)
+    :config
+    (setq eglot-send-changes-idle-time 0.05)
+    (set-lookup-handlers! 'eglot--managed-mode ;:async t
+      :implementations #'eglot-find-implementation
+      :type-definition #'eglot-find-typeDefinition
+      :documentation #'+eglot/documentation-lookup-handler
+      ;; :definition
+      ;; :references
+      )
+    (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
+;; (when (featurep! :tools lsp +peek)
+;;   (use-package! lsp-ui
+;;     :defer t
+;;     :config
+;;     (setq lsp-ui-doc-max-height 10
+;;           lsp-ui-doc-max-width 88
+;;           lsp-ui-sideline-diagnostic-max-line-length 35
+;;           lsp-ui-sideline-ignore-duplicate t
+;;           lsp-ui-doc-enable nil
+;;           ;; Don't show symbol definitions in the sideline. They are pretty noisy,
+;;           ;; and there is a bug preventing Flycheck errors from being shown (the
+;;           ;; errors flash briefly and then disappear).
+;;           lsp-ui-sideline-show-hover nil)))
+
+;; (use-package! tree-sitter
+;;   :defer-incrementally tree-sitter-langs tree-sitter-hl
+;;   :hook '(agda-mode-hook
+;;            shell-mode-hook
+;;            c-mode-hook
+;;            c++-mode-hook
+;;            css-mode-hook
+;;            haskell-mode-hook
+;;            html-mode-hook
+;;            js-mode-hook
+;;            js2-mode-hook
+;;            son-mode-hook
+;;            python-mode-hook
+;;            ruby-mode-hook
+;;            rust-mode-hook
+;;            typescript-mode-hook)
+;;   :config (require 'tree-sitter-langs))
+
+;; (use-package! tree-sitter-hl
+;;   :config (tree-sitter-hl-mode))
+
+;; (use-package! tree-sitter
+;;   :after tree-sitter-langs
+;;   :hook ((agda-mode sh-mode c-mode c++-mode
+;;           css-mode go-mode haskell-mode
+;;           html-mode java-mode js-mode js2-mode
+;;           json-mode julia-mode ocaml-mode
+;;           php-mode python-mode ruby-mode rust-mode
+;;           rustic-mode scala-mode swift-mode) .
+;;           tree-sitter-mode)
+;;   :config
+;;   (require 'tree-sitter-langs)
+;;   (tree-sitter-hl-mode))
 
 (use-package! org
   :defer t
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
-  :hook (org-mode . writeroom-mode)
+  ;; :hook (org-mode . writeroom-mode)
   :hook (org-mode . auto-fill-mode)
 
   :config
@@ -256,11 +466,16 @@
                                    :html-background "Transparent"
                                    :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
 
-(use-package! ox-hugo
-  :after org
+(use-package! org-superstar ; "prettier" bullets
+  :hook (org-mode . org-superstar-mode)
   :config
-  (setq org-hugo-preserve-filling nil
-        org-hugo-section "notes"))
+  (setq org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")  ;; '("#")
+        org-superstar-prettify-item-bullets t
+        org-superstar-item-bullet-alist
+        '((?* . ?»)
+          (?+ . ?»)
+          (?- . ?›))
+        org-superstar-special-todo-items nil))
 
 (use-package! org-roam
   :after org
@@ -325,20 +540,6 @@
                                                                      "#+roam_tags: journal\n"
                                                                      "* Tasks: \n" )))))
 
-(use-package! org-roam-server
-  :commands (org-roam-server-mode))
-
-(use-package! org-superstar ; "prettier" bullets
-  :hook (org-mode . org-superstar-mode)
-  :config
-  (setq org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")  ;; '("#")
-        org-superstar-prettify-item-bullets t
-        org-superstar-item-bullet-alist
-        '((?* . ?»)
-          (?+ . ?»)
-          (?- . ?›))
-        org-superstar-special-todo-items nil))
-
 (use-package! mathpix
   :commands (mathpix-screenshot)
   :config
@@ -346,56 +547,19 @@
         mathpix-app-key           (password-store-get "mathpix.com/app-key")
         mathpix-screenshot-method "screencapture -i %s"))
 
+(use-package! org-roam-server
+  :commands (org-roam-server-mode))
+
+(use-package! ox-hugo
+  :after org
+  :config
+  (setq org-hugo-preserve-filling nil
+        org-hugo-section "notes"))
+
 (setq +markdown-compile-functions '(+markdown-compile-pandoc
                                     +markdown-compile-marked
                                     +markdown-compile-markdown
                                     +markdown-compile-multimarkdown))
-
-(use-package! python
-  :after python
-  :config
-  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
-
-(use-package! csharp-mode
-  :mode ("\\.csx?\\'"))
-(use-package! omnisharp
-  :hook (csharp-mode . omnisharp-mode)
-  :init
-  (setq omnisharp-server-executable-path "/home/owen/.nix-profile/bin/omnisharp")
-  :config
-  (set-company-backend! 'csharp-mode 'company-omnisharp)
-  (setq omnisharp-imenu-support t
-        omnisharp-completing-read-function #'ivy-completing-read)
-  ;; (map! :mode 'csharp-mode
-  ;;       "," omnisharp-mode-map)
-  )
-
-(when (featurep! :tools lsp +eglot)
-  (use-package! eglot
-    :commands (eglot eglot-ensure)
-    :config
-    (setq eglot-send-changes-idle-time 0.05)
-    (set-lookup-handlers! 'eglot--managed-mode ;:async t
-      :implementations #'eglot-find-implementation
-      :type-definition #'eglot-find-typeDefinition
-      :documentation #'+eglot/documentation-lookup-handler
-      ;; :definition
-      ;; :references
-      )
-    (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
-;; (when (featurep! :tools lsp +peek)
-;;   (use-package! lsp-ui
-;;     :defer t
-;;     :config
-;;     (setq lsp-ui-doc-max-height 10
-;;           lsp-ui-doc-max-width 88
-;;           lsp-ui-sideline-diagnostic-max-line-length 35
-;;           lsp-ui-sideline-ignore-duplicate t
-;;           lsp-ui-doc-enable nil
-;;           ;; Don't show symbol definitions in the sideline. They are pretty noisy,
-;;           ;; and there is a bug preventing Flycheck errors from being shown (the
-;;           ;; errors flash briefly and then disappear).
-;;           lsp-ui-sideline-show-hover nil)))
 
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"

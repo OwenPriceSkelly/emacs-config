@@ -1,11 +1,12 @@
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :completion
-       (company +childframe)            ; the ultimate code completion backend
-       ;; (helm +childframe +fuzzy)
+       (company +childframe
+        )            ; the ultimate code completion backend
        (ivy +fuzzy
             +prescient
             +icons
-            +childframe)
+            +childframe
+            )
                                         ; a search engine for love and life
        :ui
        deft                             ; notational velocity for Emacs
@@ -55,12 +56,14 @@
        :term
        eshell                         ; a consistent, cross-platform shell (WIP)
        (:if IS-MAC vterm)
+       (:if IS-LINUX term)
        ;; shell                ; a terminal REPL for Emacs
        ;; term
                                         ; another terminals in Emacs
 
        :checkers
-       (syntax +childframe)      ; tasing you for every semicolon you forget
+       (syntax +childframe
+        )      ; tasing you for every semicolon you forget
        ;;spell                ; tasing you for misspelling mispelling
        ;;grammar              ; tasing grammar mistake every you make
 
@@ -74,8 +77,8 @@
        (eval +overlay)    ; run code, run (also, repls)
        ;;gist                 ; interacting with github gists
        lookup  ; helps you navigate your code and documentation ...or in Dash docsets locally
-       ;; (lsp +eglot)
-       (lsp +peek)
+       (lsp +eglot)
+       ;; (lsp +peek)
        (magit +forge)         ; a git porcelain for Emacs
        ;;make                 ; run make tasks from Emacs
        pass                            ; password manager for nerds
@@ -98,7 +101,7 @@
        ;;common-lisp          ; if you've seen one lisp, you've seen them all
        ;;coq                  ; proofs-as-programs
        ;;crystal              ; ruby at the speed of c
-       ;;csharp               ; unity, .NET, and mono shenanigans
+       (csharp +lsp) ; unity, .NET, and mono shenanigans
        data                      ; config/data formats
        ;;elixir               ; erlang done right
        ;;elm                  ; care for a cup of TEA?
