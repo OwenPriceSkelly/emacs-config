@@ -498,11 +498,20 @@
          org-roam-graph-shorten-titles    'truncate
          org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open"))
-  (+my/org-roam-templates)
+
 
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   (add-hook! 'org-roam-buffer-prepare-hook #'org-set-startup-visibility)
-  (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local)))
+  (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
+  :config
+  (+my/org-roam-templates)
+  (after! key-chord
+    (key-chord-define org-mode-map "[[" #'my/insert-roam-link)
+    (defun +my/insert-roam-link ()
+      "Inserts an Org-roam link."
+      (interactive)
+      (insert "[[roam:]]")
+      (backward-char 2))))
 
 (defun +my/org-roam-templates ()
 
@@ -512,7 +521,6 @@
                                                    :head (concat "#+title: ${title}\n"
                                                                  "#+roam_key: ${ref}\n"
                                                                  "#+roam_tags: article\n"
-                                                                 "#+setupfile: ./setup.org\n"
                                                                  "* Related: \n"
                                                                  "  - [[${ref}][url]]\n")
                                                    :unnarrowed t))
@@ -521,7 +529,6 @@
                                                :file-name "%<%Y-%m-%d>-${slug}"
                                                :head (concat "#+title: ${title}\n"
                                                              "#+roam_tags:\n"
-                                                             "#+setupfile: ./setup.org\n"
                                                              "* Description: \n"
                                                              "* Related: \n" )
                                                :unnarrowed t))
@@ -530,7 +537,6 @@
                                              :file-name "%<%Y-%m-%d>-${slug}"
                                              :head ,(concat "#+title: ${title}\n"
                                                             "#+roam_tags:\n"
-                                                            "#+setupfile: ./setup.org\n"
                                                             "* Description: \n"
                                                             "* Related: \n")
                                              :unnarrowed t
@@ -539,7 +545,7 @@
                                                        "%?"
                                                        :immediate-finish t
                                                        :file-name "%<%Y-%m-%d-%A>"
-                                                       :head (concat "#+title: %<%a, %b %d, %y>\n"
+                                                       :head (concat "#+title: %<%A, %B %d, %Y>\n"
                                                                      "#+roam_tags: journal\n"
                                                                      "* Tasks: \n" )))))
 
