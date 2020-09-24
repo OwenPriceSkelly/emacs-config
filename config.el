@@ -309,18 +309,19 @@
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 
-(if (featurep! :tools lsp +eglot)
-    (use-package! lsp-jedi
-      :after (python eglot)
-      :config
-      (add-to-list 'eglot-server-programs
-                   `(python-mode . ("jedi-language-server"))))
-  (use-package! lsp-jedi
-    :after (python lsp-mode)
-    :config
-    (add-to-list 'lsp-disabled-clients 'pyls)
-    (add-to-list 'lsp-disabled-clients 'pyright)
-    (add-to-list 'lsp-enabled-clients 'jedi)))
+(after! python
+  (if (featurep! :tools lsp +eglot)
+      (after! eglot
+        (use-package! lsp-jedi
+          :config
+          (add-to-list 'eglot-server-programs
+                       `(python-mode . ("jedi-language-server")))))
+    (after! lsp-mode
+      (use-package! lsp-jedi
+        :config
+        (add-to-list 'lsp-disabled-clients 'pyls)
+        (add-to-list 'lsp-disabled-clients 'pyright)
+        (add-to-list 'lsp-enabled-clients 'jedi)))))
 
 (use-package! csharp-mode
   ;:init (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
@@ -487,6 +488,7 @@
              org-roam-dailies-yesterday)
   :init
   (setq! org-roam-directory               org-directory
+         org-roam-db-location             "~/Notes/.roam.db"
          org-roam-tag-sort                t
          org-roam-tag-sources             '(prop)
          org-roam-tag-separator           ", "
@@ -500,9 +502,10 @@
 
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   (add-hook! 'org-roam-buffer-prepare-hook #'org-set-startup-visibility)
-  (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
+  (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local)))
 
 (defun +my/org-roam-templates ()
+
   (setq org-roam-capture-ref-templates (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
                                                    "%?"
                                                    :file-name "${slug}"
@@ -533,7 +536,7 @@
                                              :unnarrowed t
                                              :immediate-finish t)
         org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
-                                                       ""
+                                                       "%?"
                                                        :immediate-finish t
                                                        :file-name "%<%Y-%m-%d-%A>"
                                                        :head (concat "#+title: %<%a, %b %d, %y>\n"
