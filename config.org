@@ -605,13 +605,9 @@ See also: [[#org-roam][org-roam keybindings]]
   (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
   :config
   (+my/org-roam-templates)
-  (after! key-chord
-    (key-chord-define org-mode-map "[[" #'my/insert-roam-link)
-    (defun +my/insert-roam-link ()
-      "Inserts an Org-roam link."
-      (interactive)
-      (insert "[[roam:]]")
-      (backward-char 2))))
+  (map! :map org-roam-mode-map
+        :i "[[" (cmd! (insert "[[roam:]]")
+                      (backward-char 2))))
 #+END_SRC
 ***** org-roam: templates
 #+BEGIN_SRC emacs-lisp
@@ -646,13 +642,13 @@ See also: [[#org-roam][org-roam keybindings]]
                                                             "* Related: \n")
                                              :unnarrowed t
                                              :immediate-finish t)
-        org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
-                                                       "%?"
-                                                       :immediate-finish t
-                                                       :file-name "%<%Y-%m-%d-%A>"
-                                                       :head (concat "#+title: %<%a, %b %d, %y>\n"
-                                                                     "#+roam_tags: journal\n"
-                                                                     "* Tasks: \n" )))))
+        org-roam-dailies-capture-templates `(("d" "daily" plain #'org-roam-capture--get-point
+                                              ""
+                                              :immediate-finish t
+                                              :file-name "%<%Y-%m-%d-%A>"
+                                              :head ,(concat "#+title: %<%A, %B %d, %Y>\n"
+                                                             "#+roam_tags: journal\n"
+                                                             "* Tasks: \n")))))
 #+END_SRC
 
 ***** package: mathpix

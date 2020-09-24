@@ -498,11 +498,16 @@
          org-roam-graph-shorten-titles    'truncate
          org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open"))
-  (+my/org-roam-templates)
+
 
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   (add-hook! 'org-roam-buffer-prepare-hook #'org-set-startup-visibility)
-  (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local)))
+  (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
+  :config
+  (+my/org-roam-templates)
+  (map! :map org-roam-mode-map
+        :i "[[" (cmd! (insert "[[roam:]]")
+                      (backward-char 2))))
 
 (defun +my/org-roam-templates ()
 
@@ -535,13 +540,13 @@
                                                             "* Related: \n")
                                              :unnarrowed t
                                              :immediate-finish t)
-        org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
-                                                       "%?"
-                                                       :immediate-finish t
-                                                       :file-name "%<%Y-%m-%d-%A>"
-                                                       :head (concat "#+title: %<%a, %b %d, %y>\n"
-                                                                     "#+roam_tags: journal\n"
-                                                                     "* Tasks: \n" )))))
+        org-roam-dailies-capture-templates `(("d" "daily" plain #'org-roam-capture--get-point
+                                              ""
+                                              :immediate-finish t
+                                              :file-name "%<%Y-%m-%d-%A>"
+                                              :head ,(concat "#+title: %<%A, %B %d, %Y>\n"
+                                                             "#+roam_tags: journal\n"
+                                                             "* Tasks: \n")))))
 
 (use-package! mathpix
   :commands (mathpix-screenshot)
