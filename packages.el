@@ -17,7 +17,7 @@
 (unpin! doom-themes)
 (package! darktooth-theme)
 (package! creamsody-theme)
-
+(package! key-chord)
 
 ;; (package! tree-sitter
 ;;   :recipe (:host github :repo "ubolonton/emacs-tree-sitter" :files ("lisp/*.el" )))

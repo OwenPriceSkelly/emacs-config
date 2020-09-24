@@ -598,11 +598,20 @@ See also: [[#org-roam][org-roam keybindings]]
          org-roam-graph-shorten-titles    'truncate
          org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open"))
-  (+my/org-roam-templates)
+
 
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   (add-hook! 'org-roam-buffer-prepare-hook #'org-set-startup-visibility)
-  (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local)))
+  (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
+  :config
+  (+my/org-roam-templates)
+  (after! key-chord
+    (key-chord-define org-mode-map "[[" #'my/insert-roam-link)
+    (defun +my/insert-roam-link ()
+      "Inserts an Org-roam link."
+      (interactive)
+      (insert "[[roam:]]")
+      (backward-char 2))))
 #+END_SRC
 ***** org-roam: templates
 #+BEGIN_SRC emacs-lisp
