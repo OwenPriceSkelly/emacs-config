@@ -307,15 +307,13 @@
 (use-package! python
   :after python
   :config
-  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
-
-(after! python
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
   (if (featurep! :tools lsp +eglot)
       (after! eglot
-       (use-package! lsp-jedi
-           :config
-           (add-to-list 'eglot-server-programs
-                        `(python-mode . ("pyls")))))
+        (use-package! lsp-jedi
+          :config
+          (add-to-list 'eglot-server-programs
+                       `(python-mode . ("pyls")))))
     (after! lsp-mode
       (use-package! lsp-jedi
         :config
@@ -326,29 +324,6 @@
 (use-package! csharp-mode
   ;:init (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
   :mode ("\\.csx?\\'"))
-;; (use-package! omnisharp
-;;   :hook (csharp-mode . omnisharp-mode)
-;;   :init
-;;   (setq omnisharp-server-executable-path "/home/owen/.nix-profile/bin/omnisharp")
-;;   ;; (after! format-all
-;;   ;;   (define-format-all-formatter omnisharp-format
-;;   ;;     (:modes csharp-mode)
-;;   ;;     (:format (omnisharp-code-format-entire-file))))
-;;   ;; (set-lookup-handlers! 'csharp-mode
-;;   ;;   :definition #'omnisharp-go-to-definition-other-window
-;;   ;;   :implementations #'omnisharp-find-implementations
-;;   ;;   :type-definition #'omnisharp-current-type-documentation
-;;   ;;   :references #'omnisharp-find-usages
-;;   ;;   :documentation #'omnisharp-eldoc-function
-;;   ;;   :file #'omnisharp-find-implementations)
-;;   :config
-;;   (set-company-backend! 'csharp-mode 'company-omnisharp)
-;;   (setq omnisharp-imenu-support t
-;;         omnisharp-completing-read-function #'ivy-completing-read)
-;;   ;; (map! :mode 'csharp-mode
-;;   ;;       :localleader
-;;   ;;       "f" #'omnisharp-code-format-entire-file)
-;;   )
 
 (when (featurep! :tools lsp +eglot)
   (use-package! eglot
@@ -375,41 +350,8 @@
           ;; Don't show symbol definitions in the sideline. They are pretty noisy,
           ;; and there is a bug preventing Flycheck errors from being shown (the
           ;; errors flash briefly and then disappear).
-          lsp-ui-sideline-show-hover nil)))
-
-;; (use-package! tree-sitter
-;;   :defer-incrementally tree-sitter-langs tree-sitter-hl
-;;   :hook '(agda-mode-hook
-;;            shell-mode-hook
-;;            c-mode-hook
-;;            c++-mode-hook
-;;            css-mode-hook
-;;            haskell-mode-hook
-;;            html-mode-hook
-;;            js-mode-hook
-;;            js2-mode-hook
-;;            son-mode-hook
-;;            python-mode-hook
-;;            ruby-mode-hook
-;;            rust-mode-hook
-;;            typescript-mode-hook)
-;;   :config (require 'tree-sitter-langs))
-
-;; (use-package! tree-sitter-hl
-;;   :config (tree-sitter-hl-mode))
-
-;; (use-package! tree-sitter
-;;   :after tree-sitter-langs
-;;   :hook ((agda-mode sh-mode c-mode c++-mode
-;;           css-mode go-mode haskell-mode
-;;           html-mode java-mode js-mode js2-mode
-;;           json-mode julia-mode ocaml-mode
-;;           php-mode python-mode ruby-mode rust-mode
-;;           rustic-mode scala-mode swift-mode) .
-;;           tree-sitter-mode)
-;;   :config
-;;   (require 'tree-sitter-langs)
-;;   (tree-sitter-hl-mode))
+          lsp-ui-sideline-show-hover nil)
+    (lsp-ui-sideline-mode -1)))
 
 (use-package! org
   :defer t
@@ -420,6 +362,8 @@
 
   :config
   (add-hook! org-mode (hl-line-mode -1))
+  (set-company-backend! '(org-mode org-roam-mode)
+    'company-capf)
 
   ;; basic settings
   (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app
@@ -431,8 +375,7 @@
         org-export-with-sub-superscripts '{}
         org-export-with-entities t
         org-imenu-depth          9
-        org-startup-folded       'content)  ;; showeverything ;; t ;; nil
-
+        org-startup-folded       'content) ;; showeverything ;; t ;; nil
   ;; fontifying, keywords
   (setq org-ellipsis                      " ▾ "
         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "[!](r)" "|"
@@ -470,7 +413,7 @@
 (use-package! org-superstar ; "prettier" bullets
   :hook (org-mode . org-superstar-mode)
   :config
-  (setq org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")  ;; '("#")
+  (setq org-superstar-headline-bullets-list '("☰" "☱" "☳" "☷" "☶" "☴")
         org-superstar-prettify-item-bullets t
         org-superstar-item-bullet-alist
         '((?* . ?»)
@@ -505,30 +448,27 @@
   (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
   :config
   (+my/org-roam-templates)
-  (map! :map org-roam-mode-map
-        :i "[[" (cmd! (insert "[[roam:]]")
-                      (backward-char 2) )    )
-  (set-company-backend! 'org-mode
-    'company-capf))
+  (map! :map org-mode-map
+        "[[" (cmd! (insert "[[roam:]]")
+                      (backward-char 2) )    ))
 
 (defun +my/org-roam-templates ()
-
-  (setq org-roam-capture-ref-templates (list (list "r" "ref" 'plain (list 'function #'org-roam-capture--get-point)
+  (setq org-roam-capture-ref-templates `(("r" "ref" plain #'org-roam-capture--get-point
                                                    "%?"
                                                    :file-name "${slug}"
-                                                   :head (concat "#+title: ${title}\n"
+                                                   :head ,(concat "#+title: ${title}\n"
                                                                  "#+roam_key: ${ref}\n"
                                                                  "#+roam_tags: article\n"
                                                                  "* Related: \n"
                                                                  "  - [[${ref}][url]]\n")
                                                    :unnarrowed t))
-        org-roam-capture-templates (list (list "d" "default" 'plain (list 'function #'org-roam-capture--get-point)
+        org-roam-capture-templates `(("d" "default" plain #'org-roam-capture--get-point
                                                "%?"
                                                :file-name "%<%Y-%m-%d>-${slug}"
-                                               :head (concat "#+title: ${title}\n"
+                                               :head ,(concat "#+title: ${title}\n"
                                                              "#+roam_tags:\n"
                                                              "* Description: \n"
-                                                             "* Related: \n" )
+                                                             "* Related: \n")
                                                :unnarrowed t))
         org-roam-capture-immediate-template `("d" "default" plain #'org-roam-capture--get-point
                                              "%?"
@@ -539,13 +479,13 @@
                                                             "* Related: \n")
                                              :unnarrowed t
                                              :immediate-finish t)
-        org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
-                                                       ""
-                                                       :immediate-finish t
-                                                       :file-name "%<%Y-%m-%d-%A>"
-                                                       :head (concat "#+title: %<%A, %B %d, %Y>\n"
-                                                                     "#+roam_tags: journal\n"
-                                                                     "* Tasks: \n" )))))
+        org-roam-dailies-capture-templates `(("d" "daily" plain #'org-roam-capture--get-point
+                                              "%?"
+                                              :immediate-finish t
+                                              :file-name "%<%Y-%m-%d-%A>"
+                                              :head ,(concat "#+title: %<%A, %B %d, %Y>\n"
+                                                            "#+roam_tags: journal\n"
+                                                            "* Tasks: \n" )))))
 
 (use-package! mathpix
   :commands (mathpix-screenshot)
