@@ -312,10 +312,10 @@
 (after! python
   (if (featurep! :tools lsp +eglot)
       (after! eglot
-        (use-package! lsp-jedi
-          :config
-          (add-to-list 'eglot-server-programs
-                       `(python-mode . ("jedi-language-server")))))
+       (use-package! lsp-jedi
+           :config
+           (add-to-list 'eglot-server-programs
+                        `(python-mode . ("pyls")))))
     (after! lsp-mode
       (use-package! lsp-jedi
         :config
@@ -355,27 +355,27 @@
     :commands (eglot eglot-ensure)
     :config
     (setq eglot-send-changes-idle-time 0.05)
-    (set-lookup-handlers! 'eglot--managed-mode ;:async t
-      :implementations #'eglot-find-implementation
-      :type-definition #'eglot-find-typeDefinition
-      :documentation #'+eglot/documentation-lookup-handler
-      ;; :definition
-      ;; :references
-      )
+    ;; (set-lookup-handlers! 'eglot--managed-mode ;:async t
+    ;;   :implementations #'eglot-find-implementation
+    ;;   :type-definition #'eglot-find-typeDefinition
+    ;;   :documentation #'+eglot/documentation-lookup-handler
+    ;;   ;; :definition
+    ;;   ;; :references
+    ;;   )
     (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
-;; (when (featurep! :tools lsp +peek)
-;;   (use-package! lsp-ui
-;;     :defer t
-;;     :config
-;;     (setq lsp-ui-doc-max-height 10
-;;           lsp-ui-doc-max-width 88
-;;           lsp-ui-sideline-diagnostic-max-line-length 35
-;;           lsp-ui-sideline-ignore-duplicate t
-;;           lsp-ui-doc-enable nil
-;;           ;; Don't show symbol definitions in the sideline. They are pretty noisy,
-;;           ;; and there is a bug preventing Flycheck errors from being shown (the
-;;           ;; errors flash briefly and then disappear).
-;;           lsp-ui-sideline-show-hover nil)))
+(when (featurep! :tools lsp +peek)
+  (use-package! lsp-ui
+    :defer t
+    :config
+    (setq lsp-ui-doc-max-height 10
+          lsp-ui-doc-max-width 88
+          lsp-ui-sideline-diagnostic-max-line-length 35
+          lsp-ui-sideline-ignore-duplicate t
+          lsp-ui-doc-enable nil
+          ;; Don't show symbol definitions in the sideline. They are pretty noisy,
+          ;; and there is a bug preventing Flycheck errors from being shown (the
+          ;; errors flash briefly and then disappear).
+          lsp-ui-sideline-show-hover nil)))
 
 ;; (use-package! tree-sitter
 ;;   :defer-incrementally tree-sitter-langs tree-sitter-hl
@@ -505,13 +505,11 @@
   (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
   :config
   (+my/org-roam-templates)
-  (after! key-chord
-    (key-chord-define org-mode-map "[[" #'my/insert-roam-link)
-    (defun +my/insert-roam-link ()
-      "Inserts an Org-roam link."
-      (interactive)
-      (insert "[[roam:]]")
-      (backward-char 2))))
+  (map! :map org-roam-mode-map
+        :i "[[" (cmd! (insert "[[roam:]]")
+                      (backward-char 2) )    )
+  (set-company-backend! 'org-mode
+    'company-capf))
 
 (defun +my/org-roam-templates ()
 
@@ -542,7 +540,7 @@
                                              :unnarrowed t
                                              :immediate-finish t)
         org-roam-dailies-capture-templates (list (list "d" "daily" 'plain (list 'function #'org-roam-capture--get-point)
-                                                       "%?"
+                                                       ""
                                                        :immediate-finish t
                                                        :file-name "%<%Y-%m-%d-%A>"
                                                        :head (concat "#+title: %<%A, %B %d, %Y>\n"
@@ -607,8 +605,8 @@
        :g [C-tab] #'+workspace/switch-right)
 
       (:when (featurep! :completion company)
-       :i "C-i" #'+company/complete
-       :i [C-i] #'+company/complete)
+       :i "C-i" #'company-complete
+       :i [C-i] #'company-complete)
 
       ;;lispy
       (:after lispy
