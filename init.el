@@ -1,19 +1,22 @@
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :completion
-       (company +childframe)            ; the ultimate code completion backend
-       (ivy +fuzzy                      ; a search engine for love and life
+       (company +childframe
+        )            ; the ultimate code completion backend
+       (ivy +fuzzy
             +prescient
             +icons
-            +childframe)
-
+            +childframe
+            )
+                                        ; a search engine for love and life
        :ui
        deft                             ; notational velocity for Emacs
        zen
-       doom                             ; what makes DOOM look the way it does
-       doom-dashboard                   ; a nifty splash screen for Emacs
+       doom                   ; what makes DOOM look the way it does
+       doom-dashboard         ; a nifty splash screen for Emacs
        ;;doom-quit
-       ligatures ;; +extra    ; ligatures and symbols to make your code pretty again
-       hl-todo   ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       (ligatures ;; +extra
+        )         ; ligatures and symbols to make your code pretty again
+       hl-todo                ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        ;;indent-guides        ; highlighted indent columns
        ;;minimap
@@ -51,15 +54,17 @@
        (undo +tree)
 
        :term
-       eshell                 ; a consistent, cross-platform shell (WIP)
-       ;; vterm
-       ;; shell               ; a terminal REPL for Emacs
-       term                             ; another terminals in Emacs
-
+       eshell                         ; a consistent, cross-platform shell (WIP)
+       (:if IS-MAC vterm)
+       (:if IS-LINUX term)
+       ;; shell                ; a terminal REPL for Emacs
+       ;; term
+                                        ; another terminals in Emacs
 
        :checkers
-       (syntax +childframe)          ; tasing you for every semicolon you forget
-       spell                         ; tasing you for misspelling mispelling
+       (syntax +childframe
+        )      ; tasing you for every semicolon you forget
+       ;;spell                ; tasing you for misspelling mispelling
        ;;grammar              ; tasing grammar mistake every you make
 
        :tools
@@ -68,16 +73,16 @@
        ;;direnv
        docker
        ;;editorconfig         ; let someone else argue about tabs vs spaces
-       ein                ; tame Jupyter notebooks with emacs
+       ein                  ; tame Jupyter notebooks with emacs
        (eval +overlay)    ; run code, run (also, repls)
        ;;gist                 ; interacting with github gists
-       (lookup +docsets) ; helps you navigate your code and documentation ...or in Dash docsets locally
-       lsp               ;; +eglot ;; +peek
-
-       (magit +forge)                   ; a git porcelain for Emacs
-       make                             ; run make tasks from Emacs
-       pass                             ; password manager for nerds
-       pdf                              ; pdf enhancements
+       lookup  ; helps you navigate your code and documentation ...or in Dash docsets locally
+       ;; (lsp +eglot)
+       (lsp +peek)
+       (magit +forge)         ; a git porcelain for Emacs
+       ;;make                 ; run make tasks from Emacs
+       pass                            ; password manager for nerds
+       pdf                 ; pdf enhancements
        ;;prodigy              ; FIXME managing external services & code builders
        rgb             ; creating color strings
        terraform       ; infrastructure as code
@@ -85,18 +90,18 @@
        upload                         ; map local to remote projects via ssh/ftp
 
        :os
-       (:if IS-MAC macos)               ; improve compatibility with macOS
-       tty                              ; improve the terminal Emacs experience
+       (:if IS-MAC macos)  ; improve compatibility with macOS
+       tty               ; improve the terminal Emacs experience
 
        :lang
        ;;agda                 ; types of types of types of types...
        ;;assembly             ; assembly for fun or debugging
-       (cc  +lsp)                       ; C/C++/Obj-C madness
+       cc                               ; C/C++/Obj-C madness
        clojure                          ; java with a lisp
        ;;common-lisp          ; if you've seen one lisp, you've seen them all
        ;;coq                  ; proofs-as-programs
        ;;crystal              ; ruby at the speed of c
-       (csharp +lsp)             ; unity, .NET, and mono shenanigans
+       (csharp +lsp) ; unity, .NET, and mono shenanigans
        data                      ; config/data formats
        ;;elixir               ; erlang done right
        ;;elm                  ; care for a cup of TEA?
@@ -124,24 +129,26 @@
        ;;nim                  ; python + lisp at the speed of c
        nix                           ; I hereby declare "nix geht mehr!"
        ;;ocaml                ; an objective camel
-       (org +pretty
-            +roam                    ; organize your plain life in plain text
-            +dragndrop               ; drag & drop files/images into org buffers
-            +pandoc                  ; export-with-pandoc support
-            +noter
-            ;; +hugo          ; use Emacs for hugo blogging
-            ;;+present        ; using org-mode for presentations
-            ;;+gnuplot
-            ;;+jupyter        ; ipython/jupyter support for babel
-            ;;+pomodoro       ; be fruitful with the tomato technique
-            +journal)
+       (org                             ; organize your plain life in plain text
+         +pretty
+         +roam
+         +dragndrop                   ; drag & drop files/images into org buffers
+         +hugo                        ; use Emacs for hugo blogging
+         +pandoc                      ; export-with-pandoc support
+         +noter)
+       ;;+present            ; using org-mode for presentations
+       ;;+journal
+       ;;+gnuplot
+       ;;+jupyter            ; ipython/jupyter support for babel
+       ;;+pomodoro           ; be fruitful with the tomato technique
 
        ;;perl                 ; write code no one else can comprehend
        ;;php                  ; perl's insecure younger brother
        ;;plantuml             ; diagrams for confusing people more
        ;;purescript           ; javascript, but functional
        (python +lsp
-               +pyright)                ; beautiful is better than ugly ;
+               +pyright)
+                                        ; beautiful is better than ugly ;
        ;;qt                   ; the 'cutest' gui framework ever
        ;;racket               ; a DSL for DSLs
        rest                             ; Emacs as a REST client
@@ -161,14 +168,14 @@
        ;;notmuch
        ;;(wanderlust +gmail)
 
-       :config
-       (default +bindings
-         +smartparens)
-       literate
-
        :app
        ;;calendar
        ;;irc                  ; how neckbeards socialize
        ;;(rss +org)           ; emacs as an RSS reader
        ;;twitter              ; twitter client https://twitter.com/vnought
-       )
+
+       :config
+       literate
+       (default
+         +bindings
+         +smartparens))
