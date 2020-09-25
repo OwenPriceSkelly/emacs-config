@@ -420,6 +420,8 @@
 
   :config
   (add-hook! org-mode (hl-line-mode -1))
+  (set-company-backend! '(org-mode org-roam-mode)
+    'company-capf)
 
   ;; basic settings
   (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app
@@ -431,8 +433,7 @@
         org-export-with-sub-superscripts '{}
         org-export-with-entities t
         org-imenu-depth          9
-        org-startup-folded       'content)  ;; showeverything ;; t ;; nil
-
+        org-startup-folded       'content) ;; showeverything ;; t ;; nil
   ;; fontifying, keywords
   (setq org-ellipsis                      " ▾ "
         org-todo-keywords                 '((sequence "[ ](t)" "[~](p)" "[*](w)" "[!](r)" "|"
@@ -507,9 +508,7 @@
   (+my/org-roam-templates)
   (map! :map org-roam-mode-map
         :i "[[" (cmd! (insert "[[roam:]]")
-                      (backward-char 2) )    )
-  (set-company-backend! 'org-mode
-    'company-capf))
+                      (backward-char 2) )    ))
 
 (defun +my/org-roam-templates ()
 
