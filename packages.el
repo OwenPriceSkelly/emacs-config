@@ -13,8 +13,7 @@
 
 ;; existing packages pinned separately
 
-(unpin! org-roam)
-(unpin! doom-themes)
+(unpin! org-roam doom-themes)
 (package! darktooth-theme)
 (package! creamsody-theme)
 ;; (package! key-chord)

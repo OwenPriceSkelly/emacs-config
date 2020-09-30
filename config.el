@@ -294,14 +294,15 @@
 
 (setq user-full-name "Owen Price Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
-      fill-column 88
-      company-idle-delay 0
-      completion-ignore-case t
+      fill-column 100
       +workspaces-on-switch-project-behavior t)
 
 (add-to-list 'completion-styles 'flex)
+(setq completion-ignore-case t
+      company-idle-delay 0.2)
+(+company/toggle-auto-completion)
+
 (use-package! evil-textobj-line
   :demand t)
 
@@ -323,6 +324,8 @@
         (add-to-list 'lsp-disabled-clients 'pyls)
         (add-to-list 'lsp-disabled-clients 'pyright)
         (add-to-list 'lsp-enabled-clients 'jedi)))))
+
+;; TODO
 
 (use-package! csharp-mode
   ;:init (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
@@ -507,7 +510,7 @@
   org-download-screenshot
   org-download-clipboard
   :config
-  (setq org-download-image-org-width 25))
+  (setq org-download-image-org-width 500))
 
 (use-package! org-roam-server
   :commands (org-roam-server-mode))

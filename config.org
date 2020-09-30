@@ -359,14 +359,15 @@ Miscellaneous variables/ packages that don't warrant their own section.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq user-full-name "Owen Price Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
-      fill-column 88
-      company-idle-delay 0
-      completion-ignore-case t
+      fill-column 100
       +workspaces-on-switch-project-behavior t)
 
 (add-to-list 'completion-styles 'flex)
+(setq completion-ignore-case t
+      company-idle-delay 0.2)
+(+company/toggle-auto-completion)
+
 (use-package! evil-textobj-line
   :demand t)
 
@@ -399,6 +400,10 @@ LSP integration
         (add-to-list 'lsp-enabled-clients 'jedi)))))
 #+END_SRC
 
+*** c
+#+BEGIN_SRC emacs-lisp
+;; TODO
+#+END_SRC
 *** C#
 #+BEGIN_SRC emacs-lisp
 (use-package! csharp-mode
@@ -605,7 +610,7 @@ See also: [[#org-roam][org-roam keybindings]]
   org-download-screenshot
   org-download-clipboard
   :config
-  (setq org-download-image-org-width 25))
+  (setq org-download-image-org-width 500))
 #+END_SRC
 ***** package: org-roam-server
 #+BEGIN_SRC emacs-lisp :lexical yes
