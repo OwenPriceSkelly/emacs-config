@@ -53,15 +53,14 @@
 
        :term
        eshell                 ; a consistent, cross-platform shell (WIP)
-       (:if IS-MAC vterm)
+       ;; (:if IS-MAC vterm)
        (:if IS-LINUX term)
        ;; shell               ; a terminal REPL for Emacs
        ;; term
                               ; another terminals in Emacs
 
        :checkers
-       (syntax +childframe
-        )                     ; tasing you for every semicolon you forget
+       (syntax +childframe)                     ; tasing you for every semicolon you forget
        ;;spell                ; tasing you for misspelling mispelling
        ;;grammar              ; tasing grammar mistake every you make
 
@@ -78,7 +77,7 @@
        (lsp +eglot)
        ;; (lsp +peek)
        (magit +forge)         ; a git porcelain for Emacs
-       ;;make                 ; run make tasks from Emacs
+       make                 ; run make tasks from Emacs
        pass                   ; password manager for nerds
        pdf                    ; pdf enhancements
        ;;prodigy              ; FIXME managing external services & code builders
