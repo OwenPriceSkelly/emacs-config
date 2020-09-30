@@ -357,14 +357,15 @@ Miscellaneous variables/ packages that don't warrant their own section.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq user-full-name "Owen Price Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
-      fill-column 88
-      company-idle-delay 0
-      completion-ignore-case t
+      fill-column 100
       +workspaces-on-switch-project-behavior t)
 
 (add-to-list 'completion-styles 'flex)
+(setq completion-ignore-case t
+      company-idle-delay 0.2)
+(+company/toggle-auto-completion)
+
 (use-package! evil-textobj-line
   :demand t)
 
@@ -378,12 +379,12 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
   :after python
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
-  (if (featurep! :tools lsp +eglot)
-      (after! eglot
-        (use-package! lsp-jedi
-          :config
-          (add-to-list 'eglot-server-programs
-                       `(python-mode . ("pyls")))))
+  (when (featurep! :tools lsp)
+    ;; (after! eglot
+    ;;   (use-package! lsp-jedi
+    ;;     :config
+    ;;     (add-to-list 'eglot-server-programs
+    ;;                  `(python-mode . ("pyls")))))
     (after! lsp-mode
       (use-package! lsp-jedi
         :config
@@ -431,8 +432,8 @@ holding on to eglot options in case I switch back.
           lsp-ui-sideline-show-hover nil)
     (lsp-ui-sideline-mode -1)))
 #+END_SRC
-- Note:
-  the highlighting on hover can be too slow sometimes to keep up with some movements and isn't great. If it doesn't noticably hurt performance, leaving it enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just disable it. Everything else is solid.
+- Notes:
+  I go back and forth on eglot/lsp-mode, usually for performance reasons. The highlighting on hover can be too slow sometimes to keep up with some movements and isn't great. If it doesn't noticably hurt performance, leaving it enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise just disable it. Everything else is solid.
 ** Plaintext
 *** org
 **** package: org (builtin)
@@ -573,12 +574,12 @@ See also: [[#org-roam][org-roam keybindings]]
                                              :unnarrowed t
                                              :immediate-finish t)
         org-roam-dailies-capture-templates `(("d" "daily" plain #'org-roam-capture--get-point
-                                              "%?"
+                                              ""
                                               :immediate-finish t
                                               :file-name "%<%Y-%m-%d-%A>"
                                               :head ,(concat "#+title: %<%A, %B %d, %Y>\n"
                                                             "#+roam_tags: journal\n"
-                                                            "* Tasks: \n" )))))
+                                                            "* Tasks: \n")))))
 #+END_SRC
 
 ***** package: mathpix

@@ -5,7 +5,7 @@
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el")
   :pin "52bc9a6acd34d2282555ac576e905af3c5a0e767")
-(package! zoom :pin "a373e7eed59ad93315e5ae88c816ca70404d2d34")
+;; (package! zoom :pin "a373e7eed59ad93315e5ae88c816ca70404d2d34")
 (package! visual-basic-mode
   :recipe (:host github :repo "emacsmirror/visual-basic-mode") :pin "79689e97d9dc0f90388c4111c5409d544a173631")
 (package! lsp-jedi :pin "10c782261b20ad459f5d2785592c4f46f7088126")
@@ -13,7 +13,9 @@
 
 ;; existing packages pinned separately
 
-(unpin! org-roam doom-themes)
+(unpin! org-roam)
+(unpin! doom-themes)
+(unpin! eglot)
 (package! darktooth-theme)
 (package! creamsody-theme)
 ;; (package! key-chord)

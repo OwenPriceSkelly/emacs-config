@@ -308,12 +308,12 @@
   :after python
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
-  (if (featurep! :tools lsp +eglot)
-      (after! eglot
-        (use-package! lsp-jedi
-          :config
-          (add-to-list 'eglot-server-programs
-                       `(python-mode . ("pyls")))))
+  (when (featurep! :tools lsp)
+    ;; (after! eglot
+    ;;   (use-package! lsp-jedi
+    ;;     :config
+    ;;     (add-to-list 'eglot-server-programs
+    ;;                  `(python-mode . ("pyls")))))
     (after! lsp-mode
       (use-package! lsp-jedi
         :config
@@ -480,12 +480,12 @@
                                              :unnarrowed t
                                              :immediate-finish t)
         org-roam-dailies-capture-templates `(("d" "daily" plain #'org-roam-capture--get-point
-                                              "%?"
+                                              ""
                                               :immediate-finish t
                                               :file-name "%<%Y-%m-%d-%A>"
                                               :head ,(concat "#+title: %<%A, %B %d, %Y>\n"
                                                             "#+roam_tags: journal\n"
-                                                            "* Tasks: \n" )))))
+                                                            "* Tasks: \n")))))
 
 (use-package! mathpix
   :commands (mathpix-screenshot)
