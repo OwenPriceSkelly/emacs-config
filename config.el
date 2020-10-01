@@ -428,6 +428,14 @@
           (?- . ?›))
         org-superstar-special-todo-items nil))
 
+(use-package! org-noter
+  :defer t
+  :config
+  (map! :map org-noter-notes-mode-map
+        :n [ret] #'org-noter-sync-current-note)
+  (map! :map org-noter-doc-mode-map
+        :n [ret] #'org-noter-sync-current-page-or-chapter))
+
 (use-package! org-roam
   :after org
   :commands (org-roam-buffer-toggle-display
@@ -448,14 +456,9 @@
          org-roam-graph-shorten-titles    'truncate
          org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open"))
-
-
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
-
   (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
-  ;; (add-hook! 'org-roam-buffer-prepare-hook #'org-content)
   (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
-  :config
   (setq org-roam-capture-ref-templates `(("r" "ref" plain #'org-roam-capture--get-point
                                           "%?"
                                           :file-name "${slug}"
@@ -485,7 +488,7 @@
                                                              "* Related: \n")
                                               :unnarrowed t
                                               :immediate-finish t)
-        org-roam-dailies-capture-templates `(("d" "daily" plain #'org-roam-capture--get-point
+        org-roam-dailies-capture-templates `(("t" "daily" plain #'org-roam-capture--get-point
                                               ""
                                               :immediate-finish t
                                               :file-name "%<%Y-%m-%d-%A>"
@@ -493,7 +496,7 @@
                                                              "#+roam_tags: journal\n"
                                                              "* Tasks: \n" ))))
   (map! :map org-mode-map
-        "[[" (cmd! (insert "[[roam:]]")
+        "s-TAB" (cmd! (insert "[[roam:]]")
                    (backward-char 2))))
 
 (use-package! mathpix
