@@ -293,14 +293,15 @@
 
 (setq user-full-name "Owen Price Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      ;; +mu4e-backend 'offlineimap TODO
       iedit-occurrence-context-lines 1
-      fill-column 88
-      company-idle-delay 0
-      completion-ignore-case t
+      fill-column 100
       +workspaces-on-switch-project-behavior t)
 
 (add-to-list 'completion-styles 'flex)
+(setq completion-ignore-case t
+      company-idle-delay 0.2)
+(+company/toggle-auto-completion)
+
 (use-package! evil-textobj-line
   :demand t)
 
@@ -309,11 +310,11 @@
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
   (when (featurep! :tools lsp)
-    ;; (after! eglot
-    ;;   (use-package! lsp-jedi
-    ;;     :config
-    ;;     (add-to-list 'eglot-server-programs
-    ;;                  `(python-mode . ("pyls")))))
+    (after! eglot
+      (use-package! lsp-jedi
+        :config
+        (add-to-list 'eglot-server-programs
+                     `(python-mode . ("jedi-language-server")))))
     (after! lsp-mode
       (use-package! lsp-jedi
         :config

@@ -380,11 +380,11 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
   (when (featurep! :tools lsp)
-    ;; (after! eglot
-    ;;   (use-package! lsp-jedi
-    ;;     :config
-    ;;     (add-to-list 'eglot-server-programs
-    ;;                  `(python-mode . ("pyls")))))
+    (after! eglot
+      (use-package! lsp-jedi
+        :config
+        (add-to-list 'eglot-server-programs
+                     `(python-mode . ("jedi-language-server")))))
     (after! lsp-mode
       (use-package! lsp-jedi
         :config
