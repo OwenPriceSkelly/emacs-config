@@ -52,15 +52,14 @@
 
        :term
        eshell                 ; a consistent, cross-platform shell (WIP)
-       ;; (:if IS-MAC vterm)
-       (:if IS-LINUX term)
+       ;; vterm
        ;; shell               ; a terminal REPL for Emacs
-       ;; term
+       term
                               ; another terminals in Emacs
 
        :checkers
        (syntax +childframe)                     ; tasing you for every semicolon you forget
-       ;;spell                ; tasing you for misspelling mispelling
+       spell                ; tasing you for misspelling mispelling
        ;;grammar              ; tasing grammar mistake every you make
 
        :tools
@@ -72,9 +71,9 @@
        ein                    ; tame Jupyter notebooks with emacs
        (eval +overlay)        ; run code, run (also, repls)
        ;;gist                 ; interacting with github gists
-       lookup                 ; helps you navigate your code and documentation ...or in Dash docsets locally
-       (lsp +eglot)
-       ;; (lsp +peek)
+       (lookup +docsets)                 ; helps you navigate your code and documentation ...or in Dash docsets locally
+       lsp ;; ( +eglot) ;; +peek
+
        (magit +forge)         ; a git porcelain for Emacs
        make                 ; run make tasks from Emacs
        pass                   ; password manager for nerds
@@ -92,7 +91,7 @@
        :lang
        ;;agda                 ; types of types of types of types...
        ;;assembly             ; assembly for fun or debugging
-       (cc +lsp)              ; C/C++/Obj-C madness
+       (cc  +lsp)              ; C/C++/Obj-C madness
        clojure                ; java with a lisp
        ;;common-lisp          ; if you've seen one lisp, you've seen them all
        ;;coq                  ; proofs-as-programs
