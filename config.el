@@ -343,18 +343,22 @@
   ;;   :defer t)
   (use-package lsp-ui
     :requires lsp-mode flycheck
-    :config
+    :init
     (setq lsp-ui-doc-enable t
+          t
           lsp-ui-doc-use-childframe t
           lsp-ui-doc-position 'top
           lsp-ui-doc-include-signature t
+          lsp-ui-doc-max-height 16
+          lsp-ui-doc-max-width 70
           lsp-ui-sideline-enable nil
-         ;; lsp-ui-flycheck-enable t
           lsp-ui-flycheck-list-position 'right
-          lsp-ui-flycheck-live-reporting t
           lsp-ui-peek-enable t
           lsp-ui-peek-list-width 60
-          lsp-ui-peek-peek-height 25)))
+          lsp-ui-peek-peek-height 25)
+    :config
+    (after! lsp-ui
+      (setq lsp-ui-doc-enable t))))
 
 (use-package! org
   :defer t
@@ -555,7 +559,7 @@
                           (if (eq 2 (length most-recent-chars))
                               (apply #'avy-goto-char-2 most-recent-chars)
                             (call-interactively #'avy-goto-char-2))))))
-  (setq! avy-all-windows t)
+  ;; (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 
 (map! :nv [tab]  #'evil-jump-item

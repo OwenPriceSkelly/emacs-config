@@ -375,7 +375,7 @@ Miscellaneous variables/ packages that don't warrant their own section.
 #+END_SRC
 ** Programming
 *** python
-Fixes problem where f-strings in python mode weren't inserting closing quotation marks
+**** Fixes problem with f-strings in python mode not inserting close quotation mark
 #+BEGIN_SRC emacs-lisp
 (use-package! python
   :after python
@@ -383,7 +383,10 @@ Fixes problem where f-strings in python mode weren't inserting closing quotation
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 #+END_SRC
 
-LSP integration
+**** Python LSP integration
+Not super happy with any of the lsp options for python. Genuinely unsure why the
+best completion I've tried is the out-of-box ipython repl, when all of these are
+supposedly the same jedi backend.
 #+BEGIN_SRC emacs-lisp
 (after! python
   (if (featurep! :tools lsp +eglot)
@@ -399,7 +402,6 @@ LSP integration
         (add-to-list 'lsp-disabled-clients 'pyright)
         (add-to-list 'lsp-enabled-clients 'jedi)))))
 #+END_SRC
-
 *** c
 #+BEGIN_SRC emacs-lisp
 ;; TODO
@@ -427,18 +429,22 @@ holding on to eglot options in case I switch back.
   ;;   :defer t)
   (use-package lsp-ui
     :requires lsp-mode flycheck
-    :config
+    :init
     (setq lsp-ui-doc-enable t
+          t
           lsp-ui-doc-use-childframe t
           lsp-ui-doc-position 'top
           lsp-ui-doc-include-signature t
+          lsp-ui-doc-max-height 16
+          lsp-ui-doc-max-width 70
           lsp-ui-sideline-enable nil
-         ;; lsp-ui-flycheck-enable t
           lsp-ui-flycheck-list-position 'right
-          lsp-ui-flycheck-live-reporting t
           lsp-ui-peek-enable t
           lsp-ui-peek-list-width 60
-          lsp-ui-peek-peek-height 25)))
+          lsp-ui-peek-peek-height 25)
+    :config
+    (after! lsp-ui
+      (setq lsp-ui-doc-enable t))))
 #+END_SRC
 - Note:
   the highlighting on hover can be too slow sometimes to keep up with some
@@ -674,7 +680,7 @@ See also: [[#org-roam][org-roam keybindings]]
                           (if (eq 2 (length most-recent-chars))
                               (apply #'avy-goto-char-2 most-recent-chars)
                             (call-interactively #'avy-goto-char-2))))))
-  (setq! avy-all-windows t)
+  ;; (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 #+END_SRC
 ** top-level
