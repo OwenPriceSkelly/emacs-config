@@ -72,7 +72,7 @@
        (eval +overlay)        ; run code, run (also, repls)
        ;;gist                 ; interacting with github gists
        (lookup +docsets)                 ; helps you navigate your code and documentation ...or in Dash docsets locally
-       lsp ;; ( +eglot) ;; +peek
+       lsp ;; +eglot ;; +peek
 
        (magit +forge)         ; a git porcelain for Emacs
        make                 ; run make tasks from Emacs
