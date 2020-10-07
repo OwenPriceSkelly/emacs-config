@@ -12,9 +12,9 @@
 (package! org-roam-server  :pin "8d1d143f5db415864c008b8e42e4d92279df9a81")
 
 ;; existing packages pinned separately
-(package! org-roam :pin nil)
-(package! doom-themes :pin nil)
-(package! eglot :pin nil)
+(unpin! org-roam)
+(unpin! doom-themes)
+(unpin! eglot)
 (package! darktooth-theme)
 (package! creamsody-theme)
 
