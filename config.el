@@ -514,12 +514,6 @@
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
 
-(use-package! ox-hugo
-  :after org
-  :config
-  (setq org-hugo-preserve-filling nil
-        org-hugo-section "notes"))
-
 (setq +markdown-compile-functions '(+markdown-compile-pandoc
                                     +markdown-compile-marked
                                     +markdown-compile-markdown

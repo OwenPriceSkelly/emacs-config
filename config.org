@@ -624,14 +624,14 @@ See also: [[#org-roam][org-roam keybindings]]
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
 #+END_SRC
-***** package: ox-hugo
-#+BEGIN_SRC emacs-lisp
-(use-package! ox-hugo
-  :after org
-  :config
-  (setq org-hugo-preserve-filling nil
-        org-hugo-section "notes"))
-#+END_SRC
+# ***** package: ox-hugo
+# #+BEGIN_SRC emacs-lisp
+# (use-package! ox-hugo
+#   :after org
+#   :config
+#   (setq org-hugo-preserve-filling nil
+#         org-hugo-section "notes"))
+# #+END_SRC
 *** markdown
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq +markdown-compile-functions '(+markdown-compile-pandoc
