@@ -306,7 +306,7 @@
 (use-package! evil-textobj-line
   :demand t)
 
-(when (featurep! :tools lsp)
+(when (featurep! :tools lsp )
   (if (featurep! :tools lsp +eglot)
       (use-package! eglot
         :commands (eglot eglot-ensure)

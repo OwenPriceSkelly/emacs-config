@@ -375,11 +375,11 @@ Miscellaneous variables/ packages that don't warrant their own section.
 #+END_SRC
 ** Programming
 *** LSP
-lsp-mode is noticably faster than eglot as of the most recent release,
+lsp-mode is noticably faster (for python, anyways) than eglot as of the most recent release,
 especially on my laptop. Haven't bothered to reconfigure anything yet, but
 holding on to eglot options in case I switch back.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(when (featurep! :tools lsp)
+(when (featurep! :tools lsp )
   (if (featurep! :tools lsp +eglot)
       (use-package! eglot
         :commands (eglot eglot-ensure)
@@ -438,6 +438,7 @@ supposedly the same jedi backend.
 #+END_SRC
 *** C
 #+BEGIN_SRC emacs-lisp
+
 ;; TODO
 #+END_SRC
 *** C#
