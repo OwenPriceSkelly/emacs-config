@@ -1,11 +1,11 @@
 ;;; init.el -*- lexical-binding: t; -*-
 (doom! :completion
        (company +childframe)  ; the ultimate code completion backend
-       (ivy +fuzzy
+       (ivy +fuzzy            ; a search engine for love and life
             +prescient
             +icons
             +childframe)
-                              ; a search engine for love and life
+
        :ui
        deft                   ; notational velocity for Emacs
        zen
@@ -54,12 +54,12 @@
        eshell                 ; a consistent, cross-platform shell (WIP)
        ;; vterm
        ;; shell               ; a terminal REPL for Emacs
-       term
-                              ; another terminals in Emacs
+       term                   ; another terminals in Emacs
+
 
        :checkers
-       (syntax +childframe)                     ; tasing you for every semicolon you forget
-       spell                ; tasing you for misspelling mispelling
+       (syntax +childframe)   ; tasing you for every semicolon you forget
+       spell                  ; tasing you for misspelling mispelling
        ;;grammar              ; tasing grammar mistake every you make
 
        :tools
@@ -71,11 +71,11 @@
        ein                    ; tame Jupyter notebooks with emacs
        (eval +overlay)        ; run code, run (also, repls)
        ;;gist                 ; interacting with github gists
-       (lookup +docsets)                 ; helps you navigate your code and documentation ...or in Dash docsets locally
-       lsp ;; ( +eglot) ;; +peek
+       (lookup +docsets)      ; helps you navigate your code and documentation ...or in Dash docsets locally
+       (lsp +eglot)               ;; +peek
 
        (magit +forge)         ; a git porcelain for Emacs
-       make                 ; run make tasks from Emacs
+       make                   ; run make tasks from Emacs
        pass                   ; password manager for nerds
        pdf                    ; pdf enhancements
        ;;prodigy              ; FIXME managing external services & code builders
@@ -91,7 +91,7 @@
        :lang
        ;;agda                 ; types of types of types of types...
        ;;assembly             ; assembly for fun or debugging
-       (cc  +lsp)              ; C/C++/Obj-C madness
+       (cc  +lsp)             ; C/C++/Obj-C madness
        clojure                ; java with a lisp
        ;;common-lisp          ; if you've seen one lisp, you've seen them all
        ;;coq                  ; proofs-as-programs
@@ -124,26 +124,24 @@
        ;;nim                  ; python + lisp at the speed of c
        nix                    ; I hereby declare "nix geht mehr!"
        ;;ocaml                ; an objective camel
-       (org                   ; organize your plain life in plain text
-        +pretty
-        +roam
-        +dragndrop            ; drag & drop files/images into org buffers
-        +hugo                 ; use Emacs for hugo blogging
-        +pandoc               ; export-with-pandoc support
-        +noter
-        ;;+present            ; using org-mode for presentations
-        +journal)
-       ;;+gnuplot
-       ;;+jupyter             ; ipython/jupyter support for babel
-       ;;+pomodoro            ; be fruitful with the tomato technique
+       (org +pretty
+            +roam             ; organize your plain life in plain text
+            +dragndrop        ; drag & drop files/images into org buffers
+            +pandoc           ; export-with-pandoc support
+            +noter
+            ;; +hugo          ; use Emacs for hugo blogging
+            ;;+present        ; using org-mode for presentations
+            ;;+gnuplot
+            ;;+jupyter        ; ipython/jupyter support for babel
+            ;;+pomodoro       ; be fruitful with the tomato technique
+            +journal)
 
        ;;perl                 ; write code no one else can comprehend
        ;;php                  ; perl's insecure younger brother
        ;;plantuml             ; diagrams for confusing people more
        ;;purescript           ; javascript, but functional
        (python +lsp
-               +pyright)
-                              ; beautiful is better than ugly ;
+               +pyright)      ; beautiful is better than ugly ;
        ;;qt                   ; the 'cutest' gui framework ever
        ;;racket               ; a DSL for DSLs
        rest                   ; Emacs as a REST client
@@ -163,14 +161,14 @@
        ;;notmuch
        ;;(wanderlust +gmail)
 
+       :config
+       (default +bindings
+         +smartparens)
+       literate
+
        :app
        ;;calendar
        ;;irc                  ; how neckbeards socialize
        ;;(rss +org)           ; emacs as an RSS reader
        ;;twitter              ; twitter client https://twitter.com/vnought
-
-       :config
-       literate
-       (default
-         +bindings
-         +smartparens))
+       )

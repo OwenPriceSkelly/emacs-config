@@ -55,7 +55,7 @@
   (setq! doom-gruvbox-dark-variant 'soft
         doom-gruvbox-light-variant 'soft
 
-        doom-theme                (or +override-theme
+        doom-theme                (or 'doom-gruvbox
                                       (let ((theme-choices
                                              (if (<= 9 hour 15)
                                                  +my/themes-list-light
@@ -306,6 +306,30 @@
 (use-package! evil-textobj-line
   :demand t)
 
+(when (featurep! :tools lsp )
+  (if (featurep! :tools lsp +eglot)
+      (use-package! eglot
+        :commands (eglot eglot-ensure)
+        :config
+        (setq eglot-send-changes-idle-time 0.05))) ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
+  (use-package lsp-ui
+    :requires lsp-mode
+    :init
+    (setq lsp-ui-doc-enable t
+          lsp-ui-doc-use-childframe t
+          lsp-ui-doc-position 'top
+          lsp-ui-doc-include-signature t
+          lsp-ui-doc-max-height 16
+          lsp-ui-doc-max-width 70
+          lsp-ui-sideline-enable nil
+          lsp-ui-flycheck-list-position 'right
+          lsp-ui-peek-enable t
+          lsp-ui-peek-list-width 60
+          lsp-ui-peek-peek-height 25)
+    :config
+    (setq lsp-ui-doc-enable t)
+    (lsp-ui-doc-enable)))
+
 (use-package! python
   :after python
   :config
@@ -331,31 +355,6 @@
 (use-package! csharp-mode
   ;:init (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
   :mode ("\\.csx?\\'"))
-
-(when (featurep! :tools lsp)
-  (if (featurep! :tools lsp +eglot)
-      (use-package! eglot
-        :commands (eglot eglot-ensure)
-        :config
-        (setq eglot-send-changes-idle-time 0.05)
-        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
-  ;; should be configured fine already by module
-  (use-package lsp-ui
-    :after lsp-mode
-    :init
-    (setq lsp-ui-doc-enable t
-          lsp-ui-doc-use-childframe t
-          lsp-ui-doc-position 'top
-          lsp-ui-doc-include-signature t
-          lsp-ui-doc-max-height 16
-          lsp-ui-doc-max-width 70
-          lsp-ui-sideline-enable nil
-          lsp-ui-flycheck-list-position 'right
-          lsp-ui-peek-enable t
-          lsp-ui-peek-list-width 60
-          lsp-ui-peek-peek-height 25)
-    :config
-    (setq lsp-ui-doc-enable t)))
 
 (use-package! org
   :defer t
@@ -516,12 +515,6 @@
 (use-package! org-roam-server
   :commands (org-roam-server-mode))
 
-(use-package! ox-hugo
-  :after org
-  :config
-  (setq org-hugo-preserve-filling nil
-        org-hugo-section "notes"))
-
 (setq +markdown-compile-functions '(+markdown-compile-pandoc
                                     +markdown-compile-marked
                                     +markdown-compile-markdown
@@ -636,9 +629,11 @@
         "j" #'evil-avy-goto-char-2
         "m" #'+ivy/jump-list
         "l" #'evil-avy-goto-line
-        "i" #'counsel-imenu
-        (:when (and (featurep! :tools lsp) (not (featurep! :tools lsp +eglot)))
-         "i" #'lsp-ui-imenu)))
+        "i" #'counsel-imenu))
+(after! lsp-mode
+  (map! :leader
+          :prefix "j"
+          "i" #'lsp-ui-imenu))
 
 (map! :map org-mode-map
       :localleader
@@ -651,7 +646,7 @@
       :desc "roam buffer"        "r"  #'org-roam
       :desc "random note"        "R"  #'org-roam-random-note
       :desc "find"               "n"  #'org-roam-find-file
-      ;; :desc "jump to index"      "x"  #'org-roam-jump-to-index
+      :desc "jump to index"      "x"  #'org-roam-jump-to-index
       :desc "insert"             "i"  #'org-roam-insert
       :desc "insert immediate"   "I"  #'org-roam-insert-immediate
       :desc "today's file"       "t"  #'org-roam-dailies-today
