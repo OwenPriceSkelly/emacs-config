@@ -2,7 +2,7 @@
       which-key-sort-order 'which-key-key-order-alpha
       which-key-max-description-length nil
 
-      display-line-numbers-type nil
+      display-line-numbers-type t
       evil-split-window-below t
       evil-vsplit-window-right t
 
@@ -16,10 +16,6 @@
              :quit   t
              :select #'ignore
              :ttl    5))
-
-(use-package! zoom
-  :commands (zoom-mode))
-
 
 ;; (+global-word-wrap-mode)
 
@@ -311,7 +307,8 @@
       (use-package! eglot
         :commands (eglot eglot-ensure)
         :config
-        (setq eglot-send-changes-idle-time 0.05))) ;; (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
+        (setq eglot-send-changes-idle-time 0.05)
+        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
   (use-package lsp-ui
     :requires lsp-mode
     :init
