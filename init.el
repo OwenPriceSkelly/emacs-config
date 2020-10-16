@@ -52,9 +52,9 @@
 
        :term
        eshell                 ; a consistent, cross-platform shell (WIP)
-       ;; vterm
+       vterm
        ;; shell               ; a terminal REPL for Emacs
-       term                             ; another terminals in Emacs
+       ;; term                             ; another terminals in Emacs
 
 
        :checkers

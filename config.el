@@ -451,7 +451,7 @@
          org-roam-graph-viewer            (executable-find "open"))
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
-  (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
+  ;; (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
   (setq org-roam-capture-ref-templates `(("r" "ref" plain #'org-roam-capture--get-point
                                           "%?"
                                           :file-name "${slug}"
