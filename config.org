@@ -435,7 +435,13 @@ supposedly the same jedi backend.
 #+END_SRC
 *** C
 #+BEGIN_SRC emacs-lisp
-;; TODO
+(after! ccls
+  (setq ccls-initialization-options `(:clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
+                                                                "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
+                                                                "-isystem/usr/local/include"
+                                                                "-isystem/opt/local/include"
+                                                                "-isystem/opt/local/include/libomp"]
+                                                    :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir"))))))
 #+END_SRC
 *** C#
 #+BEGIN_SRC emacs-lisp
@@ -695,9 +701,11 @@ See also: [[#org-roam][org-roam keybindings]]
         "M-[" #'lispy-backward
         "M-]" #'lispy-forward)))
 #+END_SRC
+
+#+RESULTS:
+
 *** multiedit
 #+BEGIN_SRC emacs-lisp :lexical yes
-;; multiedit
 (map! :nv "R"  #'evil-multiedit-match-all
       :n "s-d" #'evil-multiedit-match-symbol-and-next
       :n "s-D" #'evil-multiedit-match-symbol-and-prev
@@ -711,7 +719,6 @@ See also: [[#org-roam][org-roam keybindings]]
         "s-D"  #'evil-multiedit-match-and-prev
         "V"    #'iedit-show/hide-unmatched-lines)))
 #+END_SRC
-*** multiple cursors
 
 ** leader
 #+BEGIN_SRC emacs-lisp :lexical yes

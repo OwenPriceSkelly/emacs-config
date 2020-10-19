@@ -346,7 +346,13 @@
         (add-to-list 'lsp-disabled-clients 'pyright)
         (add-to-list 'lsp-enabled-clients 'jedi)))))
 
-;; TODO
+(after! ccls
+  (setq ccls-initialization-options `(:clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
+                                                                "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
+                                                                "-isystem/usr/local/include"
+                                                                "-isystem/opt/local/include"
+                                                                "-isystem/opt/local/include/libomp"]
+                                                    :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir"))))))
 
 (use-package! csharp-mode
   ;:init (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
@@ -565,7 +571,6 @@
         "M-[" #'lispy-backward
         "M-]" #'lispy-forward)))
 
-;; multiedit
 (map! :nv "R"  #'evil-multiedit-match-all
       :n "s-d" #'evil-multiedit-match-symbol-and-next
       :n "s-D" #'evil-multiedit-match-symbol-and-prev
