@@ -110,7 +110,8 @@
             ;;+pomodoro       ; be fruitful with the tomato technique
             +journal)
        (python +lsp
-               +pyright)                ; beautiful is better than ugly ;
+               ;; +pyright
+               )                ; beautiful is better than ugly ;
        rest                             ; Emacs as a REST client
        scheme                           ; a fully conniving family of lisps
        (sh +fish)

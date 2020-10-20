@@ -339,14 +339,15 @@
           :config
           (add-to-list 'eglot-server-programs
                        `(python-mode . ("jedi-language-server")))))
-    (after! lsp-mode
-      (use-package! lsp-jedi
-        :config
-        (add-to-list 'lsp-disabled-clients 'pyls)
-        (add-to-list 'lsp-disabled-clients 'pyright)
-        (add-to-list 'lsp-enabled-clients 'jedi)))))
+    ;; (after! lsp-mode
+    ;;   (use-package! lsp-jedi
+    ;;     :config
+    ;;     (add-to-list 'lsp-disabled-clients 'pyls)
+    ;;     (add-to-list 'lsp-disabled-clients 'pyright)
+    ;;     (add-to-list 'lsp-enabled-clients 'jedi)))
+    ))
 
-(after! ccls
+(after! '(ccls c-mode lsp-mode)
   (setq ccls-initialization-options `(:clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
                                                                 "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
                                                                 "-isystem/usr/local/include"
