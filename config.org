@@ -576,7 +576,7 @@ See also: [[#org-roam][org-roam keybindings]]
              org-roam-dailies-yesterday)
   :init
   (setq! org-roam-directory               org-directory
-         org-roam-db-location             "~/Notes/.roam.db"
+         ;; org-roam-db-location             "~/Notes/.roam.db"
          org-roam-tag-sort                t
          org-roam-tag-sources             '(prop)
          org-roam-tag-separator           ", "
