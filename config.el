@@ -42,23 +42,22 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-(let* ((+override-theme nil) ;; 'doom-gruvbox-light
-
+(let* ((+override-theme 'doom-one) ;; 'doom-gruvbox-light
        (+my/themes-list-dark '(doom-nord doom-gruvbox doom-oceanic-next))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
   (setq! doom-gruvbox-dark-variant 'soft
-        doom-gruvbox-light-variant 'soft
+         doom-gruvbox-light-variant 'soft
 
-        doom-theme                (or 'doom-gruvbox
-                                      (let ((theme-choices
-                                             (if (<= 9 hour 15)
-                                                 +my/themes-list-light
-                                               +my/themes-list-dark)))
-                                        (nth (mod sec (length theme-choices))
-                                             theme-choices))))
-  ;(intern (concat (symbol-name doom-theme) "-brighter-comments"))  t
+         doom-theme                (or 'doom-gruvbox
+                                       (let ((theme-choices
+                                              (if (<= 9 hour 15)
+                                                  +my/themes-list-light
+                                                +my/themes-list-dark)))
+                                         (nth (mod sec (length theme-choices))
+                                              theme-choices))))
+                                        ;(intern (concat (symbol-name doom-theme) "-brighter-comments"))  t
 
   )
 
@@ -339,21 +338,24 @@
           :config
           (add-to-list 'eglot-server-programs
                        `(python-mode . ("jedi-language-server")))))
-    ;; (after! lsp-mode
-    ;;   (use-package! lsp-jedi
-    ;;     :config
-    ;;     (add-to-list 'lsp-disabled-clients 'pyls)
-    ;;     (add-to-list 'lsp-disabled-clients 'pyright)
-    ;;     (add-to-list 'lsp-enabled-clients 'jedi)))
+    (after! lsp-mode
+      (setq! lsp-pyls-plugins-pycodestyle-ignore "E501")
+      ;; (use-package! lsp-jedi
+      ;;   :config
+      ;;   (add-to-list 'lsp-disabled-clients 'pyls)
+      ;;   (add-to-list 'lsp-disabled-clients 'pyright)
+      ;;   (add-to-list 'lsp-enabled-clients 'jedi))
+      )
     ))
 
-(after! '(ccls c-mode lsp-mode)
-  (setq ccls-initialization-options `(:clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
-                                                                "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
-                                                                "-isystem/usr/local/include"
-                                                                "-isystem/opt/local/include"
-                                                                "-isystem/opt/local/include/libomp"]
-                                                    :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir"))))))
+(if IS-MAC
+    (after! '(ccls c-mode lsp-mode)
+      (setq ccls-initialization-options `(:clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
+                                                                    "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
+                                                                    "-isystem/usr/local/include"
+                                                                    "-isystem/opt/local/include"
+                                                                    "-isystem/opt/local/include/libomp"]
+                                                        :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir")))))))
 
 (use-package! csharp-mode
   ;:init (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
