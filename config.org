@@ -51,6 +51,7 @@ TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borr
   :init
   (setq solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t))
+(solaire-global-mode -1)
 #+END_SRC
 
 ** Frame setup
@@ -76,9 +77,15 @@ TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borr
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'doom-one) ;; 'doom-gruvbox-light
-       (+my/themes-list-dark '(doom-nord doom-gruvbox doom-oceanic-next))
-       (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
+(let* ((+override-theme 'doom-gruvbox-light) ;;
+       (+my/themes-list-dark '(doom-gruvbox
+                               doom-oceanic-next
+                               doom-old-hope
+                               doom-nord
+                               doom-city-lights
+                               doom-tomorrow-night))
+       (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light
+                                                             doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
   (setq! doom-gruvbox-dark-variant 'soft

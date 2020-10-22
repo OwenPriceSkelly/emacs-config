@@ -26,6 +26,7 @@
   :init
   (setq solaire-mode-auto-swap-bg t
         solaire-mode-remap-line-numbers t))
+(solaire-global-mode -1)
 
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
@@ -42,15 +43,21 @@
 ;;           '(height . 58)
 ;;           '(fullscreen . maximized))
 
-(let* ((+override-theme 'doom-one) ;; 'doom-gruvbox-light
-       (+my/themes-list-dark '(doom-nord doom-gruvbox doom-oceanic-next))
-       (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light doom-nord-light)))
+(let* ((+override-theme 'doom-gruvbox-light) ;;
+       (+my/themes-list-dark '(doom-gruvbox
+                               doom-oceanic-next
+                               doom-old-hope
+                               doom-nord
+                               doom-city-lights
+                               doom-tomorrow-night))
+       (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light
+                                                             doom-nord-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
   (setq! doom-gruvbox-dark-variant 'soft
          doom-gruvbox-light-variant 'soft
 
-         doom-theme                (or 'doom-gruvbox
+         doom-theme                (or +override-theme
                                        (let ((theme-choices
                                               (if (<= 9 hour 15)
                                                   +my/themes-list-light
