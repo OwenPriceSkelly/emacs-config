@@ -40,18 +40,15 @@ TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borr
              :select #'ignore
              :ttl    5))
 
-;; (+global-word-wrap-mode)
-
-;; (remove-hook! text-mode hl-line-mode)
-;; (add-hook! prog-mode hl-line-mode)
 #+END_SRC
 *** package: solaire-mode
+Note: currently disabled in ~packages.el~
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! solaire-mode
   :init
   (setq solaire-mode-auto-swap-bg t
-        solaire-mode-remap-line-numbers t))
-(solaire-global-mode -1)
+        solaire-mode-remap-line-numbers t)
+  (solaire-global-mode -1))
 #+END_SRC
 
 ** Frame setup
@@ -61,15 +58,6 @@ TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borr
 (modify-frame-parameters nil '((fullscreen . maximized)
                                (undecorated . nil)))
 (if IS-MAC (toggle-frame-fullscreen))
-;; (setq initial-frame-alist
-;;        '((top . 1) (left . 1) (width . 140) (height . 58)))
-;; (pushnew! default-frame-alist
-;;           ;; '(width . 90)
-;;           ;; '(height . 58)
-;;           ;; '(left . 878)
-;;           '(width . 238)
-;;           '(height . 58)
-;;           '(fullscreen . maximized))
 #+END_SRC
 
 ** Theme
@@ -77,7 +65,8 @@ TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borr
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'doom-gruvbox-light) ;;
+(let* ((+override-theme 'darktooth ;; 'doom-gruvbox-light
+                        ) ;;
        (+my/themes-list-dark '(doom-gruvbox
                                doom-oceanic-next
                                doom-old-hope
@@ -110,7 +99,13 @@ from a selection of light themes or dark themes, depending on the time of day.
   '(org-block :background nil)
   '(org-block-end-line :background nil))
 #+END_SRC
-
+*** Set theme across system
+Requires a ~pip install pywal~ and ~imagemagick~.
+#+BEGIN_SRC emacs-lisp
+(use-package! theme-magic
+  :init
+  (add-hook! 'doom-load-theme-hook (theme-magic-from-emacs)))
+#+END_SRC
 ** Font
 I like the iosevka font family for programming, and I like the 'quasi-spaced'
 options like Etoile/Sparkle/Aile for variable pitch stuff -- real variable pitch
@@ -366,14 +361,20 @@ Miscellaneous variables/ packages that don't warrant their own section.
       +workspaces-on-switch-project-behavior t)
 
 (add-to-list 'completion-styles 'flex)
-(setq completion-ignore-case t
-      company-idle-delay 0.2)
-(+company/toggle-auto-completion)
+
+(after! company
+  (setq completion-ignore-case t
+        company-idle-delay 0.2)
+  (+company/toggle-auto-completion))
 
 (use-package! evil-textobj-line
-  :demand t)
+  :after evil)
 
-
+(after! ivy
+  (setq +ivy-buffer-preview t)
+  (defadvice! prompt-for-buffer (&rest _)
+    :after '(evil-window-split evil-window-vsplit)
+    (+ivy/switch-buffer)))
 #+END_SRC
 ** Programming
 *** LSP
