@@ -72,7 +72,7 @@
        (magit +forge)                   ; a git porcelain for Emacs
        make                             ; run make tasks from Emacs
        pass                             ; password manager for nerds
-       pdf                              ; pdf enhancements
+       (:if IS-MAC pdf)                              ; pdf enhancements
        rgb             ; creating color strings
        terraform       ; infrastructure as code
        upload                         ; map local to remote projects via ssh/ftp

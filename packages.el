@@ -7,18 +7,15 @@
   :pin "52bc9a6acd34d2282555ac576e905af3c5a0e767")
 (package! visual-basic-mode
   :recipe (:host github :repo "emacsmirror/visual-basic-mode") :pin "79689e97d9dc0f90388c4111c5409d544a173631")
-(package! lsp-jedi :pin "10c782261b20ad459f5d2785592c4f46f7088126")
-(package! org-roam-server)
 
+(package! solaire-mode :disable t)
 ;; existing packages pinned separately
-(when (featurep! :tools lsp +eglot)
-  (unpin! eglot))
-(unpin! org-roam org-roam-server doom-themes)
+(if (featurep! :tools lsp +eglot)
+    (unpin! eglot)
+  (unpin! lsp-mode lsp-ui))
+
+(package! org-roam-server)
+(unpin! org-roam doom-themes)
 (package! darktooth-theme)
 (package! creamsody-theme)
-;; (package! key-chord)
-
-;; (package! tree-sitter
-;;   :recipe (:host github :repo "ubolonton/emacs-tree-sitter" :files ("lisp/*.el" )))
-;; (package! tree-sitter-langs
-;;   :recipe (:host github :repo "ubolonton/emacs-tree-sitter" :files ("langs/*.el" "langs/queries")))
+(package! theme-magic)
