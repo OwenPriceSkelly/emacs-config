@@ -571,7 +571,6 @@ See also: [[#org-roam][org-roam keybindings]]
                                           :head ,(concat "#+title: ${title}\n"
                                                          "#+roam_key: ${ref}\n"
                                                          "#+roam_tags: article\n"
-                                                         "#+setupfile: ./setup.org\n"
                                                          "* Related: \n"
                                                          "  - [[${ref}][url]]\n")
                                           :unnarrowed t))
@@ -580,7 +579,6 @@ See also: [[#org-roam][org-roam keybindings]]
                                       :file-name "%<%Y-%m-%d>-${slug}"
                                       :head ,(concat "#+title: ${title}\n"
                                                      "#+roam_tags:\n"
-                                                     "#+setupfile: ./setup.org\n"
                                                      "* Description: \n"
                                                      "* Related: \n")
                                       :unnarrowed t))
@@ -589,7 +587,6 @@ See also: [[#org-roam][org-roam keybindings]]
                                               :file-name "%<%Y-%m-%d>-${slug}"
                                               :head ,(concat "#+title: ${title}\n"
                                                              "#+roam_tags:\n"
-                                                             "#+setupfile: ./setup.org\n"
                                                              "* Description: \n"
                                                              "* Related: \n")
                                               :unnarrowed t
