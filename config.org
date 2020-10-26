@@ -65,7 +65,7 @@ Note: currently disabled in ~packages.el~
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'darktooth ;; 'doom-gruvbox-light
+(let* ((+override-theme nil ;'darktooth ;; 'doom-gruvbox-light
                         ) ;;
        (+my/themes-list-dark '(doom-gruvbox
                                doom-oceanic-next
@@ -374,11 +374,11 @@ Miscellaneous variables/ packages that don't warrant their own section.
   (setq +ivy-buffer-preview t)
   (defadvice! prompt-for-buffer (&rest _)
     :after '(evil-window-split evil-window-vsplit)
-    (+ivy/switch-buffer)))
+    (+ivy/projectile-find-file)))
 #+END_SRC
 ** Programming
 *** LSP
-lsp-mode is noticably faster (for python, anyways) than eglot as of the most recent release,
+lsp-mode is noticeably faster (for python, anyways) than eglot as of the most recent release,
 especially on my laptop. Haven't bothered to reconfigure anything yet, but
 holding on to eglot options in case I switch back.
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -386,30 +386,29 @@ holding on to eglot options in case I switch back.
   (if (featurep! :tools lsp +eglot)
       (use-package! eglot
         :commands (eglot eglot-ensure)
+        :hook (csharp-mode . eglot-ensure)
         :config
-        (setq eglot-send-changes-idle-time 0.05)
-        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)))
-  (use-package lsp-ui
-    :requires lsp-mode
-    :init
-    (setq lsp-ui-doc-enable t
-          lsp-ui-doc-use-childframe t
-          lsp-ui-doc-position 'top
-          lsp-ui-doc-include-signature t
-          lsp-ui-doc-max-height 16
-          lsp-ui-doc-max-width 70
-          lsp-ui-sideline-enable nil
-          lsp-ui-flycheck-list-position 'right
-          lsp-ui-peek-enable t
-          lsp-ui-peek-list-width 60
-          lsp-ui-peek-peek-height 25)
-    :config
-    (setq lsp-ui-doc-enable t)
-    (lsp-ui-doc-enable)))
+        (setq eglot-send-changes-idle-time 0.03)
+        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+    (use-package lsp-ui
+      :commands (lsp-ui-mode)
+      :config
+      (setq lsp-ui-doc-enable t
+            lsp-ui-doc-use-childframe t
+            lsp-ui-doc-position 'top
+            lsp-ui-doc-include-signature t
+            lsp-ui-doc-max-height 16
+            lsp-ui-doc-max-width 70
+            lsp-ui-sideline-enable nil
+            lsp-ui-flycheck-list-position 'right
+            lsp-ui-peek-enable t
+            lsp-ui-peek-list-width 60
+            lsp-ui-peek-peek-height 25)
+      (lsp-ui-doc-enable t))))
 #+END_SRC
 - Note:
   the highlighting on hover can be too slow sometimes to keep up with some
-  movements and isn't great. If it doesn't noticably hurt performance, leaving
+  movements and isn't great. If it doesn't noticeably hurt performance, leaving
   it enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise
   just disable it. Everything else is solid.
 *** python
@@ -457,7 +456,12 @@ supposedly the same jedi backend.
 *** C#
 #+BEGIN_SRC emacs-lisp
 (use-package! csharp-mode
-  ;:init (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
+  :init
+  (if (featurep! :tools lsp +eglot)
+      (after! eglot
+        (add-to-list 'eglot-server-programs `(csharp-mode . ("/home/owen/.nix-profile/bin/omnisharp" "-lsp"))))
+    ;; (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
+    )
   :mode ("\\.csx?\\'"))
 #+END_SRC
 ** Plaintext
