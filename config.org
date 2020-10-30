@@ -17,9 +17,11 @@
   - [[#local][local]]
 
 * UI
-TODO: https://tecosaur.github.io/emacs-config/config.html splash image code borrow
 ** General appearance/display
 *** Misc. & popups
+When I split windows, I usually want to go to that window immediately
+afterwards. I like the defaults from the popups module except for the size,
+which cuts things off a little short.
 #+BEGIN_SRC emacs-lisp
 (setq which-key-side-window-location 'bottom
       which-key-sort-order 'which-key-key-order-alpha
@@ -52,6 +54,8 @@ Note: currently disabled in ~packages.el~
 #+END_SRC
 
 ** Frame setup
+Surprisingly tricky to get emacs to start in fullscreen, but this works (and
+doesn't do anything weird if tiling fullscreen emacs to left or right on macOS)
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
@@ -64,13 +68,13 @@ Note: currently disabled in ~packages.el~
 *** Set theme
 changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
+Usually I just stick with one of the gruvboxes though.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme nil ;'darktooth ;; 'doom-gruvbox-light
-                        ) ;;
+(let* ((+override-theme nil)
        (+my/themes-list-dark '(doom-gruvbox
                                doom-oceanic-next
                                doom-old-hope
-                               doom-nord
+                               doom-nova
                                doom-city-lights
                                doom-tomorrow-night))
        (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light
@@ -79,20 +83,15 @@ from a selection of light themes or dark themes, depending on the time of day.
        (sec (car (decode-time nil))))
   (setq! doom-gruvbox-dark-variant 'soft
          doom-gruvbox-light-variant 'soft
-
          doom-theme                (or +override-theme
-                                       (let ((theme-choices
-                                              (if (<= 9 hour 15)
-                                                  +my/themes-list-light
-                                                +my/themes-list-dark)))
+                                       (let ((theme-choices (if (<= 9 hour 15) +my/themes-list-light
+                                                              +my/themes-list-dark)))
                                          (nth (mod sec (length theme-choices))
-                                              theme-choices))))
-                                        ;(intern (concat (symbol-name doom-theme) "-brighter-comments"))  t
-
-  )
+                                              theme-choices)))))
 #+END_SRC
 
 *** Disable embedded block background
+I don't love the way that embedded blocks look in e.g. this config.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
@@ -100,7 +99,8 @@ from a selection of light themes or dark themes, depending on the time of day.
   '(org-block-end-line :background nil))
 #+END_SRC
 *** Set theme across system
-Requires a ~pip install pywal~ and ~imagemagick~.
+Requires a ~pip install pywal~ and ~imagemagick~. When theme changes, update the
+theme of terminals etc.
 #+BEGIN_SRC emacs-lisp
 (use-package! theme-magic
   :init
@@ -148,8 +148,10 @@ readable without obviously being a totally different font at a glance.
             'line-number-current-line))
 #+END_SRC
 ** Dashboard
+Modifications to the doom-emacs home buffer
 *** ASCII-art
-  Modified `doom-dashboard-widget-banner' with ascii art modified from https://github.com/plexus/chemacs.
+When starting up in a terminal: Modified `doom-dashboard-widget-banner' with
+  ascii art modified from https://github.com/plexus/chemacs.
   It looks better without all the escaped ~\\~'s.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (defun +my/doom-dashboard-widget-banner ()
@@ -189,10 +191,8 @@ readable without obviously being a totally different font at a glance.
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
 #+END_SRC
 *** Splash image
-Lifted verbatim then slightly modified from https://tecosaur.github.io/emacs-config/config.html#splash-screen
+Lifted verbatim very slightly modified from https://tecosaur.github.io/emacs-config/config.html#splash-screen
 #+BEGIN_SRC emacs-lisp
-
-
 (defvar fancy-splash-image-template
   (expand-file-name "misc/splash-images/blackhole-lines-template.svg" doom-private-dir)
   "Default template svg used for the splash image, with substitutions from ")
@@ -201,15 +201,15 @@ Lifted verbatim then slightly modified from https://tecosaur.github.io/emacs-con
   "An image to use at minimum size, usually a transparent pixel")
 
 (setq fancy-splash-sizes
-  `((:height 500 :min-height 50 :padding (0 . 2) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
-    (:height 440 :min-height 42 :padding (1 . 2) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
-    (:height 400 :min-height 38 :padding (1 . 3) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
-    (:height 350 :min-height 36 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
-    (:height 300 :min-height 34 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
-    (:height 250 :min-height 32 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
-    (:height 200 :min-height 30 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
-    (:height 100 :min-height 24 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir))
-    (:height 0   :min-height 0  :padding (0 . 0) :file ,fancy-splash-image-nil)))
+      `((:height 500 :min-height 50 :padding (0 . 2) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+        (:height 440 :min-height 42 :padding (1 . 2) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+        (:height 400 :min-height 38 :padding (1 . 3) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+        (:height 350 :min-height 36 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+        (:height 300 :min-height 34 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+        (:height 250 :min-height 32 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+        (:height 200 :min-height 30 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/blackhole-lines-0.svg" doom-private-dir))
+        (:height 100 :min-height 24 :padding (1 . 1) :template ,(expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir))
+        (:height 0   :min-height 0  :padding (0 . 0) :file ,fancy-splash-image-nil)))
 
 (defvar fancy-splash-sizes
   `((:height 500 :min-height 50 :padding (0 . 2))
@@ -245,16 +245,16 @@ Lifted verbatim then slightly modified from https://tecosaur.github.io/emacs-con
 
 (defun fancy-splash-generate-image (template height)
   "Read TEMPLATE and create an image if HEIGHT with colour substitutions as  ;described by `fancy-splash-template-colours' for the current theme"
-    (with-temp-buffer
-      (insert-file-contents template)
-      (re-search-forward "$height" nil t)
-      (replace-match (number-to-string height) nil nil)
-      (dolist (substitution fancy-splash-template-colours)
-        (beginning-of-buffer)
-        (while (re-search-forward (car substitution) nil t)
-          (replace-match (doom-color (cdr substitution)) nil nil)))
-      (write-region nil nil
-                    (fancy-splash-filename (symbol-name doom-theme) height) nil nil)))
+  (with-temp-buffer
+    (insert-file-contents template)
+    (re-search-forward "$height" nil t)
+    (replace-match (number-to-string height) nil nil)
+    (dolist (substitution fancy-splash-template-colours)
+      (beginning-of-buffer)
+      (while (re-search-forward (car substitution) nil t)
+        (replace-match (doom-color (cdr substitution)) nil nil)))
+    (write-region nil nil
+                  (fancy-splash-filename (symbol-name doom-theme) height) nil nil)))
 
 (defun fancy-splash-generate-images ()
   "Perform `fancy-splash-generate-image' in bulk"
@@ -295,14 +295,13 @@ Lifted verbatim then slightly modified from https://tecosaur.github.io/emacs-con
 
 (add-hook 'window-size-change-functions #'set-appropriate-splash)
 (add-hook 'doom-load-theme-hook #'set-appropriate-splash)
-
 #+END_SRC
 
 *** Shortcuts, icons
+There are only a few shortcuts I'd want to use from the dashboard.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (add-hook! +doom-dashboard-mode (hl-line-mode -1))
 (setq! +doom-dashboard-name "*dashboard*" )
-
 (defun +my/doom-dashboard-widget-loaded ()
   (insert
    "\n\n"
@@ -338,9 +337,6 @@ Lifted verbatim then slightly modified from https://tecosaur.github.io/emacs-con
          ("Open project"
           :icon (all-the-icons-octicon "repo" :face 'doom-dashboard-menu-title)
           :action projectile-switch-project)
-         ;; ("Jump to bookmark"
-         ;;  :icon (all-the-icons-octicon "bookmark" :face 'doom-dashboard-menu-title)
-         ;;  :action bookmark-jump)
          ("Open private configuration"
           :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title)
           :when (file-directory-p doom-private-dir)
@@ -351,8 +347,15 @@ Lifted verbatim then slightly modified from https://tecosaur.github.io/emacs-con
                                    +my/doom-dashboard-widget-loaded))
 #+END_SRC
 * Editor
+What I'd call the "editor" stuff could probably use some organizational work; 
+it's a little broad. I'm also not sure how much I want to keep LSP-related
+config stuff all together for different languages, and how much I want to keep
+that code with the config for the respective languages. I find myself fairly
+frequently changing between LSP frontends (eglot, lsp-mode) as well as backends
+(for python-mode especially).
 ** General
 Miscellaneous variables/ packages that don't warrant their own section.
+Completion and the 'inner/around line' text objects here.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq user-full-name "Owen Price Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
@@ -379,7 +382,7 @@ Miscellaneous variables/ packages that don't warrant their own section.
 ** Programming
 *** LSP
 lsp-mode is noticeably faster (for python, anyways) than eglot as of the most recent release,
-especially on my laptop. Haven't bothered to reconfigure anything yet, but
+especially on my laptop. Haven't bothered to reconfigure much yet, but
 holding on to eglot options in case I switch back.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (when (featurep! :tools lsp )
@@ -419,7 +422,6 @@ holding on to eglot options in case I switch back.
   :config
   (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 #+END_SRC
-
 **** Python LSP integration
 Not super happy with any of the lsp options for python. Genuinely unsure why the
 best completion I've tried is the out-of-box ipython repl, when all of these are
@@ -443,6 +445,10 @@ supposedly the same jedi backend.
     ))
 #+END_SRC
 *** C
+Even though I don't ever actually compile C projects locally when it's so much
+less hassle/ more consistent to test with valgrind etc on the
+~linux.cs.uchicago.edu~ cluster, this is necessary for keep ccls from yelling at
+me about missing headers.
 #+BEGIN_SRC emacs-lisp
 (if IS-MAC
     (after! '(ccls c-mode lsp-mode)
@@ -466,6 +472,7 @@ supposedly the same jedi backend.
 #+END_SRC
 ** Plaintext
 *** org
+Mostly aesthetic changes to org.
 **** package: org (builtin)
 See also: [[#org-1][org keybindings]]
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -480,9 +487,8 @@ See also: [[#org-1][org keybindings]]
   (add-hook! org-mode (hl-line-mode -1))
   (set-company-backend! '(org-mode org-roam-mode)
     'company-capf)
-
   ;; basic settings
-  (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app
+  (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app on mac
         org-agenda-files         (list org-directory)
         org-src-window-setup     'plain
         org-export-with-toc      nil
@@ -552,6 +558,11 @@ See also: [[#org-1][org keybindings]]
 
 #+END_SRC
 **** package: org-roam
+I'm a pretty big fan of this package, though it changes pretty rapidly and think
+a fair bit of my config is outdated.
+I really like the ~[[roam:]]~ links and the completion at point is excellent, but
+I'd prefer them to look like regular links. Havent taken the time to figure out
+the font-lock options or whatever for that.
 See also: [[#org-roam][org-roam keybindings]]
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam
@@ -583,7 +594,6 @@ See also: [[#org-roam][org-roam keybindings]]
                                           :head ,(concat "#+title: ${title}\n"
                                                          "#+roam_key: ${ref}\n"
                                                          "#+roam_tags: article\n"
-                                                         "#+setupfile: ./setup.org\n"
                                                          "* Related: \n"
                                                          "  - [[${ref}][url]]\n")
                                           :unnarrowed t))
@@ -592,7 +602,6 @@ See also: [[#org-roam][org-roam keybindings]]
                                       :file-name "%<%Y-%m-%d>-${slug}"
                                       :head ,(concat "#+title: ${title}\n"
                                                      "#+roam_tags:\n"
-                                                     "#+setupfile: ./setup.org\n"
                                                      "* Description: \n"
                                                      "* Related: \n")
                                       :unnarrowed t))
@@ -601,7 +610,6 @@ See also: [[#org-roam][org-roam keybindings]]
                                               :file-name "%<%Y-%m-%d>-${slug}"
                                               :head ,(concat "#+title: ${title}\n"
                                                              "#+roam_tags:\n"
-                                                             "#+setupfile: ./setup.org\n"
                                                              "* Description: \n"
                                                              "* Related: \n")
                                               :unnarrowed t
@@ -615,7 +623,7 @@ See also: [[#org-roam][org-roam keybindings]]
                                                              "* Tasks: \n" ))))
   (map! :map org-mode-map
         "s-TAB" (cmd! (insert "[[roam:]]")
-                   (backward-char 2))))
+                      (backward-char 2))))
 #+END_SRC
 ***** package: mathpix
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -658,6 +666,9 @@ See also: [[#org-roam][org-roam keybindings]]
                                     +markdown-compile-multimarkdown))
 #+END_SRC
 * Keybindings
+Best-organized section of my config by far. Some of these are from transitioning
+from spacemacs, but most of them are newer; the ~map!~ macro is easily one of my
+favorite parts about the doom emacs distribution.
 ** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
@@ -716,8 +727,6 @@ See also: [[#org-roam][org-roam keybindings]]
         "M-[" #'lispy-backward
         "M-]" #'lispy-forward)))
 #+END_SRC
-
-#+RESULTS:
 
 *** multiedit
 #+BEGIN_SRC emacs-lisp :lexical yes

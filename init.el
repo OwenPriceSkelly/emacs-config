@@ -37,7 +37,7 @@
        (format +onsave)                 ; automated prettiness
        multiple-cursors                 ; editing in many places at once
        rotate-text               ; cycle region at point between text candidates
-       snippets                  ; my elves. They type so I don't have to
+       ;; snippets                  ; my elves. They type so I don't have to
        word-wrap                 ; soft wrapping with language-aware indent ;
        ;;parinfer             ; turn lisp into python, sort of
 
@@ -58,7 +58,7 @@
 
        :checkers
        (syntax +childframe)          ; tasing you for every semicolon you forget
-       (spell +aspell)                         ; tasing you for misspelling mispelling
+       ;; (spell +aspell)                         ; tasing you for misspelling mispelling
        ;;grammar              ; tasing grammar mistake every you make
 
        :tools
