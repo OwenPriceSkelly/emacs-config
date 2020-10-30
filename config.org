@@ -714,6 +714,9 @@ favorite parts about the doom emacs distribution.
       (:when (featurep! :ui workspaces)
        :g [C-tab] #'+workspace/switch-right)
 
+      :m "C-S-o" #'better-jumper-jump-forward
+      :g "C-s-o" #'+ivy/jump-list
+
       (:when (featurep! :completion company)
        :i "C-i" #'company-complete
        :i [C-i] #'company-complete)
