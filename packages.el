@@ -18,4 +18,4 @@
 (unpin! org-roam doom-themes)
 (package! darktooth-theme)
 (package! creamsody-theme)
-(package! theme-magic)
+;; (package! theme-magic)

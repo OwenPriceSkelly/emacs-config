@@ -108,9 +108,10 @@ I don't love the way that embedded blocks look in e.g. this config.
 Requires a ~pip install pywal~ and ~imagemagick~. When theme changes, update the
 theme of terminals etc.
 #+BEGIN_SRC emacs-lisp
-(use-package! theme-magic
-  :init
-  (add-hook! 'doom-load-theme-hook (theme-magic-from-emacs)))
+(unless IS-MAC
+  (use-package! theme-magic
+    :init
+    (add-hook! 'doom-load-theme-hook (theme-magic-from-emacs))))
 #+END_SRC
 ** Font
 I like the iosevka font family for programming, and I like the 'quasi-spaced'
