@@ -373,11 +373,11 @@ Completion and the 'inner/around line' text objects here.
 (use-package! evil-textobj-line
   :after evil)
 
-(after! ivy
-  (setq +ivy-buffer-preview t)
-  (defadvice! prompt-for-buffer (&rest _)
-    :after '(evil-window-split evil-window-vsplit)
-    (+ivy/projectile-find-file)))
+;; (after! ivy
+;;   (setq +ivy-buffer-preview t)
+;;   (defadvice! prompt-for-buffer (&rest _)
+;;     :after '(evil-window-split evil-window-vsplit)
+;;     (+ivy/projectile-find-file)))
 #+END_SRC
 ** Programming
 *** LSP
@@ -476,6 +476,8 @@ Mostly aesthetic changes to org.
 **** package: org (builtin)
 See also: [[#org-1][org keybindings]]
 #+BEGIN_SRC emacs-lisp :lexical yes
+;; has to be loaded ahead of time
+(setq org-directory "~/Notes")
 (use-package! org
   :defer t
   :hook (org-mode . toc-org-mode)
@@ -533,6 +535,7 @@ See also: [[#org-1][org keybindings]]
                                    :html-background "Transparent"
                                    :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
 #+END_SRC
+
 ***** package: org-superstar
 #+BEGIN_SRC emacs-lisp
 (use-package! org-superstar ; "prettier" bullets
@@ -566,7 +569,6 @@ the font-lock options or whatever for that.
 See also: [[#org-roam][org-roam keybindings]]
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam
-  :after org
   :commands (org-roam-buffer-toggle-display
              org-roam-find-file
              org-roam-dailies-date
@@ -587,7 +589,6 @@ See also: [[#org-roam][org-roam keybindings]]
          org-roam-graph-viewer            (executable-find "open"))
   (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
-  ;; (if IS-MAC (add-hook! org-roam-mode (org-hugo-auto-export-mode) :local))
   (setq org-roam-capture-ref-templates `(("r" "ref" plain #'org-roam-capture--get-point
                                           "%?"
                                           :file-name "${slug}"
