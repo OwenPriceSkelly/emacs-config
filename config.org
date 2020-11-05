@@ -811,8 +811,8 @@ favorite parts about the doom emacs distribution.
         "i" #'counsel-imenu))
 (after! lsp-mode
   (map! :leader
-          :prefix "j"
-          "i" #'lsp-ui-imenu))
+        :prefix "j"
+        "i" #'lsp-ui-imenu))
 #+END_SRC
 
 ** local
