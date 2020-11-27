@@ -460,6 +460,8 @@ me about missing headers.
                                                                     "-isystem/opt/local/include"
                                                                     "-isystem/opt/local/include/libomp"]
                                                         :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir")))))))
+(add-to-list '+format-on-save-enabled-modes 'c-mode :append) ;; this confusingly disables formatting on save.
+
 #+END_SRC
 *** C#
 #+BEGIN_SRC emacs-lisp
@@ -582,8 +584,8 @@ See also: [[#org-roam][org-roam keybindings]]
          org-roam-graph-shorten-titles    'truncate
          org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open"))
-  (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
-  (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
+  ;; (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
+  ;; (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
   (setq org-roam-capture-ref-templates `(("r" "ref" plain #'org-roam-capture--get-point
                                           "%?"
                                           :file-name "${slug}"
