@@ -51,9 +51,9 @@
 
        :term
        eshell                 ; a consistent, cross-platform shell (WIP)
-       ;; vterm
+       vterm
        ;; shell               ; a terminal REPL for Emacs
-       term                             ; another terminals in Emacs
+       ;; term                             ; another terminals in Emacs
 
 
        :checkers
@@ -62,7 +62,8 @@
        ;;grammar              ; tasing grammar mistake every you make
 
        :tools
-       debugger              ; FIXME stepping through code, to help you add bugs
+       (debugger ;; +lsp
+        )              ; FIXME stepping through code, to help you add bugs
        docker
        ein                ; tame Jupyter notebooks with emacs
        (eval +overlay)    ; run code, run (also, repls)
@@ -140,7 +141,6 @@
        ;;lua                  ; one-based indices? one-based indices
        ;;nim                  ; python + lisp at the speed of c
        ;;ocaml                ; an objective camel
-
        ;;perl                 ; write code no one else can comprehend
        ;;php                  ; perl's insecure younger brother
        ;;plantuml             ; diagrams for confusing people more

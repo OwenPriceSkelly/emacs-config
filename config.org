@@ -65,10 +65,16 @@ doesn't do anything weird if tiling fullscreen emacs to left or right on macOS)
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
+(add-to-list 'default-frame-alist '(height . 75))
+(add-to-list 'default-frame-alist '(width . 150))
 (modify-frame-parameters nil '((fullscreen . maximized)
-                               (undecorated . nil)))
+                               ;; (undecorated . t)
+                               ))
 (if IS-MAC (toggle-frame-fullscreen))
+
+(unless server-mode (server-mode))
 #+END_SRC
+
 
 ** Theme
 *** Set theme
@@ -429,22 +435,16 @@ Not super happy with any of the lsp options for python. Genuinely unsure why the
 best completion I've tried is the out-of-box ipython repl, when all of these are
 supposedly the same jedi backend.
 #+BEGIN_SRC emacs-lisp
-(after! python
-  (if (featurep! :tools lsp +eglot)
-      (after! eglot
-        (use-package! lsp-jedi
-          :config
-          (add-to-list 'eglot-server-programs
-                       `(python-mode . ("jedi-language-server")))))
-    (after! lsp-mode
-      (setq! lsp-pyls-plugins-pycodestyle-ignore "E501")
-      ;; (use-package! lsp-jedi
-      ;;   :config
-      ;;   (add-to-list 'lsp-disabled-clients 'pyls)
-      ;;   (add-to-list 'lsp-disabled-clients 'pyright)
-      ;;   (add-to-list 'lsp-enabled-clients 'jedi))
-      )
-    ))
+(after! (python (:or eglot lsp-mode))
+  (after! eglot
+    (use-package! lsp-jedi
+      :config
+      (add-to-list 'eglot-server-programs
+                   `(python-mode . ("jedi-language-server")))))
+  (after! lsp-mode
+                                        ;(add-to-list 'lsp-enabled-clients 'pyls)
+    (setq! lsp-pyls-plugins-pycodestyle-ignore "E501")
+    (add-to-list 'lsp-disabled-clients '(python-mode . '(mspyls pyright jedi)))))
 #+END_SRC
 *** C
 Even though I don't ever actually compile C projects locally when it's so much
@@ -453,16 +453,19 @@ less hassle/ more consistent to test with valgrind etc on the
 me about missing headers.
 #+BEGIN_SRC emacs-lisp
 (if IS-MAC
-    (after! '(ccls c-mode lsp-mode)
-      (setq ccls-initialization-options `(:clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
+    (after! '(c-mode lsp-mode ccls)
+      (setq ccls-initialization-options `(:index (:comments 2) :completion (:detailedLabel t)
+                                          :clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
                                                                     "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
                                                                     "-isystem/usr/local/include"
                                                                     "-isystem/opt/local/include"
                                                                     "-isystem/opt/local/include/libomp"]
-                                                        :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir")))))))
+                                                        :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir")))))
+      (set-lsp-priority! 'ccls 2)
+      (require 'realgud-lldb)))
 (add-to-list '+format-on-save-enabled-modes 'c-mode :append) ;; this confusingly disables formatting on save.
-
 #+END_SRC
+
 *** C#
 #+BEGIN_SRC emacs-lisp
 (use-package! csharp-mode
@@ -574,7 +577,6 @@ See also: [[#org-roam][org-roam keybindings]]
   :hook (org-load . org-roam-mode)
   :init
   (setq! org-roam-directory               org-directory
-         ;; org-roam-db-location             "~/Notes/.roam.db"
          org-roam-tag-sort                t
          org-roam-tag-sources             '(prop)
          org-roam-tag-separator           ", "
@@ -583,7 +585,9 @@ See also: [[#org-roam][org-roam keybindings]]
          org-roam-graph-max-title-length  40
          org-roam-graph-shorten-titles    'truncate
          org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
-         org-roam-graph-viewer            (executable-find "open"))
+         org-roam-graph-viewer            (executable-find "open")
+         org-roam-graph-executable        "dot"
+         )
   ;; (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   ;; (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
   (setq org-roam-capture-ref-templates `(("r" "ref" plain #'org-roam-capture--get-point
@@ -647,14 +651,19 @@ See also: [[#org-roam][org-roam keybindings]]
 #+END_SRC
 ***** package: org-roam-server
 #+BEGIN_SRC emacs-lisp :lexical yes
+;; (unless (server-running-p)
+;;   (org-roam-server-mode))
 (use-package! org-roam-server
   :commands (org-roam-server-mode)
+  :init
+  (defun org-roam--get-title-or-slug (file)
+    (org-roam-db--get-title file))
   :config
   (setq org-roam-server-host "127.0.0.1"
         org-roam-server-port 8080
         org-roam-server-authenticate nil
         org-roam-server-export-inline-images t
-        org-roam-server-serve-files nil
+        org-roam-server-serve-files t
         org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
         org-roam-server-network-poll t
         org-roam-server-network-arrows nil
@@ -662,14 +671,6 @@ See also: [[#org-roam][org-roam keybindings]]
         org-roam-server-network-label-truncate-length 60
         org-roam-server-network-label-wrap-length 20))
 #+END_SRC
-# ***** package: ox-hugo
-# #+BEGIN_SRC emacs-lisp
-# (use-package! ox-hugo
-#   :after org
-#   :config
-#   (setq org-hugo-preserve-filling nil
-#         org-hugo-section "notes"))
-# #+END_SRC
 *** markdown
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq +markdown-compile-functions '(+markdown-compile-pandoc

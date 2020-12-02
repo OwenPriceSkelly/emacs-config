@@ -14,6 +14,8 @@
     (unpin! eglot)
   (unpin! lsp-mode lsp-ui))
 
+(package! realgud-lldb)
+
 (package! org-roam-server)
 (unpin! org-roam doom-themes)
 (package! darktooth-theme)
