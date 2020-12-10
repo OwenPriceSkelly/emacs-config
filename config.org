@@ -425,10 +425,14 @@ holding on to eglot options in case I switch back.
 *** python
 **** Fixes problem with f-strings in python mode not inserting close quotation mark
 #+BEGIN_SRC emacs-lisp
-(use-package! python
-  :after python
-  :config
-  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+(after! python
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
+  ;; see: ccls navigation functions
+  (map! :map python-mode-map
+        :m "C-h" #'evil-backward-section-begin
+        :m "C-j" #'+evil/next-beginning-of-method
+        :m "C-k" #'+evil/previous-beginning-of-method
+        :m "C-l" #'evil-forward-section-begin))
 #+END_SRC
 **** Python LSP integration
 Not super happy with any of the lsp options for python. Genuinely unsure why the
@@ -437,12 +441,12 @@ supposedly the same jedi backend.
 #+BEGIN_SRC emacs-lisp
 (after! (python (:or eglot lsp-mode))
   (after! eglot
-    (use-package! lsp-jedi
-      :config
-      (add-to-list 'eglot-server-programs
-                   `(python-mode . ("jedi-language-server")))))
+    ;; (use-package! lsp-jedi
+    ;;   :config
+    ;;   (add-to-list 'eglot-server-programs
+    ;;                `(python-mode . ("jedi-language-server"))))
+    )
   (after! lsp-mode
-                                        ;(add-to-list 'lsp-enabled-clients 'pyls)
     (setq! lsp-pyls-plugins-pycodestyle-ignore "E501")
     (add-to-list 'lsp-disabled-clients '(python-mode . '(mspyls pyright jedi)))))
 #+END_SRC
@@ -450,29 +454,24 @@ supposedly the same jedi backend.
 Even though I don't ever actually compile C projects locally when it's so much
 less hassle/ more consistent to test with valgrind etc on the
 ~linux.cs.uchicago.edu~ cluster, this is necessary for keep ccls from yelling at
-me about missing headers.
+me about missing headers with OpenMP
 #+BEGIN_SRC emacs-lisp
 (if IS-MAC
-    (after! '(c-mode lsp-mode ccls)
-      (setq ccls-initialization-options `(:index (:comments 2) :completion (:detailedLabel t)
-                                          :clang ,(list :extraArgs ["-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1"
-                                                                    "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include"
-                                                                    "-isystem/usr/local/include"
-                                                                    "-isystem/opt/local/include"
-                                                                    "-isystem/opt/local/include/libomp"]
-                                                        :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir")))))
-      (set-lsp-priority! 'ccls 2)
-      (require 'realgud-lldb)))
+    (after! ccls
+      (setq ccls-initialization-options
+            `(:index (:trackDependency 1 :threads 2)
+              :clang ,(list
+                       :extraArgs ["-isystem" "-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1" "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include" "-isystem/usr/local/include" "-isystem/opt/local/include/libomp"]
+                       :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir")))))))
 (add-to-list '+format-on-save-enabled-modes 'c-mode :append) ;; this confusingly disables formatting on save.
 #+END_SRC
-
 *** C#
 #+BEGIN_SRC emacs-lisp
 (use-package! csharp-mode
   :init
   (if (featurep! :tools lsp +eglot)
       (after! eglot
-        (add-to-list 'eglot-server-programs `(csharp-mode . ("/home/owen/.nix-profile/bin/omnisharp" "-lsp"))))
+        (add-to-list 'eglot-server-programs `(csharp-mode . ("~/.nix-profile/bin/omnisharp" "-lsp"))))
     ;; (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
     )
   :mode ("\\.csx?\\'"))
@@ -567,11 +566,10 @@ See also: [[#org-1][org keybindings]]
 #+END_SRC
 **** package: org-roam
 I'm a pretty big fan of this package, though it changes pretty rapidly and think
-a fair bit of my config is outdated.
-I really like the ~[[roam:]]~ links and the completion at point is excellent, but
-I'd prefer them to look like regular links. Havent taken the time to figure out
-the font-lock options or whatever for that.
-See also: [[#org-roam][org-roam keybindings]]
+a fair bit of my config is outdated.  I really like the ~[[roam:]]~ links and the
+completion at point is excellent, but I'd prefer them to look like regular
+links. Havent taken the time to figure out the font-lock options or whatever for
+that. See also: [[#org-roam][org-roam keybindings]]
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam
   :hook (org-load . org-roam-mode)
@@ -592,7 +590,7 @@ See also: [[#org-roam][org-roam keybindings]]
   ;; (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
   (setq org-roam-capture-ref-templates `(("r" "ref" plain #'org-roam-capture--get-point
                                           "%?"
-                                          :file-name "${slug}"
+                                          :file-name "%<%Y-%m-%d>-${slug}"
                                           :head ,(concat "#+title: ${title}\n"
                                                          "#+roam_key: ${ref}\n"
                                                          "#+roam_tags: article\n"
@@ -607,15 +605,7 @@ See also: [[#org-roam][org-roam keybindings]]
                                                      "* Description: \n"
                                                      "* Related: \n")
                                       :unnarrowed t))
-        org-roam-capture-immediate-template `("d" "default" plain #'org-roam-capture--get-point
-                                              "%?"
-                                              :file-name "%<%Y-%m-%d>-${slug}"
-                                              :head ,(concat "#+title: ${title}\n"
-                                                             "#+roam_tags:\n"
-                                                             "* Description: \n"
-                                                             "* Related: \n")
-                                              :unnarrowed t
-                                              :immediate-finish t)
+        org-roam-capture-immediate-template (car org-roam-capture-templates)
         org-roam-dailies-capture-templates `(("t" "daily" plain #'org-roam-capture--get-point
                                               ""
                                               :immediate-finish t
@@ -686,7 +676,7 @@ favorite parts about the doom emacs distribution.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
        doom-leader-alt-key "C-SPC"
-       doom-localleader-key ","
+       doom-localleader-key "C-,"
        doom-localleader-alt-key "C-,")
 #+END_SRC
 
@@ -708,8 +698,8 @@ favorite parts about the doom emacs distribution.
   :config
   ;; when f/t/s searching, interpret open/close square brackets to be any
   ;; open/close delimiters, respectively
-  (push '(?\[ "[[{(]") evil-snipe-aliases)
-  (push '(?\] "[]})]") evil-snipe-aliases)
+  (push '(?\[ "[[{(<]") evil-snipe-aliases)
+  (push '(?\] "[]})>]") evil-snipe-aliases)
   ;; "C-;" pre-fills avy-goto-char-2 with most recent snipe
   (map! :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
         "C-;" (cmd! (if evil-snipe--last
