@@ -20,4 +20,4 @@
 (unpin! org-roam doom-themes)
 (package! darktooth-theme)
 (package! creamsody-theme)
-;; (package! theme-magic)
+(unless IS-MAC (package! theme-magic))

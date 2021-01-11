@@ -22,6 +22,7 @@
        treemacs                      ; a project drawer, like neotree but cooler
        vc-gutter       ; vcs diff in the fringe
        workspaces             ; tab emulation, persistence & separate workspaces
+       (emoji +github +unicode)
        ;;vi-tilde-fringe      ; fringe tildes to mark beyond EOB
        ;;indent-guides        ; highlighted indent columns
        ;;minimap
@@ -34,7 +35,8 @@
              +everywhere)               ; come to the dark side, we have cookies
        file-templates                   ; auto-snippets for empty files
        fold                             ; (nigh) universal code folding
-       (format +onsave)                 ; automated prettiness
+       (format ;; +onsave
+        )                 ; automated prettiness
        multiple-cursors                 ; editing in many places at once
        rotate-text               ; cycle region at point between text candidates
        ;; snippets                  ; my elves. They type so I don't have to
@@ -156,12 +158,6 @@
        ;;terra                ; Earth and Moon in alignment for performance.
        ;;web                  ; the tubes
 
-
-       :config
-       (default +bindings
-         +smartparens)
-       literate
-
        :email
        ;;(mu4e +gmail)
        ;;notmuch
@@ -171,4 +167,10 @@
        ;;irc                  ; how neckbeards socialize
        ;;(rss +org)           ; emacs as an RSS reader
        ;;twitter              ; twitter client https://twitter.com/vnought
+
+       :config
+       (default +bindings
+         +smartparens)
+       literate
+
        )
