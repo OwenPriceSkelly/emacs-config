@@ -5,19 +5,13 @@
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el")
   :pin "52bc9a6acd34d2282555ac576e905af3c5a0e767")
-(package! visual-basic-mode
-  :recipe (:host github :repo "emacsmirror/visual-basic-mode") :pin "79689e97d9dc0f90388c4111c5409d544a173631")
-
 (package! solaire-mode :disable t)
 ;; existing packages pinned separately
 (if (featurep! :tools lsp +eglot)
     (unpin! eglot)
   (unpin! lsp-mode lsp-ui))
 
-(package! realgud-lldb)
 
-(package! org-roam-server)
 (unpin! org-roam doom-themes)
-(package! darktooth-theme)
-(package! creamsody-theme)
+(package! org-roam-server)
 (unless IS-MAC (package! theme-magic))

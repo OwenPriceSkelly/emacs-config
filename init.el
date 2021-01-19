@@ -30,22 +30,20 @@
        ;;window-select        ; visually switch windows
 
        :editor
-       lispy
        (evil +commands
-             +everywhere)               ; come to the dark side, we have cookies
+             +everywhere) ; come to the dark side, we have cookies
+       lispy
        file-templates                   ; auto-snippets for empty files
        fold                             ; (nigh) universal code folding
-       (format ;; +onsave
-        )                 ; automated prettiness
+       format ;; +onsave                 ; automated prettiness
        multiple-cursors                 ; editing in many places at once
        rotate-text               ; cycle region at point between text candidates
-       ;; snippets                  ; my elves. They type so I don't have to
+       snippets                  ; my elves. They type so I don't have to
        word-wrap                 ; soft wrapping with language-aware indent ;
        ;;parinfer             ; turn lisp into python, sort of
 
        :emacs
-       (dired +ranger
-              +icons)             ; making dired pretty [functional]
+       (dired +icons) ;; +ranger             ; making dired pretty [functional]
        electric                   ; smarter, keyword-based electric-indent
        (ibuffer +icons)           ; interactive buffer management
        vc                         ; version-control and Emacs, sitting in a tree
@@ -106,15 +104,13 @@
             +dragndrop               ; drag & drop files/images into org buffers
             +pandoc                  ; export-with-pandoc support
             +noter
-            ;; +hugo          ; use Emacs for hugo blogging
+            ;;+hugo          ; use Emacs for hugo blogging
             ;;+present        ; using org-mode for presentations
             ;;+gnuplot
             ;;+jupyter        ; ipython/jupyter support for babel
             ;;+pomodoro       ; be fruitful with the tomato technique
             +journal)
-       (python +lsp
-               ;; +pyright
-               )                ; beautiful is better than ugly ;
+       (python +lsp)                ; beautiful is better than ugly ;
        rest                             ; Emacs as a REST client
        scheme                           ; a fully conniving family of lisps
        (sh +fish)
@@ -135,7 +131,7 @@
        ;;hy                   ; readability of scheme w/ speed of python
        ;;(java +meghanada)    ; the poster child for carpal tunnel syndrome
        ;;javascript           ; all(hope(abandon(ye(who(enter(here))))))
-       ;;julia                ; a better, faster MATLAB
+       julia                ; a better, faster MATLAB
        ;;kotlin               ; a better, slicker Java(Script)
        ;;lean
        ;;factor
@@ -151,13 +147,12 @@
        ;;racket               ; a DSL for DSLs
        ;;rst                  ; ReST in peace
        ;;ruby                 ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       ;;rust                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;; (rust +lsp)                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala                ; java, but good
        ;;solidity             ; do you need a blockchain? No.
        ;;swift                ; who asked for emoji variables?
        ;;terra                ; Earth and Moon in alignment for performance.
-       ;;web                  ; the tubes
-
+       web                  ; the tubes
        :email
        ;;(mu4e +gmail)
        ;;notmuch
@@ -169,8 +164,6 @@
        ;;twitter              ; twitter client https://twitter.com/vnought
 
        :config
-       (default +bindings
-         +smartparens)
        literate
-
-       )
+       (default +bindings
+         +smartparens))

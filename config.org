@@ -70,7 +70,6 @@ doesn't do anything weird if tiling fullscreen emacs to left or right on macOS)
 ;; (unless server-mode (server-mode))
 #+END_SRC
 
-
 ** Theme
 *** Set theme
 changing ~+override-theme~ to nil will have this snippet will choose randomly
@@ -157,7 +156,7 @@ readable without obviously being a totally different font at a glance.
 #+END_SRC
 ** Dashboard
 Modifications to the doom-emacs home buffer
-*** ASCII-art
+*** ASCII-art (terminal only)
 When starting up in a terminal: Modified `doom-dashboard-widget-banner' with
   ascii art modified from https://github.com/plexus/chemacs.
   It looks better without all the escaped ~\\~'s.
@@ -304,7 +303,6 @@ Lifted verbatim very slightly modified from https://tecosaur.github.io/emacs-con
 (add-hook 'window-size-change-functions #'set-appropriate-splash)
 (add-hook 'doom-load-theme-hook #'set-appropriate-splash)
 #+END_SRC
-
 *** Shortcuts, icons
 There are only a few shortcuts I'd want to use from the dashboard.
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -452,13 +450,14 @@ less hassle/ more consistent to test with valgrind etc on the
 ~linux.cs.uchicago.edu~ cluster, this is necessary for keep ccls from yelling at
 me about missing headers with OpenMP
 #+BEGIN_SRC emacs-lisp
-(if IS-MAC
-    (after! ccls
+(after! ccls
       (setq ccls-initialization-options
             `(:index (:trackDependency 1 :threads 2)
               :clang ,(list
                        :extraArgs ["-isystem" "-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1" "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include" "-isystem/usr/local/include" "-isystem/opt/local/include/libomp" "-L/opt/local/lib/libomp"]
-                       :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir")))))))
+                       :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir"))))))
+(set-eglot-client! 'cc-mode '("ccls" "--init={\"index\": {\"threads\": 3}, \"clang\": {\"extraArgs\": [\"-isystem\", \"-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1\", \"-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include\", \"-isystem/usr/local/include\", \"-isystem/opt/local/include/libomp\", \"-L/opt/local/lib/libomp\"], \"resourceDir\": \"/Library/Developer/CommandLineTools/usr/lib/clang/12.0.0\"}}"))
+;;;
 (add-to-list '+format-on-save-enabled-modes 'c-mode :append) ;; this confusingly is needed to disable formatting on save.
 #+END_SRC
 *** C#
@@ -493,9 +492,9 @@ See also: [[#org-1][org keybindings]]
   (setq org-directory            "~/Notes" ;; now symlinked to icloud documents for app on mac
         org-agenda-files         (list org-directory)
         org-src-window-setup     'plain
+        org-use-sub-superscripts '{}
         org-export-with-toc      nil
         org-export-with-section-numbers nil
-        org-use-sub-superscripts '{}
         org-export-with-sub-superscripts '{}
         org-export-with-entities t
         org-imenu-depth          9
@@ -518,6 +517,8 @@ See also: [[#org-1][org keybindings]]
   (setq org-preview-latex-default-process 'dvisvgm ;'imagemagick ;'dvipng
         org-startup-with-latex-preview nil
         org-highlight-latex-and-related nil
+        org-latex-packages-alist  '(("kw" "pseudo" t) ("" "tabularx" t) ("margin=2cm" "geometry" nil))
+        org-format-latex-header (concat org-format-latex-header "\n" "\\pseudodefinestyle{fullwidth}{begin-tabular=\\tabularx{\\linewidth}{@{} r>{\\pseudosetup} X>{\\leavevmode\\small\\color{black!60}} p{0.45\\linewidth} @{}}, end-tabular=\\endtabularx, setup-append=\\pseudoeq}" "\n")
         org-entities-user
         ;;org  | LaTeX str |math?| html     |ascii|latin1|utf-8
         '(("Z" "\\mathbb{Z}" t    "&#x2124;"  "Z"   "Z"    "ℤ")
@@ -671,9 +672,7 @@ favorite parts about the doom emacs distribution.
 ** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
-       doom-leader-alt-key "C-SPC"
-       doom-localleader-key "C-,"
-       doom-localleader-alt-key "C-,")
+       doom-leader-alt-key "C-SPC")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -743,7 +742,7 @@ favorite parts about the doom emacs distribution.
         "N"    #'evil-multiedit-prev
         "s-d"  #'evil-multiedit-match-and-next
         "s-D"  #'evil-multiedit-match-and-prev
-        "V"    #'iedit-show/hide-unmatched-lines)))
+        "V"    #'iedit-show/hide-context-lines)))
 #+END_SRC
 
 ** leader
