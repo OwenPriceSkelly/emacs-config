@@ -138,7 +138,7 @@
        ;;ledger               ; an accounting system in Emacs
        ;;lua                  ; one-based indices? one-based indices
        ;;nim                  ; python + lisp at the speed of c
-       ;;ocaml                ; an objective camel
+       ocaml                ; an objective camel
        ;;perl                 ; write code no one else can comprehend
        ;;php                  ; perl's insecure younger brother
        ;;plantuml             ; diagrams for confusing people more
