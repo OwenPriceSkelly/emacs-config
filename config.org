@@ -67,7 +67,6 @@ doesn't do anything weird if tiling fullscreen emacs to left or right on macOS)
 (add-to-list 'default-frame-alist '(width . 150))
 (modify-frame-parameters nil '((fullscreen . maximized)))
 ;; (if IS-MAC (toggle-frame-fullscreen))
-;; (unless server-mode (server-mode))
 #+END_SRC
 
 ** Theme
@@ -76,7 +75,7 @@ changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 Usually I just stick with one of the gruvboxes though.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme nil)
+(let* ((+override-theme 'doom-gruvbox-light)
        (+my/themes-list-dark '(doom-gruvbox
                                doom-oceanic-next
                                doom-old-hope
@@ -130,6 +129,8 @@ readable without obviously being a totally different font at a glance.
       +zen-text-scale                 0
       +ligatures-extras-in-modes '(org-mode)
       +ligatures-in-modes      '(org-mode))
+(set-ligatures! 'python-mode nil)
+(set-ligatures! 'tuareg-mode nil)
 #+END_SRC
 *** package: mixed-pitch-mode
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -394,7 +395,8 @@ holding on to eglot options in case I switch back.
         :hook (csharp-mode . eglot-ensure)
         :config
         (setq eglot-send-changes-idle-time 0.03)
-        (add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider))
+        ;;(add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
+        )
     (use-package lsp-ui
       :commands (lsp-ui-mode)
       :config
@@ -444,6 +446,7 @@ supposedly the same jedi backend.
     (setq! lsp-pyls-plugins-pycodestyle-ignore "E501")
     (add-to-list 'lsp-disabled-clients '(python-mode . '(mspyls pyright jedi)))))
 #+END_SRC
+*** Ocaml
 *** C
 Even though I don't ever actually compile C projects locally when it's so much
 less hassle/ more consistent to test with valgrind etc on the
@@ -672,7 +675,9 @@ favorite parts about the doom emacs distribution.
 ** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
-       doom-leader-alt-key "C-SPC")
+       doom-localleader-key "SPC m"
+       doom-leader-alt-key "C-SPC"
+       doom-localleader-alt-key "C-SPC m")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :lexical yes

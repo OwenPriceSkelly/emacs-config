@@ -11,7 +11,7 @@
        zen
        doom                             ; what makes DOOM look the way it does
        doom-dashboard                   ; a nifty splash screen for Emacs
-       ligatures ;; +extra    ; ligatures and symbols to make your code pretty again
+       ;; ligatures ;; +extra    ; ligatures and symbols to make your code pretty again
        hl-todo   ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        hydra
        modeline                      ; snazzy, Atom-inspired modeline, plus API
@@ -65,11 +65,12 @@
        (debugger ;; +lsp
         )              ; FIXME stepping through code, to help you add bugs
        docker
-       ein                ; tame Jupyter notebooks with emacs
+       ;; ein                ; tame Jupyter notebooks with emacs
        (eval +overlay)    ; run code, run (also, repls)
-       (lookup +docsets) ; helps you navigate your code and documentation ...or in Dash docsets locally
-       ;; (lsp +eglot)
-       (lsp +peek)
+       (lookup ;; +docsets
+        ) ; helps you navigate your code and documentation ...or in Dash docsets locally
+       (lsp +eglot)
+       ;; (lsp +peek)
        (magit +forge)                   ; a git porcelain for Emacs
        make                             ; run make tasks from Emacs
        pass                             ; password manager for nerds
@@ -91,8 +92,8 @@
        :lang
        (cc  +lsp)                       ; C/C++/Obj-C madness
        clojure                          ; java with a lisp
-       (csharp +lsp)             ; unity, .NET, and mono shenanigans
-       data                      ; config/data formats
+       ;; (csharp +lsp)             ; unity, .NET, and mono shenanigans
+       data ; config/data formats
        emacs-lisp                       ; drown in parentheses
        (latex +cdlatex
               +latexmk)
@@ -109,8 +110,9 @@
             ;;+gnuplot
             ;;+jupyter        ; ipython/jupyter support for babel
             ;;+pomodoro       ; be fruitful with the tomato technique
-            +journal)
-       (python +lsp)                ; beautiful is better than ugly ;
+            ;; +journal
+            )
+       (python +lsp) ;; +pyright                ; beautiful is better than ugly ;
        rest                             ; Emacs as a REST client
        scheme                           ; a fully conniving family of lisps
        (sh +fish)
