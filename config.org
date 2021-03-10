@@ -564,12 +564,13 @@ See also: [[#org-1][org keybindings]]
         :n [ret] #'org-noter-sync-current-page-or-chapter))
 
 #+END_SRC
-**** package: org-roam
+***** package: org-roam
 I'm a pretty big fan of this package, though it changes pretty rapidly and think
 a fair bit of my config is outdated.  I really like the ~[[roam:]]~ links and the
 completion at point is excellent, but I'd prefer them to look like regular
 links. Havent taken the time to figure out the font-lock options or whatever for
-that. See also: [[#org-roam][org-roam keybindings]]
+that.
+See also: [[#org-roam][org-roam keybindings]]
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam
   :hook (org-load . org-roam-mode)
@@ -593,15 +594,17 @@ that. See also: [[#org-roam][org-roam keybindings]]
                                           :file-name "%<%Y-%m-%d>-${slug}"
                                           :head ,(concat "#+title: ${title}\n"
                                                          "#+roam_key: ${ref}\n"
-                                                         "#+roam_tags: article\n"
+                                                         "#+roam_tags: link\n"
+                                                         "#+setupfile: setup.org\n"
                                                          "* Related: \n"
-                                                         "  - [[${ref}][url]]\n")
+                                                         "  - [[${ref}][link]]\n")
                                           :unnarrowed t))
         org-roam-capture-templates `(("d" "default" plain #'org-roam-capture--get-point
                                       "%?"
                                       :file-name "%<%Y-%m-%d>-${slug}"
                                       :head ,(concat "#+title: ${title}\n"
                                                      "#+roam_tags:\n"
+                                                     "#+setupfile: setup.org\n"
                                                      "* Description: \n"
                                                      "* Related: \n")
                                       :unnarrowed t))
@@ -675,9 +678,9 @@ favorite parts about the doom emacs distribution.
 ** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
-       doom-localleader-key "SPC m"
+       doom-localleader-key ","
        doom-leader-alt-key "C-SPC"
-       doom-localleader-alt-key "C-SPC m")
+       doom-localleader-alt-key "C-,")
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -808,11 +811,11 @@ favorite parts about the doom emacs distribution.
 ** local
 *** org
 #+BEGIN_SRC emacs-lisp :lexical yes
-(map! :map org-mode-map
-      :localleader
-      :desc "Sort"                     "S" #'org-sort
-      :desc "preview LaTeX fragments"  "L" #'org-latex-preview
-      :desc "toggle pretty entities"   "p" #'+org-pretty-mode)
+;; (map! :map org-mode-map
+;;       :localleader
+;;       :desc "Sort"                     "S" #'org-sort
+;;       :desc "preview LaTeX fragments"  "L" #'org-latex-preview
+;;       :desc "toggle pretty entities"   "p" #'+org-pretty-mode)
 #+END_SRC
 *** org-roam
 #+BEGIN_SRC emacs-lisp :lexical yes
