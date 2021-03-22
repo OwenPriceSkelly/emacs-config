@@ -22,12 +22,15 @@
 When I split windows, I usually want to go to that window immediately
 afterwards. I like the defaults from the popups module except for the size,
 which cuts things off a little short.
+
+Also, disable line numbers since I never use them for movement commands; text
+objects/avy/ snipe is usually faster
 #+BEGIN_SRC emacs-lisp
 (setq which-key-side-window-location 'bottom
       which-key-sort-order 'which-key-key-order-alpha
       which-key-max-description-length nil
 
-      display-line-numbers-type t
+      display-line-numbers-type nil
       evil-split-window-below t
       evil-vsplit-window-right t
 
@@ -156,7 +159,7 @@ readable without obviously being a totally different font at a glance.
             'line-number-current-line))
 #+END_SRC
 ** Dashboard
-Modifications to the doom-emacs home buffer
+Modifications to the doom-emacs home/fallback buffer.
 *** ASCII-art (terminal only)
 When starting up in a terminal: Modified `doom-dashboard-widget-banner' with
   ascii art modified from https://github.com/plexus/chemacs.
@@ -199,7 +202,7 @@ When starting up in a terminal: Modified `doom-dashboard-widget-banner' with
       (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
 #+END_SRC
 *** Splash image
-Lifted verbatim very slightly modified from https://tecosaur.github.io/emacs-config/config.html#splash-screen
+Lifted nearly verbatim, very slightly modified from https://tecosaur.github.io/emacs-config/config.html#splash-screen
 #+BEGIN_SRC emacs-lisp
 (defvar fancy-splash-image-template
   (expand-file-name "misc/splash-images/blackhole-lines-template.svg" doom-private-dir)
@@ -447,6 +450,7 @@ supposedly the same jedi backend.
     (add-to-list 'lsp-disabled-clients '(python-mode . '(mspyls pyright jedi)))))
 #+END_SRC
 *** Ocaml
+honestly the doom ocaml module is enough. nothing worth putting here I don't think
 *** C
 Even though I don't ever actually compile C projects locally when it's so much
 less hassle/ more consistent to test with valgrind etc on the
