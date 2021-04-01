@@ -5,7 +5,8 @@
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el")
   :pin "52bc9a6acd34d2282555ac576e905af3c5a0e767")
-;; (package! solaire-mode :disable t)
+(package! solaire-mode :disable t)
+
 ;; existing packages pinned separately
 (if (featurep! :tools lsp +eglot)
     (unpin! eglot)

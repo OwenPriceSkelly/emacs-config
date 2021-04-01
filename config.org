@@ -53,11 +53,11 @@ objects/avy/ snipe is usually faster
 *** package: solaire-mode
 Note: currently disabled in ~packages.el~
 #+BEGIN_SRC emacs-lisp :lexical yes
-(use-package! solaire-mode
-  :init
-  (setq solaire-mode-auto-swap-bg t
-        solaire-mode-remap-line-numbers t)
-  (solaire-global-mode -1))
+;; (use-package! solaire-mode
+;;   :init
+;;   (setq solaire-mode-auto-swap-bg t
+;;         solaire-mode-remap-line-numbers t)
+;;   (solaire-global-mode -1))
 #+END_SRC
 
 ** Frame setup
@@ -78,15 +78,15 @@ changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 Usually I just stick with one of the gruvboxes though.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'doom-gruvbox-light)
-       (+my/themes-list-dark '(doom-gruvbox
+(let* (;; (+override-theme 'doom-gruvbox-light)
+       (+override-theme nil)
+       (+my/themes-list-dark '(doom-zenburn
+                               doom-gruvbox
+                               doom-ayu-mirage
                                doom-oceanic-next
                                doom-old-hope
-                               doom-nova
-                               doom-city-lights
                                doom-tomorrow-night))
-       (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light
-                                                             doom-nord-light)))
+       (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light)))
        (hour (caddr (decode-time nil)))
        (sec (car (decode-time nil))))
   (setq! doom-gruvbox-dark-variant 'soft
@@ -679,6 +679,12 @@ See also: [[#org-roam][org-roam keybindings]]
 Best-organized section of my config by far. Some of these are from transitioning
 from spacemacs, but most of them are newer; the ~map!~ macro is easily one of my
 favorite parts about the doom emacs distribution.
+
+Highlights:
+-  following a "missed snipe" motion from ~evil-snipe~ package, ~C-;~ will execute
+  an ~avy-goto-char-2~ with those characters, so you can move where you meant to.
+- Under the ~SPC t~ /"toggle" prefix, ~m/f/d~ toggle frame
+  maximized/fullscreen/decorated parameters, respectively
 ** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
@@ -815,11 +821,12 @@ favorite parts about the doom emacs distribution.
 ** local
 *** org
 #+BEGIN_SRC emacs-lisp :lexical yes
-;; (map! :map org-mode-map
-;;       :localleader
-;;       :desc "Sort"                     "S" #'org-sort
-;;       :desc "preview LaTeX fragments"  "L" #'org-latex-preview
-;;       :desc "toggle pretty entities"   "p" #'+org-pretty-mode)
+(after! org
+  (map! :map org-mode-map
+        :localleader
+        :desc "Sort"                     "S" #'org-sort
+        :desc "preview LaTeX fragments"  "L" #'org-latex-preview
+        :desc "toggle pretty-mode"   "p" #'+org-pretty-mode))
 #+END_SRC
 *** org-roam
 #+BEGIN_SRC emacs-lisp :lexical yes
