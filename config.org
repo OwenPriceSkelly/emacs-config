@@ -68,7 +68,7 @@ doesn't do anything weird if tiling fullscreen emacs to left or right on macOS)
       icon-title-format frame-title-format)
 (add-to-list 'default-frame-alist '(height . 75))
 (add-to-list 'default-frame-alist '(width . 150))
-(modify-frame-parameters nil '((fullscreen . maximized)))
+(modify-frame-parameters nil '((fullscreen . maximized) (undecorated . t)))
 ;; (if IS-MAC (toggle-frame-fullscreen))
 #+END_SRC
 
@@ -338,9 +338,9 @@ There are only a few shortcuts I'd want to use from the dashboard.
                        (file-exists-p (desktop-full-file-name))))
           :face (:inherit (doom-dashboard-menu-title bold))
           :action doom/quickload-session)
-         ("Open today's note"
+         ("Open random note"
           :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title)
-          :action org-roam-dailies-find-today)
+          :action org-roam-random-note)
          ("Recently opened files"
           :icon (all-the-icons-octicon "file-text" :face 'doom-dashboard-menu-title)
           :action recentf-open-files)
@@ -398,6 +398,7 @@ holding on to eglot options in case I switch back.
         :hook (csharp-mode . eglot-ensure)
         :config
         (setq eglot-send-changes-idle-time 0.03)
+        ;; TODO: keybinds for shutdown/reconnect
         ;;(add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
         )
     (use-package lsp-ui
@@ -478,6 +479,34 @@ me about missing headers with OpenMP
     )
   :mode ("\\.csx?\\'"))
 #+END_SRC
+*** Julia
+#+begin_src emacs-lisp
+(after! (eglot eglot-jl)
+  (setq eglot-jl-language-server-project "~/.julia/environments/v1.6"
+        eglot-connect-timeout 60))
+(after! (org julia)
+  (setq org-babel-default-header-args:jupyter-julia '((:async . "yes")
+                                                      (:session . "jl")
+                                                      (:kernel . "julia"))))
+#+end_src
+*** Go
+Taken from https://github.com/golang/tools/blob/master/gopls/doc/emacs.md
+#+begin_src emacs-lisp
+(after! (go eglot project)
+  (defun project-find-go-module (dir)
+    (when-let ((root (locate-dominating-file dir "go.mod")))
+      (cons 'go-module root)))
+
+  (cl-defmethod project-root ((project (head go-module)))
+    (cdr project))
+
+  (add-hook 'project-find-functions #'project-find-go-module)
+
+  (setq-default eglot-workspace-configuration
+                '((:gopls .
+                   ((staticcheck . t)
+                    (matcher . "CaseSensitive"))))))
+#+end_src
 ** Plaintext
 *** org
 Mostly aesthetic changes to org.
@@ -490,7 +519,7 @@ See also: [[#org-1][org keybindings]]
   :defer t
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
-  :hook (org-mode . auto-fill-mode)
+  ;; :hook (org-mode . auto-fill-mode)
   :config
   (add-hook! org-mode (hl-line-mode -1))
   (set-company-backend! '(org-mode org-roam-mode)
@@ -579,13 +608,14 @@ See also: [[#org-roam][org-roam keybindings]]
 (use-package! org-roam
   :hook (org-load . org-roam-mode)
   :init
-  (setq! org-roam-directory               org-directory
+  (setq! org-roam-directory               "~/Notes"
          org-roam-tag-sort                t
          org-roam-tag-sources             '(prop)
          org-roam-tag-separator           ", "
          org-roam-verbose                 t
          org-roam-buffer-width            0.25
          org-roam-graph-max-title-length  40
+         org-roam-completion-everywhere   t
          org-roam-graph-shorten-titles    'truncate
          org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open")
@@ -600,7 +630,8 @@ See also: [[#org-roam][org-roam keybindings]]
                                                          "#+roam_key: ${ref}\n"
                                                          "#+roam_tags: link\n"
                                                          "#+setupfile: setup.org\n"
-                                                         "* Related: \n"
+                                                         "* Notes: \n"
+                                                         "* Etc: \n"
                                                          "  - [[${ref}][link]]\n")
                                           :unnarrowed t))
         org-roam-capture-templates `(("d" "default" plain #'org-roam-capture--get-point
@@ -609,8 +640,8 @@ See also: [[#org-roam][org-roam keybindings]]
                                       :head ,(concat "#+title: ${title}\n"
                                                      "#+roam_tags:\n"
                                                      "#+setupfile: setup.org\n"
-                                                     "* Description: \n"
-                                                     "* Related: \n")
+                                                     "* Notes: \n"
+                                                     "* Etc: \n")
                                       :unnarrowed t))
         org-roam-capture-immediate-template (car org-roam-capture-templates)
         org-roam-dailies-capture-templates `(("t" "daily" plain #'org-roam-capture--get-point
@@ -681,10 +712,13 @@ from spacemacs, but most of them are newer; the ~map!~ macro is easily one of my
 favorite parts about the doom emacs distribution.
 
 Highlights:
--  following a "missed snipe" motion from ~evil-snipe~ package, ~C-;~ will execute
-  an ~avy-goto-char-2~ with those characters, so you can move where you meant to.
+- following a "missed snipe" motion from ~evil-snipe~ package, ~C-;~ will execute
+ an ~avy-goto-char-2~ with those characters, so you can move where you meant to.
 - Under the ~SPC t~ /"toggle" prefix, ~m/f/d~ toggle frame
   maximized/fullscreen/decorated parameters, respectively
+- open a browser window running org-roam-server with ~SPC n g s~
+  + note: only works if loaded before org-roam. not sure why, but easy to
+    restart and run.
 ** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
@@ -826,8 +860,13 @@ Highlights:
         :localleader
         :desc "Sort"                     "S" #'org-sort
         :desc "preview LaTeX fragments"  "L" #'org-latex-preview
-        :desc "toggle pretty-mode"   "p" #'+org-pretty-mode))
+        :desc "toggle pretty-mode"   "p" #'+org-pretty-mode)
+  (after! evil-org  ;; HACK - something funny w/ doom electric module, maybe? see org module's evil-org use package map! config
+    (map! :map evil-org-mode-map
+          :i [return]   #'org-return
+          :i "RET"      #'org-return)))
 #+END_SRC
+
 *** org-roam
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :leader

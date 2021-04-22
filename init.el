@@ -108,8 +108,8 @@
             +noter
             ;;+hugo               ; use Emacs for hugo blogging
             ;;+present            ; using org-mode for presentations
-            ;;+gnuplot
-            ;;+jupyter            ; ipython/jupyter support for babel
+            +gnuplot
+            +jupyter            ; ipython/jupyter support for babel
             ;;+pomodoro           ; be fruitful with the tomato technique
             ;; +journal
             )

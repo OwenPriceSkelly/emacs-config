@@ -7,7 +7,7 @@
   :pin "52bc9a6acd34d2282555ac576e905af3c5a0e767")
 (package! solaire-mode :disable t)
 
-;; existing packages pinned separately
+;; existing packages that I don't want/need pinned
 (if (featurep! :tools lsp +eglot)
     (unpin! eglot)
   (unpin! lsp-mode lsp-ui))
