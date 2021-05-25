@@ -103,6 +103,7 @@ I don't love the way that embedded blocks look in e.g. this config.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (doom-themes-set-faces nil
   '(org-block-begin-line :background nil)
+  '(org-quote :background nil)
   '(org-block :background nil)
   '(org-block-end-line :background nil))
 #+END_SRC
@@ -310,6 +311,7 @@ Lifted nearly verbatim, very slightly modified from https://tecosaur.github.io/e
 *** Shortcuts, icons
 There are only a few shortcuts I'd want to use from the dashboard.
 #+BEGIN_SRC emacs-lisp :lexical yes
+(setq doom--initial-load-path (get 'load-path 'initial-value))
 (add-hook! +doom-dashboard-mode (hl-line-mode -1))
 (setq! +doom-dashboard-name "*dashboard*" )
 (defun +my/doom-dashboard-widget-loaded ()
@@ -553,17 +555,13 @@ See also: [[#org-1][org keybindings]]
   (setq org-preview-latex-default-process 'dvisvgm ;'imagemagick ;'dvipng
         org-startup-with-latex-preview nil
         org-highlight-latex-and-related nil
-        org-latex-packages-alist  '(("kw" "pseudo" t) ("" "tabularx" t) ("margin=2cm" "geometry" nil))
-        org-format-latex-header (concat org-format-latex-header "\n" "\\pseudodefinestyle{fullwidth}{begin-tabular=\\tabularx{\\linewidth}{@{} r>{\\pseudosetup} X>{\\leavevmode\\small\\color{black!60}} p{0.45\\linewidth} @{}}, end-tabular=\\endtabularx, setup-append=\\pseudoeq}" "\n")
-        org-entities-user
-        ;;org  | LaTeX str |math?| html     |ascii|latin1|utf-8
-        '(("Z" "\\mathbb{Z}" t    "&#x2124;"  "Z"   "Z"    "ℤ")
-          ("C" "\\mathbb{C}" t    "&#x2102;"  "C"   "C"    "ℂ")
-          ("H" "\\mathbb{H}" t    "&#x210D;"  "H"   "H"    "ℍ")
-          ("N" "\\mathbb{N}" t    "&#x2115;"  "N"   "N"    "ℕ")
-          ("P" "\\mathbb{P}" t    "&#x2119;"  "P"   "P"    "ℙ")
-          ("Q" "\\mathbb{Q}" t    "&#x211A;"  "Q"   "Q"    "ℚ")
-          ("R" "\\mathbb{R}" t    "&#x211D;"  "R"   "R"    "ℝ"))
+        org-latex-packages-alist  '(("kw" "pseudo" t)
+                                    ("" "tabularx" t)
+                                    ("margin=2cm" "geometry" nil))
+        ;; pseudocode and convenience \mathbb{} macros
+        org-format-latex-header (concat org-format-latex-header "\n"
+                                        "\\pseudodefinestyle{fullwidth}{begin-tabular=\\tabularx{\\linewidth}{@{} r>{\\pseudosetup} X>{\\leavevmode\\small\\color{black!60}} p{0.45\\linewidth} @{}}, end-tabular=\\endtabularx, setup-append=\\pseudoeq}" "\n"
+                                        "\\newcommand{\\R}{\\mathbb{R}}" "\n" "\\newcommand{\\N}{\\mathbb{N}}" "\n" "\\newcommand{\\Z}{\\mathbb{Z}}" "\n" "\\newcommand{\\Q}{\\mathbb{Q}}" "\n")
         org-format-latex-options '(:foreground default
                                    :background default
                                    :scale 1.0
