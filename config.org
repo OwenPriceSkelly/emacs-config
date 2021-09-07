@@ -847,11 +847,9 @@ Highlights:
 (map! :leader
       :prefix ("n" . "notes")
       :desc "roam buffer"        "r"  #'org-roam
-      :desc "random note"        "R"  #'org-roam-random-note
-      :desc "find"               "n"  #'org-roam-find-file
-      :desc "jump to index"      "x"  #'org-roam-jump-to-index
-      :desc "insert"             "i"  #'org-roam-insert
-      :desc "insert immediate"   "I"  #'org-roam-insert-immediate
+      :desc "random note"        "R"  #'org-roam-node-random
+      :desc "find"               "n"  #'org-roam-node-find
+      :desc "insert"             "i"  #'org-roam-node-insert
       :desc "mathpix screenshot" "m"  #'mathpix-screenshot
       (:prefix ( "g" . "graph")
        :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
@@ -861,7 +859,8 @@ Highlights:
                                               (url-generic-parse-url
                                                (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
        :desc "graph all"   "g"  #'org-roam-graph
-       :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4))))
+       ;; :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4)) ;; NOTE: SPC u [N] SPC n g g works how youd think, this isn't necessary
+       ))
 (after! org-roam
   (map!
    :leader
