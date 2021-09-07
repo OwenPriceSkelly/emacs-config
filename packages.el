@@ -13,6 +13,8 @@
   (unpin! lsp-mode lsp-ui))
 
 
-(unpin! org-roam doom-themes)
+(unpin! ;; org-roam
+ doom-themes
+ )
 (package! org-roam-server)
 (unless IS-MAC (package! theme-magic))

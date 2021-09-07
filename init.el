@@ -2,11 +2,8 @@
 (doom! :completion
        (company +childframe)      ; the ultimate code completion backend
        (ivy +fuzzy                ; a search engine for love and life
-            +prescient
-            +icons
             ;; +childframe
-            )
-
+            +prescient +icons)
        :ui
        deft                       ; notational velocity for Emacs
        zen
@@ -44,7 +41,7 @@
        ;;parinfer                 ; turn lisp into python, sort of
 
        :emacs
-       (dired +icons) ;; +ranger  ; making dired pretty [functional]
+       dired ;; +icons ;; +ranger  ; making dired pretty [functional]
        electric                   ; smarter, keyword-based electric-indent
        (ibuffer +icons)           ; interactive buffer management
        vc                         ; version-control and Emacs, sitting in a tree
@@ -63,21 +60,19 @@
        ;;grammar                  ; tasing grammar mistake every you make
 
        :tools
-       (debugger ;; +lsp
-        )                         ; FIXME stepping through code, to help you add bugs
+       debugger ;; +lsp                         ; FIXME stepping through code, to help you add bugs
        ;; docker
        ;; ein                     ; tame Jupyter notebooks with emacs
        (eval +overlay)            ; run code, run (also, repls)
-       (lookup ;; +docsets
-        )                         ; helps you navigate your code and documentation ...or in Dash docsets locally
+       lookup ; helps you navigate your code and documentation ...or in Dash docsets locally
        (lsp +eglot)
        ;; (lsp +peek)
        (magit +forge)             ; a git porcelain for Emacs
        make                       ; run make tasks from Emacs
        pass                       ; password manager for nerds
-       (:if IS-MAC pdf)           ; pdf enhancements
+       pdf                        ; pdf enhancements
        rgb                        ; creating color strings
-       terraform                  ; infrastructure as code
+       ;; terraform               ; infrastructure as code
        upload                     ; map local to remote projects via ssh/ftp
        ;;tmux                     ; an API for interacting with tmux
        ;;ansible
@@ -91,7 +86,7 @@
        tty                        ; improve the terminal Emacs experience
 
        :lang
-       (cc  +lsp)                 ; C/C++/Obj-C madness
+       (cc +lsp)                 ; C/C++/Obj-C madness
        clojure                    ; java with a lisp
        ;; (csharp +lsp)           ; unity, .NET, and mono shenanigans
        data                       ; config/data formats
@@ -102,17 +97,16 @@
        yaml
        nix                        ; I hereby declare "nix geht mehr!"
        (org +pretty
-            +roam                 ; organize your plain life in plain text
+            +roam2                 ; organize your plain life in plain text
             +dragndrop            ; drag & drop files/images into org buffers
             +pandoc               ; export-with-pandoc support
             +noter
             ;;+hugo               ; use Emacs for hugo blogging
             ;;+present            ; using org-mode for presentations
-            +gnuplot
-            +jupyter            ; ipython/jupyter support for babel
+            ;; +gnuplot
             ;;+pomodoro           ; be fruitful with the tomato technique
             ;; +journal
-            )
+            +jupyter)             ; ipython/jupyter support for babel
        (python +lsp) ;; +pyright  ; beautiful is better than ugly ;
        rest                       ; Emacs as a REST client
        scheme                     ; a fully conniving family of lisps
@@ -129,8 +123,8 @@
        ;;faust                    ; dsp, but you get to keep your soul
        ;;fsharp                   ; ML stands for Microsoft's Language
        ;;fstar                    ; (dependent) types and (monadic) effects and Z3
-       (go +lsp)                  ; the hipster dialect
-       ;;(haskell +dante)         ; a language that's lazier than I am
+       ;; (go +lsp) ; the hipster dialect
+       (haskell +lsp)         ; a language that's lazier than I am
        ;;hy                       ; readability of scheme w/ speed of python
        ;;(java +meghanada)        ; the poster child for carpal tunnel syndrome
        ;;javascript               ; all(hope(abandon(ye(who(enter(here))))))
@@ -141,7 +135,7 @@
        ;;ledger                   ; an accounting system in Emacs
        ;;lua                      ; one-based indices? one-based indices
        ;;nim                      ; python + lisp at the speed of c
-       (ocaml +lsp)               ; an objective camel
+       ocaml                      ; an objective camel
        ;;perl                     ; write code no one else can comprehend
        ;;php                      ; perl's insecure younger brother
        ;;plantuml                 ; diagrams for confusing people more

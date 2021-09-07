@@ -78,8 +78,8 @@ changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 Usually I just stick with one of the gruvboxes though.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* (;; (+override-theme 'doom-gruvbox-light)
-       (+override-theme nil)
+(let* ((+override-theme 'doom-gruvbox-light)
+       ;;(+override-theme nil)
        (+my/themes-list-dark '(doom-zenburn
                                doom-gruvbox
                                doom-ayu-mirage
@@ -108,7 +108,7 @@ I don't love the way that embedded blocks look in e.g. this config.
   '(org-block-end-line :background nil))
 #+END_SRC
 *** Set theme across system
-Requires a ~pip install pywal~ and ~imagemagick~. When theme changes, update the
+Only for linux, Requires a ~pip install pywal~ and ~imagemagick~. When theme changes, update the
 theme of terminals etc.
 #+BEGIN_SRC emacs-lisp
 (unless IS-MAC
@@ -390,7 +390,7 @@ Completion and the 'inner/around line' text objects here.
 ** Programming
 *** LSP
 lsp-mode is noticeably faster (for python, anyways) than eglot as of the most recent release,
-especially on my laptop. Haven't bothered to reconfigure much yet, but
+Haven't bothered to reconfigure much yet, but
 holding on to eglot options in case I switch back.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (when (featurep! :tools lsp )
@@ -428,13 +428,7 @@ holding on to eglot options in case I switch back.
 **** Fix: f-strings in python mode not inserting close quotation mark
 #+BEGIN_SRC emacs-lisp
 (after! python
-  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
-  ;; see: ccls navigation functions
-  (map! :map python-mode-map
-        :m "C-h" #'evil-backward-section-begin
-        :m "C-j" #'+evil/next-beginning-of-method
-        :m "C-k" #'+evil/previous-beginning-of-method
-        :m "C-l" #'evil-forward-section-begin))
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
 #+END_SRC
 **** Python LSP integration
 Tbh I'm not super happy with any of the lsp options for python (especially
@@ -445,16 +439,14 @@ supposedly the same jedi backend.
 #+BEGIN_SRC emacs-lisp
 (after! (python (:or eglot lsp-mode))
   (after! eglot
-    ;; (use-package! lsp-jedi
-    ;;   :config
-    ;;   (add-to-list 'eglot-server-programs
-    ;;                `(python-mode . ("jedi-language-server"))))
+       (add-to-list 'eglot-server-programs
+                    `(python-mode . ("/Users/owen/Library/Python/3.9/bin/pylsp"))) ;; trying https://github.com/python-lsp/python-lsp-server, a fork of the palantir one
     )
   (after! lsp-mode
     (setq! lsp-pyls-plugins-pycodestyle-ignore "E501")
     (add-to-list 'lsp-disabled-clients '(python-mode . '(mspyls pyright jedi)))))
 #+END_SRC
-*** Ocaml
+*** OCaml
 honestly the doom ocaml module is enough. nothing worth putting here I don't think
 *** C
 Even though I don't ever actually compile C projects locally when it's so much
@@ -462,26 +454,28 @@ less hassle/ more consistent to test with valgrind etc on the
 ~linux.cs.uchicago.edu~ computers, this is necessary for keep ccls from yelling at
 me about missing headers with OpenMP
 #+BEGIN_SRC emacs-lisp
-(after! ccls
-      (setq ccls-initialization-options
-            `(:index (:trackDependency 1 :threads 2)
-              :clang ,(list
-                       :extraArgs ["-isystem" "-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1" "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include" "-isystem/usr/local/include" "-isystem/opt/local/include/libomp" "-L/opt/local/lib/libomp"]
-                       :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir"))))))
-(set-eglot-client! 'cc-mode '("ccls" "--init={\"index\": {\"threads\": 3}, \"clang\": {\"extraArgs\": [\"-isystem\", \"-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1\", \"-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include\", \"-isystem/usr/local/include\", \"-isystem/opt/local/include/libomp\", \"-L/opt/local/lib/libomp\"], \"resourceDir\": \"/Library/Developer/CommandLineTools/usr/lib/clang/12.0.0\"}}"))
+;; NOTE: pretty sure this is going to need updating/troubleshooting for M1
+;; (after! ccls
+;;       (setq ccls-initialization-options
+;;             `(:index (:trackDependency 1 :threads 2)
+;;               :clang ,(list
+;;                        :extraArgs ["-isystem" "-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1" "-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include" "-isystem/usr/local/include" "-isystem/opt/local/include/libomp" "-L/opt/local/lib/libomp"]
+;;                        :resourceDir (cdr (doom-call-process "clang" "-print-resource-dir"))))))
+;; (set-eglot-client! 'cc-mode '("ccls" "--init={\"index\": {\"threads\": 3}, \"clang\": {\"extraArgs\": [\"-isystem\", \"-isystem/Library/Developer/CommandLineTools/usr/include/c++/v1\", \"-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include\", \"-isystem/usr/local/include\", \"-isystem/opt/local/include/libomp\", \"-L/opt/local/lib/libomp\"], \"resourceDir\": \"/Library/Developer/CommandLineTools/usr/lib/clang/12.0.0\"}}"))
 ;;;
 (add-to-list '+format-on-save-enabled-modes 'c-mode :append) ;; this confusingly is needed to disable formatting on save.
 #+END_SRC
 *** C#
+Not currently using C#, hopefully not going to need to tbh
 #+BEGIN_SRC emacs-lisp
-(use-package! csharp-mode
-  :init
-  (if (featurep! :tools lsp +eglot)
-      (after! eglot
-        (add-to-list 'eglot-server-programs `(csharp-mode . ("~/.nix-profile/bin/omnisharp" "-lsp"))))
-    ;; (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
-    )
-  :mode ("\\.csx?\\'"))
+;; (use-package! csharp-mode
+;;   :init
+;;   (if (featurep! :tools lsp +eglot)
+;;       (after! eglot
+;;         (add-to-list 'eglot-server-programs `(csharp-mode . ("~/.nix-profile/bin/omnisharp" "-lsp"))))
+;;     ;; (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
+;;     )
+;;   :mode ("\\.csx?\\'"))
 #+END_SRC
 *** Julia
 #+begin_src emacs-lisp
@@ -609,51 +603,32 @@ See also: [[#org-roam][org-roam keybindings]]
   :hook (org-load . org-roam-mode)
   :init
   (setq! org-roam-directory               "~/Notes"
-         org-roam-tag-sort                t
-         org-roam-tag-sources             '(prop)
-         org-roam-tag-separator           ", "
-         org-roam-verbose                 t
-         org-roam-buffer-width            0.25
+         ;; org-roam-tag-sort                t
+         ;; org-roam-tag-sources             '(prop)
+         ;; org-roam-tag-separator           ", "
+         ;; org-roam-buffer-width            0.25
          org-roam-graph-max-title-length  40
          org-roam-completion-everywhere   t
          org-roam-graph-shorten-titles    'truncate
-         org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
+         ;; org-roam-index-file              "todo.org"
+         ;; org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open")
-         org-roam-graph-executable        "dot"
-         )
+         org-roam-graph-executable        "dot")
   ;; (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   ;; (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
-  (setq org-roam-capture-ref-templates `(("r" "ref" plain #'org-roam-capture--get-point
-                                          "%?"
-                                          :file-name "%<%Y-%m-%d>-${slug}"
-                                          :head ,(concat "#+title: ${title}\n"
-                                                         "#+roam_key: ${ref}\n"
-                                                         "#+roam_tags: link\n"
-                                                         "#+setupfile: setup.org\n"
-                                                         "* Notes: \n"
-                                                         "* Etc: \n"
-                                                         "  - [[${ref}][link]]\n")
+  (setq org-roam-capture-ref-templates `(("r" "ref" plain "%?"
+                                          :if-new (file+head "%<%Y-%m-%d>-${slug}.org" ,(concat "#+title: ${title}\n"
+                                                                                                "#+setupfile: setup.org\n"
+                                                                                                "* Notes: \n"
+                                                                                                "* Etc: \n"
+                                                                                                "  - [[${ref}][link]]\n"))
                                           :unnarrowed t))
-        org-roam-capture-templates `(("d" "default" plain #'org-roam-capture--get-point
-                                      "%?"
-                                      :file-name "%<%Y-%m-%d>-${slug}"
-                                      :head ,(concat "#+title: ${title}\n"
-                                                     "#+roam_tags:\n"
-                                                     "#+setupfile: setup.org\n"
-                                                     "* Notes: \n"
-                                                     "* Etc: \n")
-                                      :unnarrowed t))
-        org-roam-capture-immediate-template (car org-roam-capture-templates)
-        org-roam-dailies-capture-templates `(("t" "daily" plain #'org-roam-capture--get-point
-                                              ""
-                                              :immediate-finish t
-                                              :file-name "%<%Y-%m-%d-%A>"
-                                              :head ,(concat "#+title: %<%A, %B %d, %Y>\n"
-                                                             "#+roam_tags: journal\n"
-                                                             "* Tasks: \n" ))))
-  (map! :map org-mode-map
-        "s-TAB" (cmd! (insert "[[roam:]]")
-                      (backward-char 2)))
+        org-roam-capture-templates `(("d" "default" plain "%?"
+                                      :if-new (file+head "%<%Y-%m-%d>-${slug}.org" ,(concat "#+title: ${title}\n"
+                                                                                            "#+setupfile: setup.org\n"
+                                                                                            "* Notes: \n"
+                                                                                            "* Etc: \n"))
+                                      :unnarrowed t)))
   :config
   (setq org-roam-verbose t))
 #+END_SRC
@@ -898,8 +873,10 @@ Highlights:
 (map! :map python-mode-map
       :localleader
       :desc "ipython repl"         "I" #'+python/open-ipython-repl)
-
+;; see: ccls navigation functions
 (map! :map python-mode-map
-      :n "C-k" #'evil-backward-section-begin
-      :n "C-j" #'evil-forward-section-begin)
+      :m "C-h" #'evil-backward-section-begin
+      :m "C-j" #'+evil/next-beginning-of-method
+      :m "C-k" #'+evil/previous-beginning-of-method
+      :m "C-l" #'evil-forward-section-begin )
 #+END_SRC
