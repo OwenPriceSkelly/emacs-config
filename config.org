@@ -78,10 +78,10 @@ changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 Usually I just stick with one of the gruvboxes though.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'doom-gruvbox-light)
-       ;;(+override-theme nil)
-       (+my/themes-list-dark '(doom-zenburn
-                               doom-gruvbox
+(let* ((+override-theme 'doom-solarized-dark-high-contrast)
+       ;(+override-theme nil)
+       (+my/themes-list-dark '(doom-gruvbox
+                               doom-solarized-dark
                                doom-ayu-mirage
                                doom-oceanic-next
                                doom-old-hope
@@ -375,17 +375,21 @@ Completion and the 'inner/around line' text objects here.
       fill-column 100
       +workspaces-on-switch-project-behavior t)
 
-(add-to-list 'completion-styles 'flex)
+
 
 (after! company
   (setq completion-ignore-case t
         company-idle-delay 0.5)
-  ;; (+company/toggle-auto-completion)
+  ;(+company/toggle-auto-completion)
   )
 (after! tramp
   (setq password-cache-expiry nil))
 (use-package! evil-textobj-line
   :after evil)
+(after! vertico
+  (add-to-list 'completion-styles 'flex)
+  ;; (setq +vertico-company-completion-styles '(flex basic partial-completion orderless))
+  )
 #+END_SRC
 ** Programming
 *** LSP
@@ -652,7 +656,7 @@ See also: [[#org-roam][org-roam keybindings]]
   :config
   (setq org-download-image-org-width 500))
 #+END_SRC
-***** package: org-roam-server
+***** COMMENT package: org-roam-server
 #+BEGIN_SRC emacs-lisp :lexical yes
 ;; (unless (server-running-p)
 ;;   (org-roam-server-mode))
@@ -687,13 +691,10 @@ from spacemacs, but most of them are newer; the ~map!~ macro is easily one of my
 favorite parts about the doom emacs distribution.
 
 Highlights:
-- following a "missed snipe" motion from ~evil-snipe~ package, ~C-;~ will execute
+- following a "missed snipe" motion from ~evil-snipe~ package, ~s-;~ will execute
  an ~avy-goto-char-2~ with those characters, so you can move where you meant to.
 - Under the ~SPC t~ /"toggle" prefix, ~m/f/d~ toggle frame
   maximized/fullscreen/decorated parameters, respectively
-- open a browser window running org-roam-server with ~SPC n g s~
-  + note: only works if loaded before org-roam. not sure why, but easy to
-    restart and run.
 ** variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
@@ -722,14 +723,13 @@ Highlights:
   ;; open/close delimiters, respectively
   (push '(?\[ "[[{(<]") evil-snipe-aliases)
   (push '(?\] "[]})>]") evil-snipe-aliases)
-  ;; "C-;" pre-fills avy-goto-char-2 with most recent snipe
+  ;; "s-;" pre-fills avy-goto-char-2 with most recent snipe
   (map! :map (evil-snipe-parent-transient-map evil-snipe-local-mode-map)
-        "C-;" (cmd! (if evil-snipe--last
+        "s-;" (cmd! (if evil-snipe--last
                         (let ((most-recent-chars (nth 1 evil-snipe--last)))
                           (if (eq 2 (length most-recent-chars))
                               (apply #'avy-goto-char-2 most-recent-chars)
                             (call-interactively #'avy-goto-char-2))))))
-  ;; (setq! avy-all-windows t)
   (evil-snipe-override-mode +1))
 #+END_SRC
 ** top-level
@@ -740,20 +740,21 @@ Highlights:
        :g [C-tab] #'+workspace/switch-right)
 
       :m "C-S-o" #'better-jumper-jump-forward
-      :g "C-s-o" #'+ivy/jump-list
+      :g "C-s-o" #'+vertico/jump-list
 
-      (:when (featurep! :completion company)
-       :i "C-i" #'company-complete
-       :i [C-i] #'company-complete)
+      ;; (:when (featurep! :completion company)
+      ;;  :i "C-i" #'company-complete
+      ;;  :i [C-i] #'company-complete)
 
       ;;lispy
-      (:after lispy
-       (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
-        "[" nil
-        "]" nil)
-       (:map lispyville-mode-map
-        "M-[" #'lispy-backward
-        "M-]" #'lispy-forward)))
+      ;; (:after lispy
+      ;;  (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
+      ;;   "[" nil
+      ;;   "]" nil)
+      ;;  (:map lispyville-mode-map
+      ;;   "M-[" #'lispy-backward
+      ;;   "M-]" #'lispy-forward))
+      )
 #+END_SRC
 
 *** multiedit
@@ -808,9 +809,7 @@ Highlights:
         :desc "Forward frame"        "f"    #'+evil/next-frame
         :desc "Backward frame"       "F"    #'+evil/previous-frame))
 
-
-      (:when (featurep! :completion ivy)
-       :desc "Ivy M-x"                "SPC" #'counsel-M-x))
+      :desc "M-x"                "SPC" #'execute-extended-command)
 
 (after! evil-easymotion
   (map! :leader
@@ -820,7 +819,7 @@ Highlights:
         "j" #'evil-avy-goto-char-2
         "m" #'+ivy/jump-list
         "l" #'evil-avy-goto-line
-        "i" #'counsel-imenu))
+        "i" #'consult-imenu))
 (after! lsp-mode
   (map! :leader
         :prefix "j"
@@ -843,7 +842,7 @@ Highlights:
 #+END_SRC
 
 *** org-roam
-#+BEGIN_SRC emacs-lisp :lexical yes
+#+begin_src emacs-lisp :lexical yes
 (map! :leader
       :prefix ("n" . "notes")
       :desc "roam buffer"        "r"  #'org-roam
@@ -852,21 +851,21 @@ Highlights:
       :desc "insert"             "i"  #'org-roam-node-insert
       :desc "mathpix screenshot" "m"  #'mathpix-screenshot
       (:prefix ( "g" . "graph")
-       :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
-                                              (org-roam-server-mode))
-                                            (browse-url
-                                             (url-recreate-url
-                                              (url-generic-parse-url
-                                               (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
+       ;; :desc "server view"       "s"  (cmd! (unless org-roam-server-mode
+       ;;                                        (org-roam-server-mode))
+       ;;                                      (browse-url
+       ;;                                       (url-recreate-url
+       ;;                                        (url-generic-parse-url
+       ;;                                         (concat "http://" org-roam-server-host ":" (int-to-string org-roam-server-port))))))
        :desc "graph all"   "g"  #'org-roam-graph
-       ;; :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4)) ;; NOTE: SPC u [N] SPC n g g works how youd think, this isn't necessary
+       ;; :desc "graph connected" "c" (cmd!! #'org-roam-graph '(4)) ;; NOTE: C-u SPC n g g does this
        ))
 (after! org-roam
   (map!
    :leader
    :prefix ("n" . "notes")
    :desc "daily entries map" "d" 'org-roam-dailies-map))
-#+END_SRC
+#+end_src
 *** python
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :map python-mode-map

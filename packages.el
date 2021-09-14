@@ -4,7 +4,8 @@
   :pin "3d401b6831bdbeec967ec8e64177a8950251e812")
 (package! mathpix.el
   :recipe (:host github :repo "jethrokuan/mathpix.el")
-  :pin "52bc9a6acd34d2282555ac576e905af3c5a0e767")
+  :pin "1ce2d4aa7708271cf60ec929688c1ce420c3fc86")
+
 (package! solaire-mode :disable t)
 
 ;; existing packages that I don't want/need pinned
@@ -13,8 +14,4 @@
   (unpin! lsp-mode lsp-ui))
 
 
-(unpin! ;; org-roam
- doom-themes
- )
-(package! org-roam-server)
-(unless IS-MAC (package! theme-magic))
+(unpin! org-roam doom-themes)
