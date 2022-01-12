@@ -2,13 +2,9 @@
 (doom! :completion
        (company +childframe)      ; the ultimate code completion backend
        (vertico +icons)
-
-       ;; (ivy +fuzzy                ; a search engine for love and life
-       ;;      ;; +childframe
-       ;;      +prescient +icons)
        :ui
-       deft                       ; notational velocity for Emacs
-       zen
+       ;; deft                       ; notational velocity for Emacs
+       ;; zen
        doom                       ; what makes DOOM look the way it does
        doom-dashboard             ; a nifty splash screen for Emacs
        ;; ligatures               ; ligatures and symbols to make your code pretty again
@@ -19,12 +15,12 @@
        ophints                    ; highlight the region an operation acts on
        (popup +all                ; tame sudden yet inevitable temporary windows; catch all popups that start with an asterix
               +defaults)          ; default popup rules
-       treemacs                   ; a project drawer, like neotree but cooler
+       (treemacs +lsp)                   ; a project drawer, like neotree but cooler
        vc-gutter                  ; vcs diff in the fringe
        workspaces                 ; tab emulation, persistence & separate workspaces
-       (emoji +github +unicode)
+       ;; (emoji +github +unicode)
        ;;vi-tilde-fringe          ; fringe tildes to mark beyond EOB
-       ;;indent-guides            ; highlighted indent columns
+       ;; indent-guides            ; highlighted indent columns
        ;;minimap
        ;;unicode
        ;;window-select            ; visually switch windows
@@ -67,8 +63,8 @@
        ;; ein                     ; tame Jupyter notebooks with emacs
        (eval +overlay)            ; run code, run (also, repls)
        lookup ; helps you navigate your code and documentation ...or in Dash docsets locally
-       (lsp +eglot)
-       ;; (lsp +peek)
+       ;; (lsp +eglot)
+       (lsp +peek)
        (magit +forge)             ; a git porcelain for Emacs
        make                       ; run make tasks from Emacs
        pass                       ; password manager for nerds
@@ -137,7 +133,7 @@
        ;;ledger                   ; an accounting system in Emacs
        ;;lua                      ; one-based indices? one-based indices
        ;;nim                      ; python + lisp at the speed of c
-       ocaml                      ; an objective camel
+       (ocaml  +lsp)                      ; an objective camel
        ;;perl                     ; write code no one else can comprehend
        ;;php                      ; perl's insecure younger brother
        ;;plantuml                 ; diagrams for confusing people more
@@ -151,7 +147,7 @@
        ;;solidity                 ; do you need a blockchain? No.
        ;;swift                    ; who asked for emoji variables?
        ;;terra                    ; Earth and Moon in alignment for performance.
-       ;; web                        ; the tubes
+       web                        ; the tubes
        :email
        ;;(mu4e +gmail)
        ;;notmuch

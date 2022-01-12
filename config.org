@@ -30,12 +30,14 @@ objects/avy/ snipe is usually faster
       which-key-sort-order 'which-key-key-order-alpha
       which-key-max-description-length nil
 
-      display-line-numbers-type nil
+      display-line-numbers-type 'relative
       evil-split-window-below t
       evil-vsplit-window-right t
 
       doom-modeline-persp-name t
       doom-modeline-major-mode-icon t)
+
+;; (global-display-fill-column-indicator-mode)
 
 (after! ivy-posframe
   (setf (alist-get t ivy-posframe-display-functions-alist)
@@ -66,10 +68,16 @@ doesn't do anything weird if tiling fullscreen emacs to left or right on macOS)
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq frame-title-format '("%b – Emacs")
       icon-title-format frame-title-format)
-(add-to-list 'default-frame-alist '(height . 75))
-(add-to-list 'default-frame-alist '(width . 150))
-(modify-frame-parameters nil '((fullscreen . maximized) (undecorated . t)))
-;; (if IS-MAC (toggle-frame-fullscreen))
+;; (when IS-MAC
+;;   (modify-frame-parameters nil '((fullscreen . fullboth)))
+;;   (when EMACS28+
+;;     (modify-frame-parameters nil '((fullscreen . nil)))
+;;     (add-to-list 'default-frame-alist '(height . 59))
+;;     (add-to-list 'default-frame-alist '(width . 238))))
+ ;; (modify-frame-parameters nil '((fullscreen . fullboth)))
+(when IS-MAC
+  (set-frame-parameter nil 'undecorated t)
+  (set-frame-parameter nil 'fullscreen 'maximized))
 #+END_SRC
 
 ** Theme
@@ -78,24 +86,13 @@ changing ~+override-theme~ to nil will have this snippet will choose randomly
 from a selection of light themes or dark themes, depending on the time of day.
 Usually I just stick with one of the gruvboxes though.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(let* ((+override-theme 'doom-solarized-dark-high-contrast)
-       ;(+override-theme nil)
-       (+my/themes-list-dark '(doom-gruvbox
-                               doom-solarized-dark
-                               doom-ayu-mirage
-                               doom-oceanic-next
-                               doom-old-hope
-                               doom-tomorrow-night))
-       (+my/themes-list-light (append +my/themes-list-dark '(doom-gruvbox-light)))
-       (hour (caddr (decode-time nil)))
-       (sec (car (decode-time nil))))
-  (setq! doom-gruvbox-dark-variant 'soft
-         doom-gruvbox-light-variant 'soft
+(let* ((+override-theme 'doom-gruvbox)
+       (hour (caddr (decode-time nil))))
+  (setq! ;doom-gruvbox-dark-variant 'soft
+         ;doom-gruvbox-light-variant 'soft
          doom-theme                (or +override-theme
-                                       (let ((theme-choices (if (<= 9 hour 15) +my/themes-list-light
-                                                              +my/themes-list-dark)))
-                                         (nth (mod sec (length theme-choices))
-                                              theme-choices)))))
+                                       (if (<= 8 hour 16) 'doom-gruvbox-light
+                                         'doom-gruvbox))))
 #+END_SRC
 
 *** Disable embedded block background
@@ -118,8 +115,8 @@ theme of terminals etc.
 #+END_SRC
 ** Font
 I like the iosevka font family for programming, and I like the 'quasi-spaced'
-options like Etoile/Sparkle/Aile for variable pitch stuff -- real variable pitch
-fonts are a little jarring imo when switching between buffers or embedding
+options like Etoile/Sparkle/Aile for variable pitch stuff -- real variable
+pitch fonts are a little jarring imo when switching between buffers or embedding
 something monospaced (like in this config). A /mostly/ monospaced font is more
 readable without obviously being a totally different font at a glance.
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -138,26 +135,27 @@ readable without obviously being a totally different font at a glance.
 #+END_SRC
 *** package: mixed-pitch-mode
 #+BEGIN_SRC emacs-lisp :lexical yes
-(use-package! mixed-pitch
-  :hook (text-mode . mixed-pitch-mode)
-  :config
-  (pushnew! mixed-pitch-fixed-pitch-faces
-            'org-date
-            'org-special-keyword
-            'org-property-value
-            'org-ref-cite-face
-            'org-tag
-            'org-todo-keyword-todo
-            'org-todo-keyword-habt
-            'org-todo-keyword-done
-            'org-todo-keyword-wait
-            'org-todo-keyword-kill
-            'org-todo-keyword-outd
-            'org-todo
-            'org-done
-            'font-lock-comment-face
-            'line-number
-            'line-number-current-line))
+(if (featurep! :ui zen)
+    (use-package! mixed-pitch
+      :hook (text-mode . mixed-pitch-mode)
+      :config
+      (pushnew! mixed-pitch-fixed-pitch-faces
+                'org-date
+                'org-special-keyword
+                'org-property-value
+                'org-ref-cite-face
+                'org-tag
+                'org-todo-keyword-todo
+                'org-todo-keyword-habt
+                'org-todo-keyword-done
+                'org-todo-keyword-wait
+                'org-todo-keyword-kill
+                'org-todo-keyword-outd
+                'org-todo
+                'org-done
+                'font-lock-comment-face
+                'line-number
+                'line-number-current-line)))
 #+END_SRC
 ** Dashboard
 Modifications to the doom-emacs home/fallback buffer.
@@ -189,6 +187,7 @@ When starting up in a terminal: Modified `doom-dashboard-widget-banner' with
             ""
             ""))
     (when (and (display-graphic-p)
+               (not EMACS28+)
                (stringp fancy-splash-image)
                (file-readable-p fancy-splash-image))
       (let ((image (create-image (fancy-splash-image-file))))
@@ -200,7 +199,8 @@ When starting up in a terminal: Modified `doom-dashboard-widget-banner' with
                    (truncate
                     (max 0 (+ 1 (/ (- +doom-dashboard--width (car (image-size image nil)))
                                    2)))) 32))))
-      (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))))
+      (insert (make-string (or (cdr +doom-dashboard-banner-padding) 0) 10)))
+    ))
 #+END_SRC
 *** Splash image
 Lifted nearly verbatim from https://tecosaur.github.io/emacs-config/config.html#splash-screen
@@ -371,11 +371,14 @@ Completion and the 'inner/around line' text objects here.
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq user-full-name "Owen Price Skelly"
       user-mail-address "Owen.Price.Skelly@gmail.com"
-      iedit-occurrence-context-lines 1
+      ;; iedit-occurrence-context-lines 1
       fill-column 100
       +workspaces-on-switch-project-behavior t)
 
+;; (after! evil-multiedit
 
+;;   (map! :map iedit-occurrence-keymap-default
+;;         "M-D" nil))
 
 (after! company
   (setq completion-ignore-case t
@@ -387,9 +390,21 @@ Completion and the 'inner/around line' text objects here.
 (use-package! evil-textobj-line
   :after evil)
 (after! vertico
-  (add-to-list 'completion-styles 'flex)
-  ;; (setq +vertico-company-completion-styles '(flex basic partial-completion orderless))
-  )
+  (setq +vertico-company-completion-styles '(flex orderless basic partial-completion)))
+(after! consult
+  (consult-customize
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file
+   +default/search-project +default/search-project-for-symbol-at-point
+   +default/search-other-project
+   +vertico/search-symbol-at-point +vertico/jump-list
+   +default/search-cwd +default/search-other-cwd
+   +default/search-notes-for-symbol-at-point
+   consult--source-file consult--source-project-file consult--source-bookmark
+   :preview-key (list (kbd "C-SPC") :debounce 0.5 'any))
+  (map! :leader
+        (:prefix ("s" . "search")
+         :desc "jump to symbol (workspace)" "I" #'consult-imenu-multi)))
 #+END_SRC
 ** Programming
 *** LSP
@@ -403,10 +418,11 @@ holding on to eglot options in case I switch back.
         :commands (eglot eglot-ensure)
         :hook (csharp-mode . eglot-ensure)
         :config
-        (setq eglot-send-changes-idle-time 0.03)
+        (setq eglot-send-changes-idle-time 0.01)
         ;; TODO: keybinds for shutdown/reconnect
         ;;(add-to-list 'eglot-ignored-server-capabilites :documentHighlightProvider)
         )
+    ;; else
     (use-package lsp-ui
       :commands (lsp-ui-mode)
       :config
@@ -414,10 +430,11 @@ holding on to eglot options in case I switch back.
             lsp-ui-doc-use-childframe t
             lsp-ui-doc-position 'top
             lsp-ui-doc-include-signature t
-            lsp-ui-doc-max-height 16
+            lsp-ui-doc-max-height 32
             lsp-ui-doc-max-width 70
             lsp-ui-sideline-enable nil
             lsp-ui-flycheck-list-position 'right
+            lsp-lens-enable nil
             lsp-ui-peek-enable t
             lsp-ui-peek-list-width 60
             lsp-ui-peek-peek-height 25)
@@ -437,7 +454,7 @@ holding on to eglot options in case I switch back.
 **** Python LSP integration
 Tbh I'm not super happy with any of the lsp options for python (especially
 compared to e.g. ccls, which is finicky to set up but extremely slick once it
-is). Genuinely unsure why the best completion I've tried is the out-of-box
+is). Genuinely unsure why the best completion I've tried is just out-of-box
 ipython repl, when all of these are
 supposedly the same jedi backend.
 #+BEGIN_SRC emacs-lisp
@@ -451,7 +468,12 @@ supposedly the same jedi backend.
     (add-to-list 'lsp-disabled-clients '(python-mode . '(mspyls pyright jedi)))))
 #+END_SRC
 *** OCaml
-honestly the doom ocaml module is enough. nothing worth putting here I don't think
+#+BEGIN_SRC emacs-lisp
+(after! utop
+  (setq! utop-command "dune utop . -- -emacs"))
+#+END_SRC
+For future reference: camlformat mystery error was caused by opam defaulting to
+a version that wasn't semver enough
 *** C
 Even though I don't ever actually compile C projects locally when it's so much
 less hassle/ more consistent to test with valgrind etc on the
@@ -469,27 +491,21 @@ me about missing headers with OpenMP
 ;;;
 (add-to-list '+format-on-save-enabled-modes 'c-mode :append) ;; this confusingly is needed to disable formatting on save.
 #+END_SRC
-*** C#
-Not currently using C#, hopefully not going to need to tbh
-#+BEGIN_SRC emacs-lisp
-;; (use-package! csharp-mode
-;;   :init
-;;   (if (featurep! :tools lsp +eglot)
-;;       (after! eglot
-;;         (add-to-list 'eglot-server-programs `(csharp-mode . ("~/.nix-profile/bin/omnisharp" "-lsp"))))
-;;     ;; (setq lsp-csharp-server-path "/home/owen/.nix-profile/bin/omnisharp")
-;;     )
-;;   :mode ("\\.csx?\\'"))
-#+END_SRC
 *** Julia
 #+begin_src emacs-lisp
 (after! (eglot eglot-jl)
-  (setq eglot-jl-language-server-project "~/.julia/environments/v1.6"
+  (setq eglot-jl-language-server-project "~/.julia/environments/v1.7"
         eglot-connect-timeout 60))
-(after! (org julia)
+
+(after! (julia-mode lsp-julia)
+ (add-hook! 'julia-mode-hook
+    (setq-local lsp-enable-folding t
+                lsp-folding-range-limit 100)) )
+
+(after! (org emacs-jupyter)
   (setq org-babel-default-header-args:jupyter-julia '((:async . "yes")
                                                       (:session . "jl")
-                                                      (:kernel . "julia"))))
+                                                      (:kernel . "julia-1.7"))))
 #+end_src
 *** Go
 Taken from https://github.com/golang/tools/blob/master/gopls/doc/emacs.md
@@ -521,6 +537,7 @@ See also: [[#org-1][org keybindings]]
   :defer t
   :hook (org-mode . toc-org-mode)
   :hook (org-mode . +org-pretty-mode)
+  ;; :hook (org-mode . writeroom-mode)
   ;; :hook (org-mode . auto-fill-mode)
   :config
   (add-hook! org-mode (hl-line-mode -1))
@@ -569,6 +586,8 @@ See also: [[#org-1][org keybindings]]
                                    :html-foreground "Black"
                                    :html-background "Transparent"
                                    :matchers ("begin" "$1" "$" "$$" "\\(" "\\["))))
+(after! visual-fill-column
+  (setq visual-fill-column-width 100))
 #+END_SRC
 
 ***** package: org-superstar
@@ -601,7 +620,7 @@ a fair bit of my config is outdated.  I really like the ~[[roam:]]~ links and th
 completion at point is excellent, but I'd prefer them to look like regular
 links. Havent taken the time to figure out the font-lock options or whatever for
 that.
-See also: [[#org-roam][org-roam keybindings]]
+See also: org-roam keybindings
 #+BEGIN_SRC emacs-lisp :lexical yes
 (use-package! org-roam
   :hook (org-load . org-roam-mode)
@@ -612,12 +631,13 @@ See also: [[#org-roam][org-roam keybindings]]
          ;; org-roam-tag-separator           ", "
          ;; org-roam-buffer-width            0.25
          org-roam-graph-max-title-length  40
-         org-roam-completion-everywhere   t
+         org-roam-completion-everywhere   nil
          org-roam-graph-shorten-titles    'truncate
          ;; org-roam-index-file              "todo.org"
          ;; org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open")
-         org-roam-graph-executable        "dot")
+         org-roam-graph-executable        "dot"
+         )
   ;; (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   ;; (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
   (setq org-roam-capture-ref-templates `(("r" "ref" plain "%?"
@@ -634,7 +654,10 @@ See also: [[#org-roam][org-roam keybindings]]
                                                                                             "* Etc: \n"))
                                       :unnarrowed t)))
   :config
-  (setq org-roam-verbose t))
+  (setq org-roam-verbose t
+        org-roam-mode-section-functions (list #'org-roam-backlinks-section
+                                              ;; #'org-roam-reflinks-section
+                                              #'org-roam-unlinked-references-section)))
 #+END_SRC
 ***** package: mathpix
 #+BEGIN_SRC emacs-lisp :lexical yes
@@ -656,28 +679,19 @@ See also: [[#org-roam][org-roam keybindings]]
   :config
   (setq org-download-image-org-width 500))
 #+END_SRC
-***** COMMENT package: org-roam-server
+
+***** COMMENT package: org-roam-ui
 #+BEGIN_SRC emacs-lisp :lexical yes
-;; (unless (server-running-p)
-;;   (org-roam-server-mode))
-(use-package! org-roam-server
-  :commands (org-roam-server-mode)
-  :init
-  (defun org-roam--get-title-or-slug (file)
-    (org-roam-db--get-title file))
-  :config
-  (setq org-roam-server-host "127.0.0.1"
-        org-roam-server-port 8080
-        org-roam-server-authenticate nil
-        org-roam-server-export-inline-images t
-        org-roam-server-serve-files t
-        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
-        org-roam-server-network-poll t
-        org-roam-server-network-arrows nil
-        org-roam-server-network-label-truncate t
-        org-roam-server-network-label-truncate-length 60
-        org-roam-server-network-label-wrap-length 20))
-#+END_SRC
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 *** markdown
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq +markdown-compile-functions '(+markdown-compile-pandoc
@@ -740,21 +754,7 @@ Highlights:
        :g [C-tab] #'+workspace/switch-right)
 
       :m "C-S-o" #'better-jumper-jump-forward
-      :g "C-s-o" #'+vertico/jump-list
-
-      ;; (:when (featurep! :completion company)
-      ;;  :i "C-i" #'company-complete
-      ;;  :i [C-i] #'company-complete)
-
-      ;;lispy
-      ;; (:after lispy
-      ;;  (:map (lispy-mode-map lispy-mode-map-evilcp lispy-mode-map-lispy)
-      ;;   "[" nil
-      ;;   "]" nil)
-      ;;  (:map lispyville-mode-map
-      ;;   "M-[" #'lispy-backward
-      ;;   "M-]" #'lispy-forward))
-      )
+      :g "C-s-o" #'+vertico/jump-list)
 #+END_SRC
 
 *** multiedit
@@ -765,12 +765,12 @@ Highlights:
       :v "s-d" #'evil-multiedit-match-and-next
       :v "s-D" #'evil-multiedit-match-and-prev
       (:after evil-multiedit
-       (:map evil-multiedit-state-map
-        "n"    #'evil-multiedit-next
-        "N"    #'evil-multiedit-prev
+       (:map evil-multiedit-mode-map
+        :n "n"    #'evil-multiedit-next
+        :n "N"    #'evil-multiedit-prev
+        :n "V"    #'iedit-show/hide-context-lines
         "s-d"  #'evil-multiedit-match-and-next
-        "s-D"  #'evil-multiedit-match-and-prev
-        "V"    #'iedit-show/hide-context-lines)))
+        "s-D"  #'evil-multiedit-match-and-prev)))
 #+END_SRC
 
 ** leader
@@ -778,6 +778,7 @@ Highlights:
 (map! :leader
       :desc "Search project" "/" #'+default/search-project
       :desc "Visual expand" "v" #'er/expand-region
+      :desc "Switch buffer" "," #'switch-to-buffer
 
       (:prefix ("w" . "window")
        :desc "Switch to last window" "w"    #'evil-window-mru)
@@ -787,10 +788,18 @@ Highlights:
        :desc "Messages buffer"        "m"   #'view-echo-area-messages
        :desc "ibuffer (other window)" "I"   #'ibuffer-other-window)
 
+
       (:prefix ("f" . "file")
        :desc "find file new window"   "F"   #'find-file-other-window)
 
+      (:when (featurep! :completion vertico)
+       (:prefix ("s" . "search")
+        :desc "imenu (multi)" "i" #'consult-imenu-multi))
+
+
       (:prefix ("t"  "toggle")
+       ;; :desc "toggle writeroom hook"  "W" (cmd! (if (memq 'writeroom-mode org-mode-hook) (add-hook! org-mode :remove #'writeroom-mode) (add-hook! org-mode :append #'writeroom-mode)))
+
        :desc "toggle fullscreen" "F" #'toggle-frame-fullscreen
        :desc "toggle maximized" "M" #'toggle-frame-maximized
        :desc "toggle hl-line mode" "h" (cmd! (hl-line-mode (if hl-line-mode -1 +1)))
@@ -810,6 +819,7 @@ Highlights:
         :desc "Backward frame"       "F"    #'+evil/previous-frame))
 
       :desc "M-x"                "SPC" #'execute-extended-command)
+
 
 (after! evil-easymotion
   (map! :leader
