@@ -4,7 +4,7 @@
        (vertico +icons)
        :ui
        ;; deft                       ; notational velocity for Emacs
-       ;; zen
+       zen
        doom                       ; what makes DOOM look the way it does
        doom-dashboard             ; a nifty splash screen for Emacs
        ;; ligatures               ; ligatures and symbols to make your code pretty again
@@ -19,7 +19,7 @@
        vc-gutter                  ; vcs diff in the fringe
        workspaces                 ; tab emulation, persistence & separate workspaces
        ;; (emoji +github +unicode)
-       ;;vi-tilde-fringe          ; fringe tildes to mark beyond EOB
+       ;; vi-tilde-fringe          ; fringe tildes to mark beyond EOB
        ;; indent-guides            ; highlighted indent columns
        ;;minimap
        ;;unicode
@@ -36,7 +36,7 @@
        rotate-text                ; cycle region at point between text candidates
        snippets                   ; my elves. They type so I don't have to
        word-wrap                  ; soft wrapping with language-aware indent ;
-       ;;parinfer                 ; turn lisp into python, sort of
+       ;; parinfer                 ; turn lisp into python, sort of
 
        :emacs
        dired ;; +icons ;; +ranger  ; making dired pretty [functional]
@@ -96,13 +96,14 @@
        nix                        ; I hereby declare "nix geht mehr!"
        (org +pretty
             +roam2                 ; organize your plain life in plain text
-            +dragndrop            ; drag & drop files/images into org buffers
+            ;; +dragndrop
+                                        ; drag & drop files/images into org buffers
             +pandoc               ; export-with-pandoc support
             +noter
-            ;;+hugo               ; use Emacs for hugo blogging
-            ;;+present            ; using org-mode for presentations
+            ;; +hugo               ; use Emacs for hugo blogging
+            ;; +present            ; using org-mode for presentations
             ;; +gnuplot
-            ;;+pomodoro           ; be fruitful with the tomato technique
+            ;; +pomodoro           ; be fruitful with the tomato technique
             ;; +journal
             +jupyter)             ; ipython/jupyter support for babel
        (python +lsp) ;; +pyright  ; beautiful is better than ugly ;
@@ -139,7 +140,7 @@
        ;;plantuml                 ; diagrams for confusing people more
        ;;purescript               ; javascript, but functional
        ;;qt                       ; the 'cutest' gui framework ever
-       ;;racket                   ; a DSL for DSLs
+       (racket +lsp +xp)                   ; a DSL for DSLs
        ;;rst                      ; ReST in peace
        ;;ruby                     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        ;; (rust +lsp)             ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
@@ -160,5 +161,4 @@
 
        :config
        literate
-       (default +bindings
-         +smartparens))
+       (default +bindings +smartparens))

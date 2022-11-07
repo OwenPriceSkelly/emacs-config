@@ -11,7 +11,7 @@
   - [[#programming][Programming]]
   - [[#plaintext][Plaintext]]
 - [[#keybindings][Keybindings]]
-  - [[#variables][variables]]
+  - [[#leader-key--variables][leader key / variables]]
   - [[#top-level][top-level]]
   - [[#leader][leader]]
   - [[#local][local]]
@@ -76,8 +76,9 @@ doesn't do anything weird if tiling fullscreen emacs to left or right on macOS)
 ;;     (add-to-list 'default-frame-alist '(width . 238))))
  ;; (modify-frame-parameters nil '((fullscreen . fullboth)))
 (when IS-MAC
-  (set-frame-parameter nil 'undecorated t)
-  (set-frame-parameter nil 'fullscreen 'maximized))
+  (set-frame-parameter nil 'fullscreen 'maximized)
+  ;; (set-frame-parameter nil 'undecorated t)
+  )
 #+END_SRC
 
 ** Theme
@@ -135,7 +136,7 @@ readable without obviously being a totally different font at a glance.
 #+END_SRC
 *** package: mixed-pitch-mode
 #+BEGIN_SRC emacs-lisp :lexical yes
-(if (featurep! :ui zen)
+(if (modulep! :ui zen)
     (use-package! mixed-pitch
       :hook (text-mode . mixed-pitch-mode)
       :config
@@ -399,9 +400,9 @@ Completion and the 'inner/around line' text objects here.
    +default/search-other-project
    +vertico/search-symbol-at-point +vertico/jump-list
    +default/search-cwd +default/search-other-cwd
-   +default/search-notes-for-symbol-at-point
-   consult--source-file consult--source-project-file consult--source-bookmark
+   +default/search-notes-for-symbol-at-point consult--source-bookmark
    :preview-key (list (kbd "C-SPC") :debounce 0.5 'any))
+
   (map! :leader
         (:prefix ("s" . "search")
          :desc "jump to symbol (workspace)" "I" #'consult-imenu-multi)))
@@ -412,8 +413,8 @@ lsp-mode is noticeably faster (for python, anyways) than eglot as of the most re
 Haven't bothered to reconfigure much yet, but
 holding on to eglot options in case I switch back.
 #+BEGIN_SRC emacs-lisp :lexical yes
-(when (featurep! :tools lsp )
-  (if (featurep! :tools lsp +eglot)
+(when (modulep! :tools lsp )
+  (if (modulep! :tools lsp +eglot)
       (use-package! eglot
         :commands (eglot eglot-ensure)
         :hook (csharp-mode . eglot-ensure)
@@ -445,11 +446,28 @@ holding on to eglot options in case I switch back.
   movements and isn't great. If it doesn't noticeably hurt performance, leaving
   it enabled and reducing ~eglot-send-changes-idle-time~ to 0 is good, otherwise
   just disable it. Everything else is solid.
+*** lisp
+#+BEGIN_SRC emacs-lisp :lexical yes
+(after! lispyville
+  (setq lispyville-key-theme
+        '((operators normal)
+          c-w
+          text-objects
+          commentary
+          (prettify insert)
+          (atom-movement t)
+          slurp/barf-lispy
+          additional
+          additional-insert))
+  (lispyville-set-key-theme))
+#+END_SRC
 *** python
 **** Fix: f-strings in python mode not inserting close quotation mark
 #+BEGIN_SRC emacs-lisp
 (after! python
-  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes)))
+  (sp-local-pair '(python-mode) "f\"" "\"" :post-handlers '(:add sp-python-fix-tripple-quotes))
+  (setq +python-ipython-repl-args '("-i" "--no-color-info" ;; "--simple-prompt"
+                                    )))
 #+END_SRC
 **** Python LSP integration
 Tbh I'm not super happy with any of the lsp options for python (especially
@@ -498,7 +516,7 @@ me about missing headers with OpenMP
         eglot-connect-timeout 60))
 
 (after! (julia-mode lsp-julia)
- (add-hook! 'julia-mode-hook
+  (add-hook! 'julia-mode-hook
     (setq-local lsp-enable-folding t
                 lsp-folding-range-limit 100)) )
 
@@ -506,7 +524,16 @@ me about missing headers with OpenMP
   (setq org-babel-default-header-args:jupyter-julia '((:async . "yes")
                                                       (:session . "jl")
                                                       (:kernel . "julia-1.7"))))
+(after! lsp-mode
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-tramp-connection '+my/lsp-julia-tramp-command)
+                    :major-modes '(julia-mode ess-julia-mode)
+                    :server-id 'julia-ls-remote
+                    :remote? t
+                    :multi-root t)))
 #+end_src
+
+
 *** Go
 Taken from https://github.com/golang/tools/blob/master/gopls/doc/emacs.md
 #+begin_src emacs-lisp
@@ -622,22 +649,21 @@ links. Havent taken the time to figure out the font-lock options or whatever for
 that.
 See also: org-roam keybindings
 #+BEGIN_SRC emacs-lisp :lexical yes
+(defun +my/org-init-roam-h ()
+    "Setup `org-roam' but don't immediately initialize its database.
+Instead, initialize it when it will be actually needed."
+    (letf! ((#'org-roam-db-sync #'ignore))
+      (org-roam-db-autosync-enable)))
 (use-package! org-roam
-  :hook (org-load . org-roam-mode)
+  :defer t
+  ;; :hook (org-load . +my/org-init-roam-h)
   :init
   (setq! org-roam-directory               "~/Notes"
-         ;; org-roam-tag-sort                t
-         ;; org-roam-tag-sources             '(prop)
-         ;; org-roam-tag-separator           ", "
-         ;; org-roam-buffer-width            0.25
          org-roam-graph-max-title-length  40
          org-roam-completion-everywhere   nil
          org-roam-graph-shorten-titles    'truncate
-         ;; org-roam-index-file              "todo.org"
-         ;; org-roam-graph-exclude-matcher   '("old/" "Sunday" "Monday" "Tuesday" "Wednesday" "Thursday" "Friday" "Saturday" "journal")
          org-roam-graph-viewer            (executable-find "open")
-         org-roam-graph-executable        "dot"
-         )
+         org-roam-graph-executable        "dot")
   ;; (remove-hook 'org-roam-buffer-prepare-hook 'org-roam-buffer--insert-ref-links)
   ;; (add-hook! 'org-roam-buffer-prepare-hook #'outline-hide-body)
   (setq org-roam-capture-ref-templates `(("r" "ref" plain "%?"
@@ -709,7 +735,7 @@ Highlights:
  an ~avy-goto-char-2~ with those characters, so you can move where you meant to.
 - Under the ~SPC t~ /"toggle" prefix, ~m/f/d~ toggle frame
   maximized/fullscreen/decorated parameters, respectively
-** variables
+** leader key / variables
 #+BEGIN_SRC emacs-lisp :lexical yes
 (setq  doom-leader-key "SPC"
        doom-localleader-key ","
@@ -747,10 +773,10 @@ Highlights:
   (evil-snipe-override-mode +1))
 #+END_SRC
 ** top-level
-*** misc.
+*** [tab] and jump-list
 #+BEGIN_SRC emacs-lisp :lexical yes
 (map! :nv [tab]  #'evil-jump-item
-      (:when (featurep! :ui workspaces)
+      (:when (modulep! :ui workspaces)
        :g [C-tab] #'+workspace/switch-right)
 
       :m "C-S-o" #'better-jumper-jump-forward
@@ -792,7 +818,7 @@ Highlights:
       (:prefix ("f" . "file")
        :desc "find file new window"   "F"   #'find-file-other-window)
 
-      (:when (featurep! :completion vertico)
+      (:when (modulep! :completion vertico)
        (:prefix ("s" . "search")
         :desc "imenu (multi)" "i" #'consult-imenu-multi))
 
@@ -805,13 +831,13 @@ Highlights:
        :desc "toggle hl-line mode" "h" (cmd! (hl-line-mode (if hl-line-mode -1 +1)))
        :desc "toggle decorated"  "d" (cmd! (set-frame-parameter nil 'undecorated (not (frame-parameter nil 'undecorated)))))
 
-      (:when (featurep! :emacs undo +tree)
+      (:when (modulep! :emacs undo +tree)
        :desc "Undo tree"              "U"   #'undo-tree-visualize)
 
-      (:when (featurep! :ui treemacs)
+      (:when (modulep! :ui treemacs)
        :desc "Project sidebar"        "0"   #'+treemacs/toggle)
 
-      (:when (featurep! :ui workspaces)
+      (:when (modulep! :ui workspaces)
        (:prefix "TAB"
         :desc "Main workspace"       "`"    #'+workspace/switch-to-0
         :desc "Previous workspace"   "TAB"  #'+workspace/other

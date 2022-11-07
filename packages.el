@@ -12,18 +12,19 @@
   :pin "fda4455333309545c0787a79d73c19ddbeb57980")
 (package! org-roam-ui
   :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out"))
-   :pin "af0a8f2365968bbafc7991304060f381f9e67316")
+  :pin "9474a254390b1e42488a1801fed5826b32a8030b")
 
 (package! solaire-mode :disable t)
 
 ;; prefer builtin flymake with eglot
-(package! flymake :built-in t)
+(if (modulep! :tools lsp +eglot)
+    (package! flymake :built-in t))
+
 
 ;; existing packages that I don't want/need pinned
-(if (featurep! :tools lsp +eglot)
+(if (modulep! :tools lsp +eglot)
     (unpin! eglot)
   (unpin! lsp-mode lsp-ui))
 
 
-(unpin! org-roam doom-themes)
-
+(unpin! doom-themes org-roam)
